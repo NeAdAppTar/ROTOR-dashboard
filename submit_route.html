@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+  <meta charset="utf-8">
+  <!-- <meta name="viewport" content="width=device-width,initial-scale=1"> -->
+  <title>ROTOR — Маршрутный лист</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/png" href="icon.png">
+  <script src="checkauth.js"></script>
+  <script src="usermenu.js"></script>
+</head>
+
+<body>
+  
+<div class="navbar">
+  <div class="nav-links">
+    <a href="employee_dashboard.html">Личный кабинет</a>
+    <a href="employees.html">Список сотрудников</a>
+    <a href="routes.html">Маршруты</a>
+    <a href="vehicles.html">Список ПС</a>
+    <a href="submit_route.html">Маршрутный лист</a>
+    <a href="charter.html">Устав</a>
+    <a href="plan.html">План</a>
+    <a href="t.html">Тесты</a>
+    <a href="binds.html">Бинды и таблички</a>
+  </div>
+
+  <div class="user-menu" id="userMenu">
+    <span class="user-name" id="userName">user</span>
+    <div class="dropdown" id="dropdownMenu">
+      <button id="logoutBtn">Выйти</button>
+    </div>
+  </div>
+</div>
+
+  <div class="container" style="text-align: center; margin-top: 80px;">
+    <h1>Отправка маршрутного листа</h1>
+    <p style="font-size: 1.2rem; color: var(--muted); margin-bottom: 40px;">
+      Нажмите кнопку ниже, чтобы перейти к форме отправки маршрутного листа.
+    </p>
+    <a href="https://forms.gle/Diwzhkkjo5tZxpNG7" target="_blank">
+      <button style="font-size: 1.3rem; padding: 18px 40px;">Отправить маршрутный лист</button>
+    </a>
+  </div>
+</body>
+
+</html>

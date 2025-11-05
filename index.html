@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <title>ROTOR — Главная</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/png" href="icon.png">
+  <script src="checkauth.js"></script>
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      const user = (function() {
+        const match = document.cookie.match(/(^| )userLogin=([^;]+)/);
+        return match ? decodeURIComponent(match[2]) : null;
+      })();
+
+      if (user && user.trim() !== '') {
+        // в ЛК
+        window.location.href = 'employee_dashboard.html';
+      } else {
+        // на auth
+        const redirectUrl = encodeURIComponent('https://rotorbus.ru/employee_dashboard.html');
+        window.location.href = `https://auth.rotorbus.ru/?redirect=${redirectUrl}`;
+      }
+    });
+  </script>
+</head>
+<body>
+  <div class="center-card">
+    <h1>ROTOR</h1>
+    <p>Перенаправление...</p>
+  </div>
+</body>
+</html>

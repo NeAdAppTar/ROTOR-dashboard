@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Выполнение плана по маршрутам</title>
+  <link rel="icon" type="image/png" href="icon.png">
+  <link rel="stylesheet" href="style.css">
+  <script src="checkauth.js"></script>
+  <script src="usermenu.js"></script>
+
+  <style>
+    
+
+    
+
+    .progress-container {
+      background-color: #e0e0e0;
+      border-radius: 10px;
+      height: 20px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      transition: width 0.8s ease;
+    }
+
+    .progress-good {
+      background-color: #66bb6a;
+    }
+
+    .progress-mid {
+      background-color: #ffca28;
+    }
+
+    .progress-bad {
+      background-color: #ef5350;
+    }
+
+    .progress-none {
+      background-color: #bdbdbd;
+    }
+
+    .loading {
+      text-align: center;
+      font-style: italic;
+      color: #555;
+    }
+
+    .summary {
+      text-align: center;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="navbar">
+    <div class="nav-links">
+      <a href="employee_dashboard.html">Личный кабинет</a>
+      <a href="employees.html">Список сотрудников</a>
+      <a href="routes.html">Маршруты</a>
+      <a href="vehicles.html">Список ПС</a>
+      <a href="submit_route.html">Маршрутный лист</a>
+      <a href="charter.html">Устав</a>
+      <a href="plan.html">План</a>
+      <a href="t.html">Тесты</a>
+      <a href="binds.html">Бинды и таблички</a>
+    </div>
+
+    <div class="user-menu" id="userMenu">
+      <span class="user-name" id="userName">user</span>
+      <div class="dropdown" id="dropdownMenu">
+        <button id="logoutBtn">Выйти</button>
+      </div>
+    </div>
+  </div>
+
+  <main class="container">
+    <h1>Выполнение плана по маршрутам за месяц</h1>
+
+    <div id="loading" class="loading">Получение информации от сервера...</div>
+
+    <div id="tableContainer" style="display:none;">
+      <table class="styled-table" id="planTable">
+        <thead>
+          <tr>
+            <th>Маршрут</th>
+            <th>План, кругорейсов</th>
+            <th>Выполнено, кругорейсов</th>
+            <th>Выполнение плана</th>
+          </tr>
+        </thead>
+        <tbody id="planBody"></tbody>
+      </table>
+      <p id="summary" class="summary"></p>
+    </div>
+  </main>
+
+  <script>
+    async function loadPlan() {
+      const apiUrl = 'https://rotor.pythonanywhere.com/plan';
+      const tbody = document.getElementById('planBody');
+      const summary = document.getElementById('summary');
+      const tableContainer = document.getElementById('tableContainer');
+      const loading = document.getElementById('loading');
+
+      try {
+        const response = await fetch(apiUrl);
+        if (!response.ok) throw new Error('Ошибка при загрузке данных');
+        const data = await response.json();
+
+        delete data.len;
+        const routes = data.routes || [];
+        tbody.innerHTML = '';
+
+        routes.forEach(route => {
+          if (route === 'Всего') return;
+          const info = data[route];
+          const [plan, done, status] = info;
+
+          let percent = 0;
+          if (plan && done && !isNaN(plan) && !isNaN(done) && Number(plan) > 0)
+            percent = Math.round((Number(done) / Number(plan)) * 100);
+
+          let progressClass = 'progress-none';
+          if (status.includes('не установлен')) {
+            progressClass = 'progress-none';
+          } else if (percent >= 90) {
+            progressClass = 'progress-good';
+          } else if (percent >= 50) {
+            progressClass = 'progress-mid';
+          } else {
+            progressClass = 'progress-bad';
+          }
+
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>${route}</td>
+            <td>${plan || '-'}</td>
+            <td>${done || '-'}</td>
+            <td>
+              <div class="progress-container">
+                <div class="progress-bar ${progressClass}" style="width: ${percent}%;"></div>
+              </div>
+              <small>${status}</small>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+
+        // Итого
+        if (data['Всего']) {
+          const [plan, done, status] = data['Всего'];
+          const totalRow = document.createElement('tr');
+          totalRow.style.fontWeight = 'bold';
+          const totalPercent = plan > 0 ? Math.round((done / plan) * 100) : 0;
+          totalRow.innerHTML = `
+            <td>Всего</td>
+            <td>${plan}</td>
+            <td>${done}</td>
+            <td>
+              <div class="progress-container">
+                <div class="progress-bar progress-good" style="width: ${totalPercent}%;"></div>
+              </div>
+              <small>${status}</small>
+            </td>
+          `;
+          tbody.appendChild(totalRow);
+        }
+
+        loading.style.display = 'none';
+        tableContainer.style.display = 'block';
+      } catch (error) {
+        loading.textContent = 'Не удалось загрузить данные: ' + error.message;
+      }
+    }
+
+    loadPlan();
+  </script>
+</body>
+</html>

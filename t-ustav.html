@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Тест по Уставу</title>
+  <link rel="stylesheet" href="style.css">
+    <script src="checkauth.js"></script>
+    <script src="usermenu.js"></script>
+</head>
+<body>
+<div class="navbar">
+  <div class="nav-links">
+    <a href="employee_dashboard.html">Личный кабинет</a>
+    <a href="employees.html">Список сотрудников</a>
+    <a href="routes.html">Маршруты</a>
+    <a href="vehicles.html">Список ПС</a>
+    <a href="submit_route.html">Маршрутный лист</a>
+    <a href="charter.html">Устав</a>
+    <a href="plan.html">План</a>
+    <a href="t.html">Тесты</a>
+    <a href="binds.html">Бинды и таблички</a>
+  </div>
+
+  <div class="user-menu" id="userMenu">
+    <span class="user-name" id="userName">user</span>
+    <div class="dropdown" id="dropdownMenu">
+      <button id="logoutBtn">Выйти</button>
+    </div>
+  </div>
+</div>
+
+
+  <main class="container">
+    <h1>Тест по Уставу</h1>
+    <p id="playerName"></p>
+
+    <form id="testForm">
+      <div class="question">
+  <p>1. Что является основным документом организации?</p>
+  <label><input type="radio" name="q1" value="0"> Таблица маршрутов</label><br>
+  <label><input type="radio" name="q1" value="1"> Устав ООО «Ротор»</label><br>
+  <label><input type="radio" name="q1" value="0"> Внутренний чат</label>
+</div>
+
+<div class="question">
+  <p>2. Кто является представителем организации при исполнении обязанностей?</p>
+  <label><input type="radio" name="q2" value="0"> Пассажир</label><br>
+  <label><input type="radio" name="q2" value="1"> Сотрудник ООО «Ротор»</label><br>
+  <label><input type="radio" name="q2" value="0"> Любой водитель автобуса</label>
+</div>
+
+<div class="question">
+  <p>3. Что обязан сделать сотрудник перед выездом на линию?</p>
+  <label><input type="radio" name="q3" value="0"> Просто выехать на маршрут</label><br>
+  <label><input type="radio" name="q3" value="0"> Проверить только маршрут</label><br>
+  <label><input type="radio" name="q3" value="1"> Проверить техническое состояние и заправку ПС</label>
+</div>
+
+<div class="question">
+  <p>4. Сколько выговоров ведёт к увольнению сотрудника?</p>
+  <label><input type="radio" name="q4" value="0"> Один</label><br>
+  <label><input type="radio" name="q4" value="1"> Три</label><br>
+  <label><input type="radio" name="q4" value="0"> Два</label>
+</div>
+
+<div class="question">
+  <p>5. Что запрещено при эксплуатации техники?</p>
+  <label><input type="radio" name="q5" value="1"> Использовать технику в личных целях</label><br>
+  <label><input type="radio" name="q5" value="0"> Использовать таблички маршрута</label><br>
+  <label><input type="radio" name="q5" value="0"> Проходить обучение</label>
+</div>
+
+<div class="question">
+  <p>6. Где должна оставаться техника после смены?</p>
+  <label><input type="radio" name="q6" value="0"> У дома водителя</label><br>
+  <label><input type="radio" name="q6" value="1"> В гараже организации</label><br>
+  <label><input type="radio" name="q6" value="0"> На любой стоянке</label>
+</div>
+
+<div class="question">
+  <p>7. Сколько кругорейсов обязан выполнить сотрудник за полумесяц?</p>
+  <label><input type="radio" name="q7" value="0"> Не менее 10</label><br>
+  <label><input type="radio" name="q7" value="1"> Не менее 16</label><br>
+  <label><input type="radio" name="q7" value="0"> Не менее 20</label>
+</div>
+
+<div class="question">
+  <p>8. Что обязан сделать сотрудник при отклонении от маршрута?</p>
+  <label><input type="radio" name="q8" value="1"> Уведомить диспетчерскую</label><br>
+  <label><input type="radio" name="q8" value="0"> Ничего</label><br>
+  <label><input type="radio" name="q8" value="0"> Отклоняться без объяснений</label>
+</div>
+
+<div class="question">
+  <p>9. Что запрещено при перевозке пассажиров?</p>
+  <label><input type="radio" name="q9" value="0"> Общаться с кондуктором</label><br>
+  <label><input type="radio" name="q9" value="1"> Оскорблять пассажиров</label><br>
+  <label><input type="radio" name="q9" value="0"> Пожелать хорошего дня</label>
+</div>
+
+<div class="question">
+  <p>10. Кто может изменить меру наказания сотруднику?</p>
+  <label><input type="radio" name="q10" value="0"> Любой водитель</label><br>
+  <label><input type="radio" name="q10" value="1"> Администрация</label><br>
+  <label><input type="radio" name="q10" value="0"> Диспетчер</label>
+</div>
+
+<div class="question">
+  <p>11. Что запрещено делать с сайтом организации?</p>
+  <label><input type="radio" name="q11" value="0"> Смотреть расписание</label><br>
+  <label><input type="radio" name="q11" value="0"> Проверять обновления</label><br>
+  <label><input type="radio" name="q11" value="1"> Нарушать или дестабилизировать его работу</label>
+</div>
+
+<div class="question">
+  <p>12. Что должен сделать сотрудник в начале смены?</p>
+  <label><input type="radio" name="q12" value="1"> Уведомить диспетчерскую о выходе</label><br>
+  <label><input type="radio" name="q12" value="0"> Просто выехать на маршрут</label><br>
+  <label><input type="radio" name="q12" value="0"> Позвонить коллеге</label>
+</div>
+
+<div class="question">
+  <p>13. Что обязан сделать сотрудник после окончания смены?</p>
+  <label><input type="radio" name="q13" value="0"> Просто выключить двигатель</label><br>
+  <label><input type="radio" name="q13" value="1"> Уведомить диспетчерскую о сходе и сдать маршрутный лист</label><br>
+  <label><input type="radio" name="q13" value="0"> Уехать домой</label>
+</div>
+
+<div class="question">
+  <p>14. Сколько маршрутов обслуживает ООО «Ротор»?</p>
+  <label><input type="radio" name="q14" value="0"> Пять</label><br>
+  <label><input type="radio" name="q14" value="1"> Четыре</label><br>
+  <label><input type="radio" name="q14" value="0"> Три</label>
+</div>
+
+<div class="question">
+  <p>15. Какая стоимость проезда на пригородном маршруте №92п?</p>
+  <label><input type="radio" name="q15" value="0"> 80 рублей</label><br>
+  <label><input type="radio" name="q15" value="1"> 125 рублей</label><br>
+  <label><input type="radio" name="q15" value="0"> 100 рублей</label>
+</div>
+
+<div class="question">
+  <p>16. Кто назначается на должность «Стажёр»?</p>
+  <label><input type="radio" name="q16" value="0"> Заместитель директора</label><br>
+  <label><input type="radio" name="q16" value="1"> Новый сотрудник при трудоустройстве</label><br>
+  <label><input type="radio" name="q16" value="0"> Водитель I класса</label>
+</div>
+
+<div class="question">
+  <p>17. Что должен сделать стажёр в течение недели?</p>
+  <label><input type="radio" name="q17" value="1"> Повыситься до водителя III класса</label><br>
+  <label><input type="radio" name="q17" value="0"> Взять отпуск</label><br>
+  <label><input type="radio" name="q17" value="0"> Перейти в другую компанию</label>
+</div>
+
+<div class="question">
+  <p>18. Что происходит при одном выговоре?</p>
+  <label><input type="radio" name="q18" value="0"> Повышается в должности</label><br>
+  <label><input type="radio" name="q18" value="1"> Сотрудник теряет 25% зарплаты за период</label><br>
+  <label><input type="radio" name="q18" value="0"> Получает премию</label>
+</div>
+
+<div class="question">
+  <p>19. Кто имеет право пожаловаться администрации на коллег?</p>
+  <label><input type="radio" name="q19" value="0"> Только директор</label><br>
+  <label><input type="radio" name="q19" value="1"> Любой сотрудник</label><br>
+  <label><input type="radio" name="q19" value="0"> Только водители I класса</label>
+</div>
+
+<div class="question">
+  <p>20. Какое максимальное ограничение по зарплате установлено за период?</p>
+  <label><input type="radio" name="q20" value="0"> 250 000 рублей</label><br>
+  <label><input type="radio" name="q20" value="1"> 400 000 рублей</label><br>
+  <label><input type="radio" name="q20" value="0"> 500 000 рублей</label>
+</div>
+
+
+      <button type="submit">Отправить</button>
+    </form>
+
+    <p id="result"></p>
+  </main>
+
+  <script src="tsys.js"></script>
+  <script>
+    initTest("Устав");
+  </script>
+
+  <style>
+    /* ------------------ Кнопки тестов ------------------ */
+.button {
+  display: inline-block;
+  padding: 12px 25px;
+  background: #ffd500;       /* ярко-жёлтый фон */
+  color: #000;               /* чёрный текст */
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: 600;
+  text-align: center;
+  transition: transform 0.2s, box-shadow 0.2s;
+  border: 2px solid #000;
+}
+
+.button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  background: #fff200; /* чуть ярче при наведении */
+}
+
+
+
+/* ------------------ Имя пользователя ------------------ */
+#playerName {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  color: #000;
+}
+
+/* ------------------ Контейнер кнопок ------------------ */
+.test-links {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  max-width: 300px;
+  margin-top: 30px;
+}
+
+/* ------------------ Контейнер теста ------------------ */
+main.container {
+  max-width: 700px;
+  margin: 30px auto;
+  padding: 20px;
+  background-color: #fffacd; /* светлый желтый фон */
+  border: 2px solid #000;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  font-family: 'Arial', sans-serif;
+  color: #000;
+}
+
+/* ------------------ Заголовки ------------------ */
+h1 {
+  text-align: center;
+  color: #000;
+  margin-bottom: 25px;
+}
+
+/* ------------------ Имя пользователя ------------------ */
+#playerName {
+  font-size: 18px;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* ------------------ Вопросы ------------------ */
+.question {
+  margin-bottom: 20px;
+  padding: 15px;
+  background-color: #fff; /* белый блок вопроса */
+  border: 2px solid #000;
+  border-radius: 8px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.question:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* ------------------ Варианты ответа ------------------ */
+label {
+  display: block;
+  padding: 8px 12px;
+  margin: 6px 0;
+  border-radius: 6px;
+  cursor: pointer;
+  background-color: #ffd500; /* жёлтый фон */
+  color: #000;
+  transition: background 0.2s, transform 0.2s;
+  border: 1px solid #000;
+}
+
+label:hover {
+  background-color: #fff200;
+  transform: translateX(3px);
+}
+
+/* Стили для выбранного radio */
+input[type="radio"]:checked + label {
+  background-color: #000;
+  color: #ffd500;
+  font-weight: bold;
+}
+
+/* ------------------ Кнопка отправки ------------------ */
+button[type="submit"] {
+  display: inline-block;
+  padding: 12px 25px;
+  background-color: #000;
+  color: #ffd500;
+  border-radius: 8px;
+  border: 2px solid #000;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+  margin-top: 15px;
+}
+
+button[type="submit"]:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  background-color: #333;
+}
+
+  </style>
+</body>
+</html>

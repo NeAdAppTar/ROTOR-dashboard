@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Результаты тестов</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/png" href="icon.png">
+  <script src="checkauth.js"></script>
+  <script src="usermenu.js"></script>
+
+</head>
+<body>
+<div class="navbar">
+  <div class="nav-links">
+    <a href="employee_dashboard.html">Личный кабинет</a>
+    <a href="employees.html">Список сотрудников</a>
+    <a href="routes.html">Маршруты</a>
+    <a href="vehicles.html">Список ПС</a>
+    <a href="submit_route.html">Маршрутный лист</a>
+    <a href="charter.html">Устав</a>
+    <a href="plan.html">План</a>
+    <a href="t.html">Тесты</a>
+    <a href="binds.html">Бинды и таблички</a>
+  </div>
+
+  <div class="user-menu" id="userMenu">
+    <span class="user-name" id="userName">user</span>
+    <div class="dropdown" id="dropdownMenu">
+      <button id="logoutBtn">Выйти</button>
+    </div>
+  </div>
+</div>
+  <main class="container">
+    <h1>Результаты тестов</h1>
+    <p>Оценка за устав выставяляется по принципу: "2" - 0-9 баллов, "3" - 10-13 баллов, "4" - 14-17 баллов, "5" - 18-20 баллов.</p>
+    <p>Оценка за ПДД выставяляется по принципу: "2" - 0-4 баллов, "3" - 5-6 баллов, "4" - 7-8 баллов, "5" - 9-10 баллов.</p>
+    <p>Оценка за практику выставялется на усмотрение инструктора.</p>
+    <p>Итоговая оценка - среднее арифиметическое всех трех оценок, округленное по правилу математики (Пример: (4+3+4)/3 = 3,33 ~ 3. Оценка "3")</p>
+    <div id="loading">Загрузка...</div>
+    <table id="resultsTable" class="styled-table" style="display:none;">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Имя</th>
+          <th>Баллы</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </main>
+
+  <script>
+    async function loadResults() {
+      try {
+        const response = await fetch('https://rotor.pythonanywhere.com/get-tests');
+        const data = await response.json();
+
+        const table = document.getElementById('resultsTable');
+        const tbody = table.querySelector('tbody');
+        const loading = document.getElementById('loading');
+
+        tbody.innerHTML = '';
+        data.tests.forEach(test => {
+          const [id, name, score] = test;
+          const row = `<tr><td>${id}</td><td>${name}</td><td>${score}</td></tr>`;
+          tbody.insertAdjacentHTML('beforeend', row);
+        });
+
+        loading.style.display = 'none';
+        table.style.display = 'table';
+      } catch (err) {
+        document.getElementById('loading').textContent = 'Ошибка при загрузке данных';
+      }
+    }
+
+    loadResults();
+  </script>
+</body>
+</html>

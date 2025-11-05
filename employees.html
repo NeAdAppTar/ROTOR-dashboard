@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+  <meta charset="utf-8">
+  <title>ROTOR — Сотрудники</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/png" href="icon.png">
+  <script src="checkauth.js"></script>
+  <script src="usermenu.js"></script>
+
+</head>
+
+<body>
+<div class="navbar">
+  <div class="nav-links">
+    <a href="employee_dashboard.html">Личный кабинет</a>
+    <a href="employees.html">Список сотрудников</a>
+    <a href="routes.html">Маршруты</a>
+    <a href="vehicles.html">Список ПС</a>
+    <a href="submit_route.html">Маршрутный лист</a>
+    <a href="charter.html">Устав</a>
+    <a href="plan.html">План</a>
+    <a href="t.html">Тесты</a>
+    <a href="binds.html">Бинды и таблички</a>
+  </div>
+
+  <div class="user-menu" id="userMenu">
+    <span class="user-name" id="userName">user</span>
+    <div class="dropdown" id="dropdownMenu">
+      <button id="logoutBtn">Выйти</button>
+    </div>
+  </div>
+</div>
+
+  <div class="container">
+    <h1>Список сотрудников</h1>
+    <div id="loading" class="loading">Получение информации от сервера...</div>
+    <table class="table" id="usersTable" style="display:none;">
+      <thead>
+        <tr>
+          <th>Ник</th>
+          <th>Должность</th>
+          <th>ВК</th>
+          <th>Выговоры</th>
+          <th>Счёт</th>
+        </tr>
+      </thead>
+      <tbody id="usersBody">
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    async function loadUsers() {
+      const apiUrl = 'https://rotor.pythonanywhere.com/users';
+      const table = document.getElementById('usersTable');
+      const tbody = document.getElementById('usersBody');
+      const loading = document.getElementById('loading');
+
+      try {
+        const response = await fetch(apiUrl);
+        if (!response.ok) throw new Error('Ошибка при загрузке данных');
+        const data = await response.json();
+
+        delete data.len;
+
+        tbody.innerHTML = '';
+
+        Object.values(data).forEach(user => {
+          const tr = document.createElement('tr');
+          const vkUrl = user.vk.startsWith('http') ? user.vk : `https://${user.vk}`;
+
+          tr.innerHTML = `
+            <td>${user.login}</td>
+            <td>${user.post}</td>
+            <td><button class="vk-btn" onclick="window.open('${vkUrl}', '_blank')">VK</button></td>
+            <td>${user.dis}</td>
+            <td>${user.account}</td>
+          `;
+          tbody.appendChild(tr); 
+        });
+
+        loading.style.display = 'none';
+        table.style.display = 'table';
+      } catch (error) {
+        loading.textContent = 'Не удалось загрузить данные: ' + error.message;
+      }
+    }
+
+    loadUsers();
+  </script>
+
+</body>
+
+</html>

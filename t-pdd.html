@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Тест по ПДД</title>
+  <link rel="stylesheet" href="style.css">
+      <script src="checkauth.js"></script>
+      <script src="usermenu.js"></script>
+</head>
+<body>
+<div class="navbar">
+  <div class="nav-links">
+    <a href="employee_dashboard.html">Личный кабинет</a>
+    <a href="employees.html">Список сотрудников</a>
+    <a href="routes.html">Маршруты</a>
+    <a href="vehicles.html">Список ПС</a>
+    <a href="submit_route.html">Маршрутный лист</a>
+    <a href="charter.html">Устав</a>
+    <a href="plan.html">План</a>
+    <a href="t.html">Тесты</a>
+    <a href="binds.html">Бинды и таблички</a>
+  </div>
+
+  <div class="user-menu" id="userMenu">
+    <span class="user-name" id="userName">user</span>
+    <div class="dropdown" id="dropdownMenu">
+      <button id="logoutBtn">Выйти</button>
+    </div>
+  </div>
+</div>
+
+  <main class="container">
+    <h1>Тест по ПДД</h1>
+    <p id="playerName"></p>
+
+    <form id="testForm">
+     <div class="question">
+  <p>1. Какое движение установлено на дорогах РФ?</p>
+  <label><input type="radio" name="q1" value="1"> Правостороннее движение</label><br>
+  <label><input type="radio" name="q1" value="0"> Левостороннее движение</label><br>
+  <label><input type="radio" name="q1" value="0"> По усмотрению водителя</label>
+</div>
+
+<div class="question">
+  <p>2. Что означает мигающий жёлтый сигнал светофора?</p>
+  <label><input type="radio" name="q2" value="0"> Запрещает движение</label><br>
+  <label><input type="radio" name="q2" value="1"> Предупреждает об опасности и требует осторожности</label><br>
+  <label><input type="radio" name="q2" value="0"> Разрешает движение без ограничений</label>
+</div>
+
+<div class="question">
+  <p>3. Кто имеет преимущество на перекрёстке без знаков?</p>
+  <label><input type="radio" name="q3" value="1"> Транспорт, приближающийся справа</label><br>
+  <label><input type="radio" name="q3" value="0"> Тот, кто едет быстрее</label><br>
+  <label><input type="radio" name="q3" value="0"> Тот, кто первым подал сигнал</label>
+</div>
+
+<div class="question">
+  <p>4. Что обязан сделать водитель при ДТП, если есть пострадавшие?</p>
+  <label><input type="radio" name="q4" value="1"> Оказать первую помощь, вызвать скорую и полицию</label><br>
+  <label><input type="radio" name="q4" value="0"> Уехать с места происшествия</label><br>
+  <label><input type="radio" name="q4" value="0"> Сообщить друзьям</label>
+</div>
+
+<div class="question">
+  <p>5. Что запрещено водителю?</p>
+  <label><input type="radio" name="q5" value="1"> Управлять транспортом в состоянии опьянения</label><br>
+  <label><input type="radio" name="q5" value="0"> Использовать ближний свет днём</label><br>
+  <label><input type="radio" name="q5" value="0"> Проехать по автомагистрали</label>
+</div>
+
+<div class="question">
+  <p>6. Что должен сделать водитель при приближении машины с маячком и сиреной?</p>
+  <label><input type="radio" name="q6" value="1"> Уступить дорогу</label><br>
+  <label><input type="radio" name="q6" value="0"> Продолжить движение</label><br>
+  <label><input type="radio" name="q6" value="0"> Обогнать её</label>
+</div>
+
+<div class="question">
+  <p>7. Где запрещён обгон?</p>
+  <label><input type="radio" name="q7" value="1"> На пешеходных переходах и перед железнодорожным переездом</label><br>
+  <label><input type="radio" name="q7" value="0"> На пустой дороге</label><br>
+  <label><input type="radio" name="q7" value="0"> На автомагистрали</label>
+</div>
+
+<div class="question">
+  <p>8. Какой свет должен быть включён при движении днём?</p>
+  <label><input type="radio" name="q8" value="0"> Дальний свет</label><br>
+  <label><input type="radio" name="q8" value="1"> Ближний свет фар или дневные ходовые огни</label><br>
+  <label><input type="radio" name="q8" value="0"> Только габаритные огни</label>
+</div>
+
+<div class="question">
+  <p>9. Как поступить, если загорелся красный сигнал светофора?</p>
+  <label><input type="radio" name="q9" value="0"> Проехать, если нет машин</label><br>
+  <label><input type="radio" name="q9" value="1"> Остановиться перед стоп-линией</label><br>
+  <label><input type="radio" name="q9" value="0"> Замедлить ход и продолжить</label>
+</div>
+
+<div class="question">
+  <p>10. Что должен сделать водитель при вынужденной остановке на дороге?</p>
+  <label><input type="radio" name="q10" value="0"> Ничего</label><br>
+  <label><input type="radio" name="q10" value="1"> Включить аварийку и выставить знак аварийной остановки</label><br>
+  <label><input type="radio" name="q10" value="0"> Выйти и подать рукой сигнал</label>
+</div>
+
+
+      <button type="submit">Отправить</button>
+    </form>
+
+    <p id="result"></p>
+  </main>
+
+  <script src="tsys.js"></script>
+  <script>
+    initTest("ПДД");
+  </script>
+
+  <style>
+    /* ------------------ Кнопки тестов ------------------ */
+.button {
+  display: inline-block;
+  padding: 12px 25px;
+  background: #ffd500;       /* ярко-жёлтый фон */
+  color: #000;               /* чёрный текст */
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: 600;
+  text-align: center;
+  transition: transform 0.2s, box-shadow 0.2s;
+  border: 2px solid #000;
+}
+
+.button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  background: #fff200; /* чуть ярче при наведении */
+}
+
+
+
+/* ------------------ Имя пользователя ------------------ */
+#playerName {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  color: #000;
+}
+
+/* ------------------ Контейнер кнопок ------------------ */
+.test-links {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  max-width: 300px;
+  margin-top: 30px;
+}
+
+/* ------------------ Контейнер теста ------------------ */
+main.container {
+  max-width: 700px;
+  margin: 30px auto;
+  padding: 20px;
+  background-color: #fffacd; /* светлый желтый фон */
+  border: 2px solid #000;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  font-family: 'Arial', sans-serif;
+  color: #000;
+}
+
+/* ------------------ Заголовки ------------------ */
+h1 {
+  text-align: center;
+  color: #000;
+  margin-bottom: 25px;
+}
+
+/* ------------------ Имя пользователя ------------------ */
+#playerName {
+  font-size: 18px;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* ------------------ Вопросы ------------------ */
+.question {
+  margin-bottom: 20px;
+  padding: 15px;
+  background-color: #fff; /* белый блок вопроса */
+  border: 2px solid #000;
+  border-radius: 8px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.question:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* ------------------ Варианты ответа ------------------ */
+label {
+  display: block;
+  padding: 8px 12px;
+  margin: 6px 0;
+  border-radius: 6px;
+  cursor: pointer;
+  background-color: #ffd500; /* жёлтый фон */
+  color: #000;
+  transition: background 0.2s, transform 0.2s;
+  border: 1px solid #000;
+}
+
+label:hover {
+  background-color: #fff200;
+  transform: translateX(3px);
+}
+
+/* Стили для выбранного radio */
+input[type="radio"]:checked + label {
+  background-color: #000;
+  color: #ffd500;
+  font-weight: bold;
+}
+
+/* ------------------ Кнопка отправки ------------------ */
+button[type="submit"] {
+  display: inline-block;
+  padding: 12px 25px;
+  background-color: #000;
+  color: #ffd500;
+  border-radius: 8px;
+  border: 2px solid #000;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+  margin-top: 15px;
+}
+
+button[type="submit"]:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  background-color: #333;
+}
+
+  </style>
+</body>
+</html>

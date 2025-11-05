@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+  <meta charset="utf-8">
+  <!-- <meta name="viewport" content="width=device-width,initial-scale=1"> -->
+  <title>ROTOR — Маршруты</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/png" href="icon.png">
+  <script src="checkauth.js"></script>
+  <script src="usermenu.js"></script>
+
+  <style>
+    .routes-container {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 40px;
+      flex-wrap: wrap;
+    }
+
+    .route-button {
+      cursor: pointer;
+      padding: 12px 24px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+
+    }
+
+    .route-button:hover {
+      transform: translateY(-2px);
+    }
+
+    .route-button:active {
+      transform: translateY(1px);
+    }
+  </style>
+</head>
+
+<body>
+  
+<div class="navbar">
+  <div class="nav-links">
+    <a href="employee_dashboard.html">Личный кабинет</a>
+    <a href="employees.html">Список сотрудников</a>
+    <a href="routes.html">Маршруты</a>
+    <a href="vehicles.html">Список ПС</a>
+    <a href="submit_route.html">Маршрутный лист</a>
+    <a href="charter.html">Устав</a>
+    <a href="plan.html">План</a>
+    <a href="t.html">Тесты</a>
+    <a href="binds.html">Бинды и таблички</a>
+  </div>
+
+  <div class="user-menu" id="userMenu">
+    <span class="user-name" id="userName">user</span>
+    <div class="dropdown" id="dropdownMenu">
+      <button id="logoutBtn">Выйти</button>
+    </div>
+  </div>
+</div>
+
+  <main class="container">
+    <h1>Расписание маршрутов</h1>
+
+    <div class="routes-container">
+      <button class="route-button"
+        onclick="window.open('https://docs.google.com/spreadsheets/d/1l2tWScnK9viwHkSwoEyC4p4C_KE8V7rr0yjhdcCehos/', '_blank')">
+        Маршрут №77
+      </button>
+
+      <button class="route-button"
+        onclick="window.open('https://docs.google.com/spreadsheets/d/13IbPzPqs9005ud_Ip0TswJUeASGtfeAYENTn8Cb6Y3s/', '_blank')">
+        Маршрут №35
+      </button>
+
+      <button class="route-button"
+        onclick="window.open('https://docs.google.com/spreadsheets/d/17uWMFQrD1oG-58RvUIejSYQxCl2jRZPIuBF4Ma1ItQ0/', '_blank')">
+        Маршрут №92п
+      </button>
+
+      <button class="route-button"
+        onclick="window.open('https://docs.google.com/spreadsheets/d/1vWoDBVbfGnG15lxohhlijv-3-GAKMWlFrIEnlMiK9tU/', '_blank')">
+        Маршрут №99
+      </button>
+
+
+    </div>
+  </main>
+
+  <div class="container">
+    <h1>Маршруты</h1>
+    <div class="routes-grid">
+      <div class="tile">
+        <img src="route77.jpg" alt="Схема маршрута №77" class="route-img">
+        <h3>Маршрут №77</h3>
+        <p>Цена проезда: <span class="highlight">80 ₽</span></p>
+        <p>Зарплата за кругорейс: <span class="highlight">9000 ₽</span> </p>
+      </div>
+
+      <div class="tile">
+        <img src="route35.jpg" alt="Схема маршрута №35" class="route-img">
+        <h3>Маршрут №35</h3>
+        <p>Цена проезда: <span class="highlight">80 ₽</span></p>
+        <p>Зарплата за кругорейс: <span class="highlight">7200 ₽</span></p>
+      </div>
+
+      <div class="tile">
+        <img src="route92.jpg" alt="Схема маршрута №29п" class="route-img">
+        <h3>Маршрут №92п</h3>
+        <p>Цена проезда: <span class="highlight">125 ₽</span></p>
+        <p>Зарплата за кругорейс: <span class="highlight">5400 ₽</span></p>
+      </div>
+
+      <div class="tile">
+        <img src="route99.jpg" alt="Схема маршрута №99" class="route-img">
+        <h3>Маршрут №99</h3>
+        <p>Цена проезда: <span class="highlight">80 ₽</span></p>
+        <p>Зарплата за кругорейс: <span class="highlight">7200 ₽</span></p>
+      </div>
+    </div>
+
+    <div class="bonus-info" style="margin-top: 30px; text-align: center; font-size: 18px;">
+      <p><strong>Надбавки:</strong> за каждого пассажира — <span class="highlight">+2000 ₽</span>, за каждый класс — <span class="highlight">+1000 ₽</span> к кругорейсу.</p>
+    </div>
+  </div>
+</body>
+
+</html>

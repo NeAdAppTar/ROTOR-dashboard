@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+  <meta charset="utf-8">
+  <!-- <meta name="viewport" content="width=device-width,initial-scale=1"> -->
+  <title>ROTOR — Панель сотрудника</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/png" href="icon.png">
+  <script src="checkauth.js"></script>
+  <script src="usermenu.js"></script>
+</head>
+
+<body>
+
+  
+<div class="navbar">
+  <div class="nav-links">
+    <a href="employee_dashboard.html">Личный кабинет</a>
+    <a href="employees.html">Список сотрудников</a>
+    <a href="routes.html">Маршруты</a>
+    <a href="vehicles.html">Список ПС</a>
+    <a href="submit_route.html">Маршрутный лист</a>
+    <a href="charter.html">Устав</a>
+    <a href="plan.html">План</a>
+    <a href="t.html">Тесты</a>
+    <a href="binds.html">Бинды и таблички</a>
+  </div>
+
+  <div class="user-menu" id="userMenu">
+    <span class="user-name" id="userName">user</span>
+    <div class="dropdown" id="dropdownMenu">
+      <button id="logoutBtn">Выйти</button>
+    </div>
+  </div>
+</div>
+
+
+  <div class="dashboard">
+    <div class="tile">
+      <h3>Никнейм</h3>
+      <p class="highlight" id="nickname">Загрузка...</p>
+    </div>
+
+    <div class="tile">
+      <h3>Статистика всего</h3>
+      <p>Кругорейсов: <span class="highlight" id="totalRoutes">Загрузка...</span></p>
+      <p>Пассажиров: <span class="highlight" id="totalPassengers">Загрузка...</span></p>
+    </div>
+
+    <div class="tile">
+      <h3>Текущий полупериод</h3>
+      <p>Кругорейсов: <span class="highlight" id="periodRoutes">Загрузка...</span></p>
+
+      <div class="progress-container">
+        <div class="progress-bar" id="routesProgress"></div>
+        <span class="progress-label" id="routesProgressLabel">0 / 16</span>
+      </div>
+
+      <p>Пассажиров: <span class="highlight" id="periodPassengers">Загрузка...</span></p>
+    </div>
+
+    <div class="tile">
+      <h3>Оклад за полупериод</h3>
+      <p class="highlight" id="salary">Загрузка...</p>
+    </div>
+
+    <div class="tile important">
+      <p>Водитель, при завершении смены не забывай сдавать маршрутный лист</p>
+    </div>
+
+  <!--   <a href="https://rotorbus.ru/10h1" target="_blank" class="tile important" style="text-decoration: none; color: inherit;">
+      <p>Выплата зарплаты за первый полупериод октября (кликабельно)</p>
+    </a> -->
+
+  </div>
+
+  <script>
+    function formatNumber(value) {
+      if (value === null || value === undefined) return '0';
+      const str = String(value).trim();
+      if (str.includes('.')) {
+        const [int, dec] = str.split('.');
+        return dec === '0' ? int : str;
+      }
+      return str;
+    }
+
+    async function loadDashboard() {
+  const login = localStorage.getItem('userLogin');
+  const nickname = document.getElementById('nickname');
+  const totalRoutes = document.getElementById('totalRoutes');
+  const totalPassengers = document.getElementById('totalPassengers');
+  const periodRoutes = document.getElementById('periodRoutes');
+  const periodPassengers = document.getElementById('periodPassengers');
+  const salary = document.getElementById('salary');
+
+  nickname.textContent = login;
+
+  try {
+    const response = await fetch('https://rotor.pythonanywhere.com/user_info', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ login })
+    });
+
+    if (!response.ok) throw new Error('Ошибка при получении данных');
+
+    const data = await response.json();
+
+    totalRoutes.textContent = formatNumber(data.all_routes);
+    totalPassengers.textContent = formatNumber(data.all_passengers);
+    periodRoutes.textContent = formatNumber(data.half_routes);
+    periodPassengers.textContent = formatNumber(data.half_passengers);
+    salary.textContent = data.salary ? formatNumber(data.salary) + ' ₽' : '0 ₽';
+
+    //Прогрессбар
+    const routesProgress = document.getElementById('routesProgress');
+    const routesProgressLabel = document.getElementById('routesProgressLabel');
+
+    const current = parseFloat(data.half_routes) || 0;
+    const max = 16;
+    let percent = (current / max) * 100;
+    if (percent > 100) percent = 100;
+
+    routesProgress.style.width = percent + '%';
+    routesProgressLabel.textContent = `${formatNumber(current)} / ${max}`;
+
+    if (current > max) {
+      routesProgress.classList.add('progress-over');
+    } else {
+      routesProgress.classList.remove('progress-over');
+    }
+
+  } catch (error) {
+    totalRoutes.textContent = 'Ошибка';
+    totalPassengers.textContent = 'Ошибка';
+    periodRoutes.textContent = 'Ошибка';
+    periodPassengers.textContent = 'Ошибка';
+    salary.textContent = 'Ошибка';
+    console.error('Ошибка загрузки данных:', error);
+  }
+}
+
+
+    function logout() {
+      localStorage.removeItem('userLogin');
+      document.cookie = "userLogin=; path=/; domain=.rotorbus.ru; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+      window.location.href = "https://auth.rotorbus.ru/";
+    }
+
+    window.addEventListener('DOMContentLoaded', loadDashboard);
+
+    
+  </script>
+</body>
+
+</html>

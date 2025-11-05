@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Список ПС</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/png" href="icon.png">
+  <script src="checkauth.js"></script>
+  <script src="usermenu.js"></script>
+  <style>
+    .state-f {
+      background-color: #b0dfb0 !important;
+    }
+
+    .state-n {
+      background-color: #e5d866 !important;
+    }
+
+    .state-l {
+      background-color: #c8a2c8 !important;
+    }
+  </style>
+</head>
+
+<body>
+  
+<div class="navbar">
+  <div class="nav-links">
+    <a href="employee_dashboard.html">Личный кабинет</a>
+    <a href="employees.html">Список сотрудников</a>
+    <a href="routes.html">Маршруты</a>
+    <a href="vehicles.html">Список ПС</a>
+    <a href="submit_route.html">Маршрутный лист</a>
+    <a href="charter.html">Устав</a>
+    <a href="plan.html">План</a>
+    <a href="t.html">Тесты</a>
+    <a href="binds.html">Бинды и таблички</a>
+  </div>
+
+  <div class="user-menu" id="userMenu">
+    <span class="user-name" id="userName">user</span>
+    <div class="dropdown" id="dropdownMenu">
+      <button id="logoutBtn">Выйти</button>
+    </div>
+  </div>
+</div>
+
+  <main class="container">
+    <h1>Список подвижного состава</h1>
+
+    <div id="loading" class="loading">Получение информации от сервера...</div>
+
+    <div id="tableContainer" style="display:none;">
+      <table class="styled-table" id="vehiclesTable">
+        <thead>
+          <tr>
+            <th>Бортовой номер</th>
+            <th>Гос. номер</th>
+            <th>Модель</th>
+            <th>Построен</th>
+            <th>С (эксплуатации)</th>
+            <th>Состояние</th>
+            <th>Примечание</th>
+          </tr>
+        </thead>
+        <tbody id="vehiclesBody"></tbody>
+      </table>
+      <p id="summary" class="summary"></p>
+    </div>
+  </main>
+
+  <script>
+    async function loadVehicles() {
+      const apiUrl = 'https://rotor.pythonanywhere.com/vehicles';
+      const tableContainer = document.getElementById('tableContainer');
+      const tbody = document.getElementById('vehiclesBody');
+      const summary = document.getElementById('summary');
+      const loading = document.getElementById('loading');
+
+      try {
+        const response = await fetch(apiUrl);
+        if (!response.ok) throw new Error('Ошибка при загрузке данных');
+        const data = await response.json();
+
+        delete data.len;
+        tbody.innerHTML = '';
+        let totalCount = 0;
+
+        Object.values(data).forEach(item => {
+          if (!item.bort || item.bort.includes('Общее количество') || item.bort.includes('Списанные')) return;
+
+          const tr = document.createElement('tr');
+
+
+          const state = (item.state || '').toString().trim().toLowerCase();
+
+          if (state === 'f') tr.classList.add('state-f');
+          else if (state === 'n') tr.classList.add('state-n');
+          else if (state === 'l') tr.classList.add('state-l');
+
+          let stateText = '-';
+          if (state === 'f') stateText = 'На заводе / новый';
+          else if (state === 'n') stateText = 'Не эксплуатируется';
+          else if (state === 'l') stateText = 'Списан / передан';
+          else if (state === 'nan' || state === '') stateText = 'В эксплуатации';
+
+          tr.innerHTML = `
+            <td>${item.bort || '-'}</td>
+            <td>${item.gos && item.gos !== 'nan' ? item.gos : '-'}</td>
+            <td>${item.model && item.model !== 'nan' ? item.model : '-'}</td>
+            <td>${item.built && item.built !== 'nan' ? item.built : '-'}</td>
+            <td>${item.from && item.from !== 'nan' ? item.from : '-'}</td>
+            <td>${stateText}</td>
+            <td>${item.note && item.note !== 'nan' ? item.note : ''}</td>
+          `;
+          tbody.appendChild(tr);
+          totalCount++;
+        });
+
+        summary.innerHTML = `Общее количество ПС: <strong>${totalCount}</strong>`;
+        loading.style.display = 'none';
+        tableContainer.style.display = 'block';
+      } catch (error) {
+        loading.textContent = 'Не удалось загрузить данные: ' + error.message;
+      }
+    }
+
+    loadVehicles();
+  </script>
+</body>
+
+</html>

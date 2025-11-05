@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Бинды маршрутов</title>
+    <link rel="icon" type="image/png" href="icon.png">
+  <link rel="stylesheet" href="style.css" />
+ <script src="checkauth.js"></script>
+ <script src="usermenu.js"></script>
+</head>
+<body>
+<div class="navbar">
+  <div class="nav-links">
+    <a href="employee_dashboard.html">Личный кабинет</a>
+    <a href="employees.html">Список сотрудников</a>
+    <a href="routes.html">Маршруты</a>
+    <a href="vehicles.html">Список ПС</a>
+    <a href="submit_route.html">Маршрутный лист</a>
+    <a href="charter.html">Устав</a>
+    <a href="plan.html">План</a>
+    <a href="t.html">Тесты</a>
+    <a href="binds.html">Бинды и таблички</a>
+  </div>
+
+  <div class="user-menu" id="userMenu">
+    <span class="user-name" id="userName">user</span>
+    <div class="dropdown" id="dropdownMenu">
+      <button id="logoutBtn">Выйти</button>
+    </div>
+  </div>
+</div>
+  <div class="container">
+    <div class="card">
+      <h1>Бинды и таблички — быстрый копипаст</h1>
+      <p>Внизу можно скопировать все бинды сразу для вставки в свой файл.</p>
+    </div>
+
+    <div class="card" id="route-77">
+      <h2>Маршрут: 77</h2>
+      <pre>Цвет: Белый
+Номер: 77
+Откуда: ********** ********** ТРАМ.ДЕПО 2 Вокзал Автошкола Таксопарк Банк Трол.депо ЖБК
+Куда: [просто пробел]
+Стоимость: 80</pre>
+      <pre>do [Информатор] Автобус следует по маршруту 77. Желаем приятной поездки.</pre>
+      <button data-text="do [Информатор] Автобус следует по маршруту 77. Желаем приятной поездки.">Копировать бинД</button>
+      <pre>do [Табло в салоне] Трам.депо 2, ТТУ, Вокзал, Автошкола, Таксопарк, Банк, ЦГБ, Трол.депо, ЖБК.</pre>
+      <button data-text="do [Табло в салоне] Трам.депо 2, ТТУ, Вокзал, Автошкола, Таксопарк, Банк, ЦГБ, Трол.депо, ЖБК.">Копировать бинД</button>
+    </div>
+
+    <div class="card" id="route-35">
+      <h2>Маршрут: 35</h2>
+      <pre>Цвет: Белый
+Номер: 35
+Откуда: ********** ********** ВОКЗАЛ Отель Офисы ГУВД Автосалон Стройка ЗАВОД ЖБК
+Куда: [просто пробел]
+Стоимость: 80</pre>
+      <pre>do [Информатор] Автобус следует по маршруту 35. Желаем приятной поездки.</pre>
+      <button data-text="do [Информатор] Автобус следует по маршруту 35. Желаем приятной поездки.">Копировать бинД</button>
+      <pre>do [Табло в салоне] Вокзал, Отель, Офисы, ГУВД, Автосалон, Стойка, ЖБК.</pre>
+      <button data-text="do [Табло в салоне] Вокзал, Отель, Офисы, ГУВД, Автосалон, Стойка, ЖБК.">Копировать бинД</button>
+    </div>
+
+    <div class="card" id="route-92p">
+      <h2>Маршрут: 92п</h2>
+      <pre>Цвет: Белый
+Номер: 92п
+Откуда: ПРИВОЛЖСК
+Куда: ЖУКОВСКИЙ
+Стоимость: 125</pre>
+      <pre>do [Информатор] Автобус следует по маршруту 92п. Желаем приятной поездки.</pre>
+      <button data-text="do [Информатор] Автобус следует по маршруту 92п. Желаем приятной поездки.">Копировать бинД</button>
+      <pre>do [Табло в салоне] Автовокзал Приволжска, ЖД Вокзал, Жуковский, ЖТУ.</pre>
+      <button data-text="do [Табло в салоне] Автовокзал Приволжска, ЖД Вокзал, Жуковский, ЖТУ.">Копировать бинД</button>
+    </div>
+
+    <div class="card" id="route-99">
+      <h2>Маршрут: 99</h2>
+      <pre>Цвет: Белый
+Номер: 99
+Откуда: ********** ********** ВОКЗАЛ АШ АТП-2 ТК Такси Банк Стройка РЫНОК
+Куда: [просто пробел]
+Стоимость: 80</pre>
+      <pre>do [Информатор] Автобус следует по маршруту 99. Желаем приятной поездки.</pre>
+      <button data-text="do [Информатор] Автобус следует по маршруту 99. Желаем приятной поездки.">Копировать бинД</button>
+      <pre>do [Табло в салоне] Вокзал, Автошкола, АТП-2, Транспортная компания, Таксопарк, Банк, Стойка, Рынок.</pre>
+      <button data-text="do [Табло в салоне] Вокзал, Автошкола, АТП-2, Транспортная компания, Таксопарк, Банк, Стойка, Рынок.">Копировать бинД</button>
+    </div>
+
+    <div class="card" id="route-uchebny">
+      <h2>Маршрут: Учебный</h2>
+      <pre>Цвет: Белый
+Номер: [У]
+Откуда: **************************** ****************************** ВНИМАНИЕ ЗА РУЛЕМ УЧЕНИК (посадки нет)
+Куда: [просто пробел]
+Стоимость: 50</pre>
+    </div>
+
+    <div class="card" id="other-binds">
+      <h2>Прочие бинды</h2>
+      <pre>bind (клавиша) do [Информатор] Во избежание травм во время движения или при резком торможении, держитесь за поручни.</pre>
+      <button data-text="bind (клавиша) do [Информатор] Во избежание травм во время движения или при резком торможении, держитесь за поручни.">Копировать</button>
+      <pre>bind (клавиша) do [Информатор] Вас обслуживает ООО "РОТОР"! Приглашаем водителей на работу! Высокая ЗП и хороший коллектив ждут Вас в ООО "РОТОР"!</pre>
+      <button data-text="bind (клавиша) do [Информатор] Вас обслуживает ООО РОТОР! Приглашаем водителей на работу! Высокая ЗП и хороший коллектив ждут Вас в ООО \"РОТОР\"!">Копировать</button>
+      <pre>bind (клавиша) b Трудоустройство в группе ВК ООО "РОТОР" https://vk.com/rotor_s7</pre>
+      <button data-text="bind (клавиша) b Трудоустройство в группе ВК ООО РОТОР https://vk.com/rotor_s7">Копировать</button>
+      <pre>bind (клавиша) do [Информатор] Автобус прибыл на конечную остановку. При выходе не забывайте свои личные вещи. Доброго вам пути.</pre>
+      <button data-text="bind (клавиша) do [Информатор] Автобус прибыл на конечную остановку. При выходе не забывайте свои личные вещи. Доброго вам пути.">Копировать</button>
+      <button id="copy-all">Копировать ВСЕ бинды</button>
+      <span id="status"></span>
+    </div>
+  </div>
+
+  <script>
+    document.querySelectorAll('pre').forEach(pre => {
+      pre.innerHTML = pre.textContent.replace(/\\n/g, '<br>');
+    });
+
+    document.querySelectorAll('button[data-text]').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const text = btn.dataset.text;
+        try {
+          await navigator.clipboard.writeText(text);
+          btn.textContent = 'Скопировано!';
+          setTimeout(()=>btn.textContent='Копировать бинД',1000);
+        } catch {
+          const t = document.createElement('textarea');
+          t.value = text;
+          document.body.appendChild(t);
+          t.select();
+          document.execCommand('copy');
+          t.remove();
+        }
+      });
+    });
+
+    document.getElementById('copy-all').addEventListener('click', async () => {
+      const all = Array.from(document.querySelectorAll('pre')).map(e=>e.textContent.trim()).join('\n\n');
+      await navigator.clipboard.writeText(all);
+      document.getElementById('status').textContent = 'Все бинды скопированы!';
+      setTimeout(()=>document.getElementById('status').textContent='',1500);
+    });
+
+  </script>
+</body>
+</html>
