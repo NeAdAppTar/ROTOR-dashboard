@@ -40,7 +40,7 @@
     </div>
   </main>
 
-  <script src="test-common.js"></script>
+  <script src="tsys.js"></script>
   <script>
   function getCookie(name) {
     const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
@@ -52,12 +52,12 @@
 
     document.getElementById('playerName').textContent = `Пользователь: ${username} (${role})`;
 
-    if (role === 'manager') {
-      const resultsBtn = document.createElement('a');
-      resultsBtn.href = 'results.html';
-      resultsBtn.textContent = 'Результаты';
-      resultsBtn.classList.add('button');
-      document.getElementById('testLinks').appendChild(resultsBtn);
+  if (role === 'leader') {
+      const resultsButton = document.createElement('a');
+      resultsButton.href = 'results.html';
+      resultsButton.textContent = 'Результаты';
+      resultsButton.className = 'button';
+      document.querySelector('.test-links').appendChild(resultsButton);
     }
   </script>
 
