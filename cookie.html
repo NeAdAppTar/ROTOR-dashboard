@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+</head>
+<body>
+  <button id="clearCookiesBtn">Очистить куки и localStorage</button>
+
+
+  <script>
+    document.getElementById('clearCookiesBtn').addEventListener('click', () => {
+      document.cookie.split(';').forEach(cookie => {
+        const name = cookie.split('=')[0].trim();
+        document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; domain=.rotorbus.ru';
+      });
+
+      localStorage.removeItem('username');
+      localStorage.removeItem('role');
+
+      const toast = document.getElementById('toast');
+      toast.style.display = 'block';
+      setTimeout(() => toast.style.display = 'none', 4000);
+    });
+  </script>
+
+</body>
+</html>
