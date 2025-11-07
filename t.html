@@ -50,7 +50,7 @@
   const username = getCookie('userLogin') || localStorage.getItem('username') || 'Неизвестный';
   const role = getCookie('userRole') || localStorage.getItem('role') || 'employee';
 
-    document.getElementById('playerName').textContent = `Пользователь: ${username} (${role})`;
+    document.getElementById('playerName').textContent = `Пользователь: ${username}`;
 
   if (role === 'leader') {
       const resultsButton = document.createElement('a');
