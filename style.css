@@ -540,3 +540,40 @@ body.dark button {
   background: var(--primary-dark);
   color: var(--black);
 }
+
+/* Исправление таблиц в тёмной теме */
+body.dark .table thead {
+  background: #111827; 
+  color: var(--primary); 
+}
+
+body.dark .table tbody tr {
+  background: #1e293b; 
+  color: #f1f5f9;
+}
+
+body.dark .table tbody tr:nth-child(even) {
+  background: #273449; 
+}
+
+body.dark .table tbody tr:hover {
+  background: #334155; 
+}
+
+body.dark .styled-table thead {
+  background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+  color: #111;
+}
+
+body.dark .styled-table tbody tr {
+  background: #1e293b;
+  color: #f1f5f9;
+}
+
+body.dark .styled-table tbody tr:nth-child(even) {
+  background: #273449;
+}
+
+body.dark .styled-table tbody tr:hover {
+  background: #3b4252;
+}
