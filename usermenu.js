@@ -9,14 +9,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const login = localStorage.getItem('userLogin') || 'user';
   userName.textContent = login;
 
-  // Проверяем текущую тему
   const currentTheme = localStorage.getItem('theme') || 'light';
   if (currentTheme === 'dark') {
     document.body.classList.add('dark');
     themeBtn.textContent = '☀️ Светлая тема';
   }
 
-  // Переключение темы
   themeBtn.addEventListener('click', () => {
     document.body.classList.toggle('dark');
     const isDark = document.body.classList.contains('dark');
@@ -24,7 +22,6 @@ document.addEventListener('DOMContentLoaded', () => {
     themeBtn.textContent = isDark ? '☀️ Светлая тема' : '🌙 Тёмная тема';
   });
 
-  // Меню пользователя
   userName.addEventListener('click', () => {
     dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
   });
