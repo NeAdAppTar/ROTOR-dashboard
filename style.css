@@ -41,31 +41,30 @@ p, label {
 
 /* Навигация */
 .navbar {
-  max-width: 1250px; /* ограничиваем ширину, чтобы не прилипала к краям */
-  margin: 20px auto; /* отступы сверху и по бокам */
+  width: calc(100% - 40px); 
+  margin: 20px auto;   
   background: linear-gradient(135deg, var(--primary), var(--primary-dark));
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 15px 25px;
-  border-radius: 20px; /* красивое скругление */
+  border-radius: 20px; 
   position: sticky;
-  top: 15px; /* немного ниже верхнего края */
+  top: 10px;              
   z-index: 1000;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.15);
   transition: all 0.3s ease;
 }
 
-/* Лёгкая анимация при скролле */
 .navbar:hover {
   transform: translateY(-2px);
   box-shadow: 0 10px 25px rgba(0,0,0,0.2);
 }
 
-.navbar a { 
+.navbar a {
   color: #fff;
   text-decoration: none;
-  margin: 0 15px;
+  margin: 0 18px;
   font-size: 1.1rem;
   font-weight: 600;
   padding: 8px 14px;
