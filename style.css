@@ -71,7 +71,7 @@ p, label {
   border-radius: 10px;
   transition: all 0.3s ease;
 }
-
+ 
 .navbar a:hover {
   background: #fff;
   color: var(--primary-dark);
