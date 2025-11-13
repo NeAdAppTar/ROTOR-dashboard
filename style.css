@@ -62,7 +62,7 @@ p, label {
   box-shadow: 0 10px 25px rgba(0,0,0,0.2);
 }
 
-.navbar a {
+.navbar a { 
   color: #fff;
   text-decoration: none;
   margin: 0 15px;
