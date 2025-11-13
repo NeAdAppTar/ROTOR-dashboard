@@ -40,35 +40,49 @@ p, label {
 }
 
 /* Навигация */
-nav {
-  background: var(--black);
-  padding: 12px 20px;
-  box-shadow: var(--shadow);
-  border-bottom-left-radius: var(--radius);
-  border-bottom-right-radius: var(--radius);
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-}
-nav ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
+.navbar {
+  max-width: 1250px; /* ограничиваем ширину, чтобы не прилипала к краям */
+  margin: 20px auto; /* отступы сверху и по бокам */
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
   display: flex;
-  gap: 25px;
   justify-content: center;
+  align-items: center;
+  padding: 15px 25px;
+  border-radius: 20px; /* красивое скругление */
+  position: sticky;
+  top: 15px; /* немного ниже верхнего края */
+  z-index: 1000;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+  transition: all 0.3s ease;
 }
-nav a {
+
+/* Лёгкая анимация при скролле */
+.navbar:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+
+.navbar a {
+  color: #fff;
   text-decoration: none;
-  color: var(--primary);
+  margin: 0 15px;
+  font-size: 1.1rem;
   font-weight: 600;
-  padding: 6px 12px;
-  border-radius: var(--radius);
-  transition: var(--transition);
+  padding: 8px 14px;
+  border-radius: 10px;
+  transition: all 0.3s ease;
 }
-nav a:hover {
-  background: var(--primary);
-  color: var(--black);
+
+.navbar a:hover {
+  background: #fff;
+  color: var(--primary-dark);
+  transform: scale(1.05);
+}
+
+.navbar a.active {
+  background: #fff;
+  color: var(--primary-dark);
+  box-shadow: 0 3px 10px rgba(0,0,0,0.2);
 }
 
 
