@@ -12,14 +12,14 @@ document.addEventListener('DOMContentLoaded', () => {
   const currentTheme = localStorage.getItem('theme') || 'light';
   if (currentTheme === 'dark') {
     document.body.classList.add('dark');
-    themeBtn.textContent = '☀️ Светлая тема';
+    themeBtn.textContent = 'Светлая тема';
   }
 
   themeBtn.addEventListener('click', () => {
     document.body.classList.toggle('dark');
     const isDark = document.body.classList.contains('dark');
     localStorage.setItem('theme', isDark ? 'dark' : 'light');
-    themeBtn.textContent = isDark ? '☀️ Светлая тема' : '🌙 Тёмная тема';
+    themeBtn.textContent = isDark ? 'Светлая тема' : '🌙 Тёмная тема';
   });
 
   userName.addEventListener('click', () => {

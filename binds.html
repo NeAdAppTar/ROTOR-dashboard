@@ -10,26 +10,16 @@
  <script src="usermenu.js"></script>
 </head>
 <body>
-<div class="navbar">
-  <div class="nav-links">
-    <a href="employee_dashboard.html">Личный кабинет</a>
-    <a href="employees.html">Список сотрудников</a>
-    <a href="routes.html">Маршруты</a>
-    <a href="vehicles.html">Список ПС</a>
-    <a href="submit_route.html">Маршрутный лист</a>
-    <a href="charter.html">Устав</a>
-    <a href="plan.html">План</a>
-    <a href="t.html">Тесты</a>
-    <a href="binds.html">Бинды и таблички</a>
-  </div>
+<div id="navbar"></div>
 
-  <div class="user-menu" id="userMenu">
-  <span class="user-name" id="userName">user</span>
-  <div class="dropdown" id="dropdownMenu">
-    <button id="logoutBtn">Выйти</button>
-    <button id="themeBtn">🌙 Тёмная тема</button>
-  </div>
-</div>
+<script>
+  fetch("navbar.html")
+    .then(response => response.text())
+    .then(data => {
+      document.getElementById("navbar").innerHTML = data;
+    });
+</script>
+
 </div>
   <div class="container">
     <div class="card">
