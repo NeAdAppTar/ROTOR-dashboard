@@ -176,12 +176,13 @@ const userPanel = sidebar.querySelector(".user-panel");
 const userMenu = document.getElementById("userMenu");
 
 sidebar.addEventListener("click", (e) => {
-    if (e.target.closest("a")) return;
-    if (e.target.closest(".user-panel")) {
-        userMenu.classList.toggle("active");
-        return;
-    }
+    if (e.target.closest("a") || e.target.closest(".user-panel")) return;
+
     sidebar.classList.toggle("collapsed");
+});
+
+userPanel.addEventListener("click", (e) => {
+    userMenu.classList.toggle("active");
 });
 
   </script>
