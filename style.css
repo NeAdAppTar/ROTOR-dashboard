@@ -577,3 +577,118 @@ body.dark .styled-table tbody tr:nth-child(even) {
 body.dark .styled-table tbody tr:hover {
   background: #3b4252;
 }
+
+/* === SIDEBAR */
+
+.sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 240px;
+    height: 100vh;
+
+    background: #f5f5f7;
+
+    color: var(--text);
+    box-shadow: var(--shadow);
+    transition: width 0.3s ease;
+    overflow: hidden;
+}
+
+body.dark .sidebar {
+    background: #1f2937;
+    color: var(--primary);
+}
+
+.sidebar.collapsed {
+    width: 70px;
+}
+
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px;
+    font-size: 20px;
+    font-weight: bold;
+    color: var(--primary-dark);
+}
+
+.logo {
+    white-space: nowrap;
+    transition: opacity 0.3s ease;
+}
+
+.sidebar.collapsed .logo {
+    opacity: 0;
+}
+
+.sidebar-menu {
+    list-style: none;
+    padding: 0;
+    margin-top: 10px;
+}
+
+.sidebar-menu li a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 20px;
+    text-decoration: none;
+    color: var(--text);
+    font-weight: 600;
+    transition: 0.3s ease;
+}
+
+body.dark .sidebar-menu li a {
+    color: var(--primary);
+}
+
+.sidebar-menu li a:hover {
+    background: var(--primary);
+    color: #000;
+}
+
+.sidebar.collapsed li a span {
+    opacity: 0;
+    width: 0;
+}
+
+.sidebar li a span {
+    transition: opacity 0.3s ease, width 0.3s ease;
+    white-space: nowrap;
+}
+
+.user-panel {
+    margin-top: auto;
+    padding: 15px;
+    border-top: 1px solid #ddd;
+}
+
+body.dark .user-panel {
+    border-top: 1px solid #333;
+}
+
+.sidebar.collapsed .user-panel .user-name {
+    opacity: 0;
+    width: 0;
+}
+
+.user-name {
+    margin-bottom: 10px;
+    transition: 0.3s;
+    color: var(--text);
+}
+
+body.dark .user-name {
+    color: var(--primary);
+}
+
+.main-content {
+    margin-left: 240px;
+    transition: margin-left 0.3s ease;
+}
+
+.sidebar.collapsed ~ .main-content {
+    margin-left: 70px;
+}
