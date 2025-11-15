@@ -16,7 +16,7 @@
   
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-<div class="sidebar" id="sidebar"> 
+<<div class="sidebar" id="sidebar"> 
     <div class="sidebar-header">
         <span class="logo">РОТОР</span>
     </div>
@@ -34,18 +34,14 @@
     </ul>
 
     <div class="user-panel" id="userPanel">
-        <div class="user-name">user</div>
+        <div class="user-name" id="userName">user</div>
+        <div class="dropdown" id="dropdownMenu">
+            <button id="logoutBtn">Выйти</button>
+            <button id="themeBtn">Тёмная тема</button>
+        </div>
     </div>
 </div>
 
-
-<div class="user-menu" id="userMenu">
-    <span class="user-name">user</span>
-    <div class="dropdown" id="dropdownMenu">
-        <button id="logoutBtn">Выйти</button>
-        <button id="themeBtn">Тёмная тема</button>
-    </div>
-</div>
 
 <div class="main-content">
 
@@ -172,17 +168,21 @@
     window.addEventListener('DOMContentLoaded', loadDashboard);
 
 const sidebar = document.getElementById("sidebar");
-const userPanel = sidebar.querySelector(".user-panel");
-const userMenu = document.getElementById("userMenu");
 
 sidebar.addEventListener("click", (e) => {
-    if (e.target.closest("a") || e.target.closest(".user-panel")) return;
+    if (e.target.closest("a")) return;
 
     sidebar.classList.toggle("collapsed");
 });
 
+const userPanel = document.getElementById("userPanel");
+const dropdown = document.getElementById("dropdownMenu");
 userPanel.addEventListener("click", (e) => {
-    userMenu.classList.toggle("active");
+    e.stopPropagation();
+    dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+});
+document.addEventListener("click", () => {
+    dropdown.style.display = "none";
 });
 
   </script>
