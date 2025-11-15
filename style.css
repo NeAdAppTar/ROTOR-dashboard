@@ -673,4 +673,47 @@ body.dark .user-info .user-name {
     margin-left: 70px;
 }
 
+.user-panel {
+    margin-top: auto;
+    padding: 15px;
+    border-top: 1px solid #ddd;
+    position: relative; /* чтобы dropdown позиционировался относительно */
+    cursor: pointer;
+}
+
+body.dark .user-panel {
+    border-top: 1px solid #333;
+}
+
+.dropdown {
+    display: none; /* скрыт по умолчанию */
+    position: absolute;
+    bottom: 50px; /* над user-name */
+    left: 0;
+    width: 180px;
+    background: #fff;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+    border-radius: 8px;
+    overflow: hidden;
+    z-index: 100;
+}
+
+body.dark .dropdown {
+    background: #1f2937;
+}
+
+.dropdown button {
+    width: 100%;
+    padding: 8px 12px;
+    border: none;
+    background: none;
+    text-align: left;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.dropdown button:hover {
+    background: var(--primary);
+    color: #000;
+}
 
