@@ -12,32 +12,19 @@
 }
 
 
-/* === исправленный блок user-panel === */
 
 .user-panel {
-    margin-top: auto; /* ← прижимает вниз */
-    padding: 10px 0 0 0;
-    border-top: 1px solid #dadada;
-}
-
-/* === ФИКС: кнопки строго слева === */
-.user-actions li a {
+    margin-top: auto; 
     display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 12px 20px;
-    text-decoration: none;
-    color: inherit;
-    cursor: pointer;
-
-    /* ВАЖНО: фиксирует выравнивание */
-    justify-content: flex-start;
+    flex-direction: column;
+    gap: 5px;
+    padding: 0;
+    border-top: 1px solid #ddd;
 }
 
-/* Исправление смещения иконок при коллапсе */
-.sidebar.collapsed .user-actions li a {
-    justify-content: center;
-    padding: 12px 0;
+
+.sidebar.collapsed .user-actions li a span {
+    display: none; 
 }
 
 /* Прячем текст только при коллапсе */
@@ -47,18 +34,17 @@
 
 /* Ник пользователя */
 .user-name {
-    padding: 14px 20px;
-    font-weight: 700;
-    border-top: 1px solid #dadada;
-
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
+    padding: 12px 20px;
+    font-weight: bold;
+    border-top: 1px solid #e0e0e0;
 }
 
 .sidebar.collapsed .user-name {
     justify-content: center;
-    padding: 14px 0;
+    padding: 12px 0;
 }
 .sidebar.collapsed .user-name span {
     display: none;
@@ -68,11 +54,11 @@ body.dark .user-panel {
     border-top: 1px solid #333;
 }
 body.dark .user-actions li a:hover {
-    background: rgba(255,255,255,0.1);
+    background: #2e2e2e;
 }
 
 .user-actions li a:hover {
-    background: rgba(0,0,0,0.07);
+    background: #ececec;
 }
 
 .sidebar.collapsed .user-actions li a span {
@@ -81,35 +67,23 @@ body.dark .user-actions li a:hover {
     padding: 12px 0
 }
 
-/* Ник внизу */
-
 .user-name {
-    padding: 14px 20px;
-    font-weight: 700;
-    border-top: 1px solid #dadada;
-
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
+    padding: 12px 20px;
+    font-weight: bold;
+    border-top: 1px solid #e0e0e0;
 }
 
-/* при сворачивании */
-.sidebar.collapsed .user-name {
-    justify-content: center;
-    padding: 14px 0;
-}
-.sidebar.collapsed .user-name span {
-    display: none;
-}
+
 
 /* тёмная тема */
 
 body.dark .user-panel {
     border-top: 1px solid #333;
 }
-body.dark .user-actions li a:hover {
-    background: rgba(255,255,255,0.1);
-}
+
 
 
 /* Общие */
@@ -501,14 +475,6 @@ button:active {
   user-select: none;
 }
 
-.user-name {
-  background: #fff;
-  color: #000;
-  padding: 8px 14px;
-  border-radius: 10px;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.15);
-  transition: all 0.3s ease;
-}
 
 .user-name:hover {
   background: var(--primary-dark);
@@ -599,8 +565,7 @@ body.dark .charter {
 }
 
 body.dark .user-name {
-  background: #1e293b;
-  color: #f1f5f9;
+    border-top: 1px solid #2d2d2d;
 }
 
 
@@ -649,20 +614,18 @@ body.dark .styled-table tbody tr:hover {
 /* === SIDEBAR */
 
 .sidebar {
+    display: flex;
+    flex-direction: column;
     position: fixed;
     left: 0;
     top: 0;
     width: 240px;
     height: 100vh;
-
     background: #f5f5f7;
-
     color: var(--text);
     box-shadow: var(--shadow);
     transition: width 0.3s ease;
     overflow: hidden;
-        display: flex;
-    flex-direction: column;
 }
 
 body.dark .sidebar {
@@ -729,11 +692,6 @@ body.dark .sidebar-menu li a {
     white-space: nowrap;
 }
 
-.user-panel {
-    margin-top: auto;
-    padding: 15px;
-    border-top: 1px solid #ddd;
-}
 
 body.dark .user-panel {
     border-top: 1px solid #333;
@@ -771,16 +729,22 @@ body.dark .user-info .user-name {
 
 .user-actions {
     list-style: none;
+    padding: 0;
+    margin: 0;
 }
+
 
 .user-actions li a {
     display: flex;
     align-items: center;
-    padding: 14px 22px;
-    gap: 14px;
+    gap: 12px;
+    padding: 12px 20px; /* одинаковый padding слева и справа */
+    text-decoration: none;
+    color: inherit;
+    font-weight: 600;
     cursor: pointer;
-    font-size: 15px;
-    color: #444;
+    justify-content: flex-start; /* текст и иконки слева */
+    transition: all 0.3s ease;
 }
 
 .user-actions li a:hover {
@@ -791,9 +755,6 @@ body.dark .user-actions li a {
     color: #ddd;
 }
 
-body.dark .user-actions li a:hover {
-    background: #2e2e2e;
-}
 
 /* При коллапсе скрывать текст */
 
@@ -801,24 +762,6 @@ body.dark .user-actions li a:hover {
     display: none;
 }
 
-/* Ник пользователя внизу */
 
-.user-name {
-    padding: 16px 22px;
-    font-weight: bold;
-    border-top: 1px solid #e0e0e0;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
 
-body.dark .user-name {
-    border-top: 1px solid #2d2d2d;
-}
-
-/* При коллапсе скрывать текст */
-
-.sidebar.collapsed .user-name span {
-    display: none;
-}
 
