@@ -765,30 +765,4 @@ body.dark .user-actions li a {
 
 
 
-/* ==== FIX: Сайдбар в тёмной теме ==== */
-body.dark .sidebar {
-    background: #1f2937;
-}
 
-body.dark .sidebar-menu li a {
-    color: #f1f5f9;
-}
-
-body.dark .sidebar-menu li a:hover {
-    background: var(--primary-dark);
-    color: #000;
-}
-body.dark .user-panel {
-    border-top: 1px solid #2d2d2d;
-}
-
-body.dark .user-actions li a:hover {
-    background: #2e2e2e;
-}
-body.dark #themeBtn {
-    color: var(--black);
-}
-body.dark {
-    background: var(--bg) !important;
-    color: var(--text) !important;
-}
