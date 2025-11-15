@@ -692,3 +692,83 @@ body.dark .user-name {
 .sidebar.collapsed ~ .main-content {
     margin-left: 70px;
 }
+
+/* user panel внизу sidebar */
+.user-panel {
+    margin-top: auto;
+    padding: 15px;
+    border-top: 1px solid #ddd;
+    cursor: pointer;
+    background: transparent;
+}
+
+body.dark .user-panel {
+    border-top: 1px solid #333;
+}
+
+.sidebar.collapsed .user-panel .user-name {
+    opacity: 0;
+    width: 0;
+}
+
+.user-panel .user-name {
+    font-weight: 600;
+    color: var(--text);
+}
+
+body.dark .user-panel .user-name {
+    color: var(--primary);
+}
+
+
+.user-menu {
+    position: absolute;
+    left: 240px;
+    bottom: 20px;
+    background: #f5f5f7;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: var(--shadow);
+    opacity: 0;
+    pointer-events: none;
+    transition: 0.3s ease;
+}
+
+body.dark .user-menu {
+    background: #1f2937;
+}
+
+.sidebar.collapsed + .user-menu {
+    left: 70px; 
+}
+
+.user-menu.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.user-menu .user-name {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: 600;
+    color: var(--text);
+}
+
+body.dark .user-menu .user-name {
+    color: var(--primary);
+}
+
+.user-menu button {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 5px;
+    background: var(--primary);
+    color: #000;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.user-menu button:hover {
+    background: var(--primary-dark);
+}
