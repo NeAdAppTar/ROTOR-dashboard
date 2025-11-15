@@ -10,6 +10,8 @@
   --shadow: 0 6px 18px rgba(0,0,0,0.1);
   --transition: all 0.3s ease;
 }
+
+
 /* === SIDEBAR FIX С ТЁМНОЙ ТЕМОЙ === */
 .user-actions li a {
     display: flex;
@@ -69,8 +71,6 @@ body.dark .user-name {
     color: var(--text);
     border-top: 1px solid #333;
 }
-
-
 
 .user-panel {
     margin-top: auto; 
