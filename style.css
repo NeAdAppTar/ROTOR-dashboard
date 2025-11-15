@@ -669,51 +669,56 @@ body.dark .user-info .user-name {
     transition: margin-left 0.3s ease;
 }
 
-.sidebar.collapsed ~ .main-content {
-    margin-left: 70px;
+.user-actions {
+    list-style: none;
 }
 
-.user-panel {
-    margin-top: auto;
-    padding: 15px;
-    border-top: 1px solid #ddd;
-    position: relative; /* чтобы dropdown позиционировался относительно */
+.user-actions li a {
+    display: flex;
+    align-items: center;
+    padding: 14px 22px;
+    gap: 14px;
     cursor: pointer;
+    font-size: 15px;
+    color: #444;
 }
 
-body.dark .user-panel {
-    border-top: 1px solid #333;
+.user-actions li a:hover {
+    background: #ececec;
 }
 
-.dropdown {
-    display: none; /* скрыт по умолчанию */
-    position: absolute;
-    bottom: 50px; /* над user-name */
-    left: 0;
-    width: 180px;
-    background: #fff;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
-    border-radius: 8px;
-    overflow: hidden;
-    z-index: 100;
+body.dark .user-actions li a {
+    color: #ddd;
 }
 
-body.dark .dropdown {
-    background: #1f2937;
+body.dark .user-actions li a:hover {
+    background: #2e2e2e;
 }
 
-.dropdown button {
-    width: 100%;
-    padding: 8px 12px;
-    border: none;
-    background: none;
-    text-align: left;
-    font-weight: 600;
-    cursor: pointer;
+/* При коллапсе скрывать текст */
+
+.sidebar.collapsed .user-actions li a span {
+    display: none;
 }
 
-.dropdown button:hover {
-    background: var(--primary);
-    color: #000;
+/* Ник пользователя внизу */
+
+.user-name {
+    padding: 16px 22px;
+    font-weight: bold;
+    border-top: 1px solid #e0e0e0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+body.dark .user-name {
+    border-top: 1px solid #2d2d2d;
+}
+
+/* При коллапсе скрывать текст */
+
+.sidebar.collapsed .user-name span {
+    display: none;
 }
 
