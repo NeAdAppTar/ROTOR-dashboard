@@ -417,33 +417,6 @@ button:active {
   color: #fff;
 }
 
-.dropdown {
-  display: none;
-  position: absolute;
-  right: 0;
-  top: 45px;
-  background: #fff;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.15);
-  border-radius: 8px;
-  overflow: hidden;
-  animation: fadeIn 0.2s ease;
-}
-
-.dropdown button {
-  background: none;
-  border: none;
-  color: #000;
-  font-size: 1rem;
-  padding: 12px 24px;
-  cursor: pointer;
-  width: 100%;
-  text-align: left;
-  transition: background 0.3s ease;
-}
-
-.dropdown button:hover {
-  background: var(--primary);
-}
 
 /* --- Прогрессбар выполнения кругорейсов --- */
 .progress-container {
@@ -530,10 +503,6 @@ body.dark .charter {
 body.dark .user-name {
   background: #1e293b;
   color: #f1f5f9;
-}
-
-body.dark .dropdown {
-  background: #1e293b;
 }
 
 body.dark button {
