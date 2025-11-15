@@ -639,20 +639,30 @@ body.dark .user-panel {
     border-top: 1px solid #333;
 }
 
-.sidebar.collapsed .user-panel .user-name {
-    opacity: 0;
-    width: 0;
+.user-info {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
-.user-name {
-    margin-bottom: 10px;
-    transition: 0.3s;
-    color: var(--text);
+.user-info .user-name {
+    font-weight: 700;
+    padding: 8px 12px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
 }
 
-body.dark .user-name {
-    color: var(--primary);
+body.dark .user-info .user-name {
+    background: #1e293b;
+    color: #f1f5f9;
 }
+
+.user-info button {
+    width: 100%;
+    font-size: 0.95rem;
+}
+
 
 .main-content {
     margin-left: 240px;
@@ -663,47 +673,4 @@ body.dark .user-name {
     margin-left: 70px;
 }
 
-.user-panel {
-    margin-top: auto;
-    padding: 15px;
-    border-top: 1px solid #ddd;
-    position: relative; /* чтобы dropdown позиционировался относительно */
-    cursor: pointer;
-}
-
-body.dark .user-panel {
-    border-top: 1px solid #333;
-}
-
-.dropdown {
-    display: none; /* скрыт по умолчанию */
-    position: absolute;
-    bottom: 50px; /* над user-name */
-    left: 0;
-    width: 180px;
-    background: #fff;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
-    border-radius: 8px;
-    overflow: hidden;
-    z-index: 100;
-}
-
-body.dark .dropdown {
-    background: #1f2937;
-}
-
-.dropdown button {
-    width: 100%;
-    padding: 8px 12px;
-    border: none;
-    background: none;
-    text-align: left;
-    font-weight: 600;
-    cursor: pointer;
-}
-
-.dropdown button:hover {
-    background: var(--primary);
-    color: #000;
-}
 
