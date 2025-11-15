@@ -186,6 +186,9 @@ userPanel.querySelector(".user-name").addEventListener("click", (e) => {
 document.addEventListener("click", () => {
     dropdown.style.display = "none";
 });
+userPanel.addEventListener("click", (e) => {
+    e.stopPropagation(); 
+});
 
   </script>
 </body>

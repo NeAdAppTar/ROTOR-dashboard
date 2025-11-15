@@ -505,6 +505,7 @@ body.dark .user-name {
   color: #f1f5f9;
 }
 
+
 body.dark button {
   background: var(--primary-dark);
   color: var(--black);
