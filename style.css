@@ -15,25 +15,60 @@
 /* === исправленный блок user-panel === */
 
 .user-panel {
+    margin-top: auto; /* ← прижимает вниз */
+    padding: 10px 0 0 0;
     border-top: 1px solid #dadada;
-    padding-top: 10px;
 }
 
-.user-actions {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-}
-
+/* === ФИКС: кнопки строго слева === */
 .user-actions li a {
     display: flex;
     align-items: center;
     gap: 12px;
     padding: 12px 20px;
-    color: inherit;
     text-decoration: none;
+    color: inherit;
     cursor: pointer;
-    transition: background 0.2s;
+
+    /* ВАЖНО: фиксирует выравнивание */
+    justify-content: flex-start;
+}
+
+/* Исправление смещения иконок при коллапсе */
+.sidebar.collapsed .user-actions li a {
+    justify-content: center;
+    padding: 12px 0;
+}
+
+/* Прячем текст только при коллапсе */
+.sidebar.collapsed .user-actions li a span {
+    display: none;
+}
+
+/* Ник пользователя */
+.user-name {
+    padding: 14px 20px;
+    font-weight: 700;
+    border-top: 1px solid #dadada;
+
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.sidebar.collapsed .user-name {
+    justify-content: center;
+    padding: 14px 0;
+}
+.sidebar.collapsed .user-name span {
+    display: none;
+}
+
+body.dark .user-panel {
+    border-top: 1px solid #333;
+}
+body.dark .user-actions li a:hover {
+    background: rgba(255,255,255,0.1);
 }
 
 .user-actions li a:hover {
@@ -42,6 +77,8 @@
 
 .sidebar.collapsed .user-actions li a span {
     display: none;
+    justify-content: center;
+    padding: 12px 0
 }
 
 /* Ник внизу */
@@ -50,20 +87,28 @@
     padding: 14px 20px;
     font-weight: 700;
     border-top: 1px solid #dadada;
+
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
+/* при сворачивании */
+.sidebar.collapsed .user-name {
+    justify-content: center;
+    padding: 14px 0;
+}
 .sidebar.collapsed .user-name span {
     display: none;
 }
 
 /* тёмная тема */
 
-body.dark .user-actions li a:hover {
-    background: rgba(255,255,255,0.09);
-}
-
-body.dark .user-name {
+body.dark .user-panel {
     border-top: 1px solid #333;
+}
+body.dark .user-actions li a:hover {
+    background: rgba(255,255,255,0.1);
 }
 
 
@@ -616,6 +661,8 @@ body.dark .styled-table tbody tr:hover {
     box-shadow: var(--shadow);
     transition: width 0.3s ease;
     overflow: hidden;
+        display: flex;
+    flex-direction: column;
 }
 
 body.dark .sidebar {
