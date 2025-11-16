@@ -10,6 +10,7 @@
   <link rel="icon" type="image/png" href="icon.png">
   <script src="checkauth.js"></script>
   <script src="usermenu.js"></script> 
+  <script src="sidebar.js"></script>
 </head>
 
 <body>
@@ -180,21 +181,6 @@
     }
 
     window.addEventListener('DOMContentLoaded', loadDashboard);
-
-const sidebar = document.getElementById("sidebar");
-
-sidebar.addEventListener("click", (e) => {
-
-    if (e.target.closest("a")) return;
-
-    if (e.target.closest(".user-menu-item")) return;
-
-    sidebar.classList.toggle("collapsed");
-});
-
-
-const userPanel = document.getElementById("userPanel");
-
   </script>
 </body>
 
