@@ -11,3 +11,13 @@ sidebar.addEventListener("click", (e) => {
 
 
 const userPanel = document.getElementById("userPanel");
+
+const links = document.querySelectorAll(".sidebar-menu a");
+const current = window.location.pathname.split("/").pop();
+
+links.forEach(link => {
+    const href = link.getAttribute("href");
+    if (href === current) {
+        link.classList.add("active");
+    }
+});
