@@ -182,36 +182,6 @@ sidebar.addEventListener("click", (e) => {
 });
 
 const userPanel = document.getElementById("userPanel");
-const logoutBtn = document.getElementById("logoutBtn");
-const themeBtn = document.getElementById("themeBtn");
-const userName = document.getElementById("userName");
-
-/* Защита от null */
-if (!userPanel || !logoutBtn || !themeBtn || !userName) {
-    console.error("Некоторые элементы не найдены в DOM!");
-}
-
-
-/* Имя */
-userName.textContent = localStorage.getItem("userLogin") || "user";
-
-/* Тема */
-const savedTheme = localStorage.getItem("theme") || "light";
-if (savedTheme === "dark") document.body.classList.add("dark");
-
-themeBtn.addEventListener("click", () => {
-    document.body.classList.toggle("dark");
-    const isDark = document.body.classList.contains("dark");
-    localStorage.setItem("theme", isDark ? "dark" : "light");
-});
-
-/* Выход */
-logoutBtn.addEventListener("click", () => {
-    localStorage.removeItem("userLogin");
-    document.cookie =
-        "userLogin=; path=/; domain=.rotorbus.ru; expires=Thu, 01 Jan 1970 00:00:00 GMT";
-    window.location.href = "https://auth.rotorbus.ru/";
-});
 
   </script>
 </body>
