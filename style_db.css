@@ -378,3 +378,11 @@ body.dark .sidebar-menu li a:hover {
 body.dark #themeToggle {
   color: var(--black);
 }
+.main-content {
+  margin-left: 240px;
+  transition: margin-left 0.3s ease;
+}
+
+.sidebar.collapsed + .main-content {
+  margin-left: 70px;
+}
