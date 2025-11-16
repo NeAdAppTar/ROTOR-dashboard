@@ -283,6 +283,8 @@ body.dark .sidebar {
   font-weight: 600;
   color: var(--text);
   transition: var(--transition);
+  display: flex;
+    position: relative;
 }
 
 .sidebar-menu li a:hover {
@@ -448,6 +450,7 @@ body.dark #themeToggle {
 .sidebar.collapsed .user-name-display {
     justify-content: center;
 }
+
 
 
 .sidebar-menu li a.active::after {
