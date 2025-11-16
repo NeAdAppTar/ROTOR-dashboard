@@ -1,0 +1,380 @@
+/* ============================= */
+/*        ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ  */
+/* ============================= */
+:root {
+  --primary: #facc15;
+  --primary-dark: #eab308;
+  --bg: #ffffff;
+  --text: #111827;
+  --muted: #4b5563;
+  --card-bg: #ffffff;
+  --black: #000000;
+  --radius: 14px;
+  --shadow: 0 6px 18px rgba(0,0,0,0.1);
+  --transition: 0.3s ease;
+}
+
+/* ТЕМНАЯ ТЕМА */
+body.dark {
+  --bg: #0f172a;
+  --text: #f1f5f9;
+  --muted: #cbd5e1;
+  --card-bg: #1e293b;
+  --black: #f8fafc;
+}
+
+/* ============================= */
+/*            ОБЩИЕ              */
+/* ============================= */
+
+body {
+  font-family: 'Segoe UI', Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  margin: 0;
+  padding: 0;
+  transition: background var(--transition), color var(--transition);
+}
+
+h1, h2, h3 {
+  margin: 0 0 15px;
+  font-weight: 700;
+}
+
+h1 { font-size: 2rem; color: var(--black); }
+h2 { font-size: 1.5rem; color: var(--primary-dark); }
+p, label { color: var(--muted); }
+
+/* ============================= */
+/*         НАВИГАЦИЯ             */
+/* ============================= */
+
+nav {
+  background: var(--black);
+  padding: 12px 20px;
+  border-bottom-left-radius: var(--radius);
+  border-bottom-right-radius: var(--radius);
+  box-shadow: var(--shadow);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+nav ul {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  gap: 25px;
+  margin: 0;
+  padding: 0;
+}
+
+nav a {
+  text-decoration: none;
+  color: var(--primary);
+  padding: 6px 12px;
+  border-radius: var(--radius);
+  transition: var(--transition);
+}
+
+nav a:hover {
+  background: var(--primary);
+  color: var(--black);
+}
+
+/* ============================= */
+/*            КАРТОЧКИ           */
+/* ============================= */
+
+.container {
+  max-width: 1500px;
+  margin: auto;
+  padding: 30px 20px;
+}
+
+.card, .form-card {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 25px;
+  margin: 25px 0;
+  box-shadow: var(--shadow);
+  transition: var(--transition);
+}
+
+.card:hover, .form-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+}
+
+/* ============================= */
+/*              INPUTS           */
+/* ============================= */
+
+input, select, textarea {
+  width: 100%;
+  padding: 12px;
+  border-radius: var(--radius);
+  border: 2px solid #e5e7eb;
+  transition: var(--transition);
+  margin-bottom: 16px;
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: var(--primary-dark);
+  box-shadow: 0 0 0 3px rgba(250,204,21,0.4);
+  outline: none;
+}
+
+/* ============================= */
+/*             BUTTONS           */
+/* ============================= */
+
+button {
+  background: var(--primary);
+  color: var(--black);
+  padding: 12px 20px;
+  border: none;
+  font-size: 1rem;
+  border-radius: var(--radius);
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  box-shadow: inset 0 -3px 0 var(--primary-dark), var(--shadow);
+}
+
+button:hover {
+  background: var(--primary-dark);
+  transform: translateY(-2px);
+}
+
+body.dark button {
+  background: var(--primary-dark);
+  color: var(--black);
+}
+
+/* ============================= */
+/*             TABLES            */
+/* ============================= */
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+
+.table thead {
+  background: var(--black);
+  color: var(--primary);
+}
+
+.table tbody tr:nth-child(even) {
+  background: #f9fafb;
+}
+
+/* DARK MODE таблицы */
+body.dark .table thead {
+  background: #111827;
+}
+
+body.dark .table tbody tr {
+  background: #1e293b;
+  color: var(--text);
+}
+
+body.dark .table tbody tr:nth-child(even) {
+  background: #273449;
+}
+
+/* ============================= */
+/*            DASHBOARD          */
+/* ============================= */
+
+.dashboard {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px,1fr));
+  gap: 30px;
+  padding: 30px;
+}
+
+.tile {
+  background: var(--card-bg);
+  padding: 25px;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  text-align: center;
+  transition: var(--transition);
+}
+
+.tile:hover {
+  transform: translateY(-5px);
+}
+
+.highlight { 
+  font-weight: 700; 
+  color: var(--primary-dark);
+  font-size: 1.6rem;
+}
+
+.tile.important {
+  background: #000;
+  color: #fff;
+}
+
+/* ============================= */
+/*          PROGRESS BAR         */
+/* ============================= */
+
+.progress-container {
+  background: #f3f4f6;
+  height: 24px;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.progress-bar {
+  background: linear-gradient(90deg, #facc15, #eab308);
+  height: 100%;
+  width: 0%;
+  transition: width 0.4s ease;
+}
+
+/* ============================= */
+/*             SIDEBAR           */
+/* ============================= */
+
+.sidebar {
+  position: fixed;
+  width: 240px;
+  height: 100vh;
+  background: #f5f5f7;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  transition: width 0.3s ease;
+}
+
+.sidebar.collapsed { width: 70px; }
+
+body.dark .sidebar {
+  background: #1f2937;
+  color: var(--text);
+}
+
+.sidebar-header {
+  padding: 15px;
+  font-weight: bold;
+  color: var(--primary-dark);
+}
+
+/* Меню */
+.sidebar-menu {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar-menu li a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  text-decoration: none;
+  font-weight: 600;
+  color: var(--text);
+  transition: var(--transition);
+}
+
+.sidebar-menu li a:hover {
+  background: var(--primary);
+  color: #000;
+}
+
+.sidebar.collapsed .sidebar-menu li a span {
+  display: none;
+}
+
+body.dark .sidebar-menu li a {
+  color: var(--primary);
+}
+
+/* ============================= */
+/*            USER PANEL         */
+/* ============================= */
+
+.user-panel {
+  margin-top: auto;
+  border-top: 1px solid #ddd;
+}
+
+.user-actions li a {
+  display: flex;
+  gap: 12px;
+  padding: 12px 20px;
+  text-decoration: none;
+  font-weight: 600;
+  color: inherit;
+}
+
+.user-actions li a:hover {
+  background: #ececec;
+}
+
+/* DARK */
+body.dark .user-panel { border-top: 1px solid #333; }
+body.dark .user-actions li a { color: #ddd; }
+body.dark .user-actions li a:hover {
+  background: #2e2e2e;
+}
+
+.user-name {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  font-weight: bold;
+  border-top: 1px solid #e0e0e0;
+}
+
+body.dark .user-name {
+  border-top: 1px solid #2d2d2d;
+}
+
+/* ============================= */
+/*         FIX SIDEBAR DARK      */
+/* ============================= */
+
+body.dark .sidebar {
+  background: #1f2937 !important;
+}
+
+body.dark .sidebar-menu li a:hover {
+  background: var(--primary-dark);
+  color: #000;
+}
+
+/* ============================= */
+/*        КНОПКА ТЕМЫ            */
+/* ============================= */
+
+#themeToggle {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  background: var(--primary);
+  color: var(--black);
+  border-radius: 50%;
+  padding: 10px 14px;
+  cursor: pointer;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  transition: var(--transition);
+  z-index: 9999;
+}
+
+#themeToggle:hover {
+  transform: scale(1.1);
+}
+
+body.dark #themeToggle {
+  color: var(--black);
+}

@@ -765,4 +765,16 @@ body.dark .user-actions li a {
 
 
 
+/* ==== FIX: Сайдбар в тёмной теме ==== */
+body.dark .sidebar {
+    background: #1f2937;
+}
 
+body.dark .sidebar-menu li a {
+    color: #f1f5f9;
+}
+
+body.dark .sidebar-menu li a:hover {
+    background: var(--primary-dark);
+    color: #000;
+}
