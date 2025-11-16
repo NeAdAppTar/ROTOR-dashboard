@@ -35,16 +35,23 @@
 
     <div class="user-menu" id="userMenu">
 
-    <span class="user-name" id="userName">user</span>
+    <div class="user-menu-item" id="themeBtn">
+        <i class="fas fa-moon"></i>
+        <span>Тёмная тема</span>
+    </div>
 
-    <div class="dropdown" id="dropdownMenu">
-        <button id="logoutBtn">Выйти</button>
-        <button id="themeBtn">🌙 Тёмная тема</button>
+    <div class="user-menu-item" id="logoutBtn">
+        <i class="fas fa-sign-out-alt"></i>
+        <span>Выйти</span>
+    </div>
+
+    <div class="user-name-display">
+        <i class="fas fa-user"></i>
+        <span id="userName">user</span>
     </div>
 
 </div>
 
-</div>
 
 </div>
 
@@ -176,10 +183,14 @@
 const sidebar = document.getElementById("sidebar");
 
 sidebar.addEventListener("click", (e) => {
+
     if (e.target.closest("a")) return;
+
+    if (e.target.closest(".user-menu-item")) return;
 
     sidebar.classList.toggle("collapsed");
 });
+
 
 const userPanel = document.getElementById("userPanel");
 
