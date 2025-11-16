@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="style_db.css">
   <link rel="icon" type="image/png" href="icon.png">
   <script src="checkauth.js"></script>
-  <script src="usermenu.js"></script>
+  <script src="usermenu.js"></script> 
 </head>
 
 <body>
@@ -33,7 +33,7 @@
         <li><a href="binds.html"><i class="fas fa-keyboard"></i><span>Бинды и таблички</span></a></li>
     </ul>
 
-    <div class="user-panel">
+    <div class="user-panel" id="userPanel">
     <ul class="user-actions">
         <li><a id="themeBtn"><i class="fas fa-moon"></i><span>Тёмная тема</span></a></li>
         <li><a id="logoutBtn"><i class="fas fa-sign-out-alt"></i><span>Выйти</span></a></li>
@@ -44,6 +44,7 @@
         <span id="userName">user</span>
     </div>
 </div>
+
 </div>
 
 
@@ -183,6 +184,12 @@ const userPanel = document.getElementById("userPanel");
 const logoutBtn = document.getElementById("logoutBtn");
 const themeBtn = document.getElementById("themeBtn");
 const userName = document.getElementById("userName");
+
+/* Защита от null */
+if (!userPanel || !logoutBtn || !themeBtn || !userName) {
+    console.error("Некоторые элементы не найдены в DOM!");
+}
+
 
 /* Имя */
 userName.textContent = localStorage.getItem("userLogin") || "user";
