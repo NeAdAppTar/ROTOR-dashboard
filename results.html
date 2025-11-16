@@ -3,34 +3,56 @@
 <head>
   <meta charset="UTF-8">
   <title>Результаты тестов</title>
+  <link rel="stylesheet" href="style_db.css">
   <link rel="stylesheet" href="style.css">
   <link rel="icon" type="image/png" href="icon.png">
   <script src="checkauth.js"></script>
   <script src="usermenu.js"></script>
+  <script src="sidebar.js"></script>
 
 </head>
 <body>
-<div class="navbar">
-  <div class="nav-links">
-    <a href="employee_dashboard.html">Личный кабинет</a>
-    <a href="employees.html">Список сотрудников</a>
-    <a href="routes.html">Маршруты</a>
-    <a href="vehicles.html">Список ПС</a>
-    <a href="submit_route.html">Маршрутный лист</a>
-    <a href="charter.html">Устав</a>
-    <a href="plan.html">План</a>
-    <a href="t.html">Тесты</a>
-    <a href="binds.html">Бинды и таблички</a>
-  </div>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-  <div class="user-menu" id="userMenu">
-  <span class="user-name" id="userName">user</span>
-  <div class="dropdown" id="dropdownMenu">
-    <button id="logoutBtn">Выйти</button>
-    <button id="themeBtn">🌙 Тёмная тема</button>
-  </div>
+<div class="sidebar" id="sidebar"> 
+    <div class="sidebar-header">
+        <span class="logo">РОТОР</span>
+    </div>
+
+    <ul class="sidebar-menu">
+        <li><a href="employee_dashboard.html"><i class="fas fa-user"></i><span>Личный кабинет</span></a></li>
+        <li><a href="employees.html"><i class="fas fa-users"></i><span>Список сотрудников</span></a></li>
+        <li><a href="routes.html"><i class="fas fa-route"></i><span>Маршруты</span></a></li>
+        <li><a href="vehicles.html"><i class="fas fa-truck"></i><span>Список ПС</span></a></li>
+        <li><a href="submit_route.html"><i class="fas fa-file"></i><span>Маршрутный лист</span></a></li>
+        <li><a href="charter.html"><i class="fas fa-book"></i><span>Устав</span></a></li>
+        <li><a href="plan.html"><i class="fas fa-calendar"></i><span>План</span></a></li>
+        <li><a href="t.html"><i class="fas fa-check"></i><span>Тесты</span></a></li>
+        <li><a href="binds.html"><i class="fas fa-keyboard"></i><span>Бинды и таблички</span></a></li>
+    </ul>
+
+    <div class="user-menu" id="userMenu">
+
+    <div class="user-menu-item" id="themeBtn">
+        <i class="fas fa-moon"></i>
+        <span>Тёмная тема</span>
+    </div>
+
+    <div class="user-menu-item" id="logoutBtn">
+        <i class="fas fa-sign-out-alt"></i>
+        <span>Выйти</span>
+    </div>
+
+    <div class="user-name-display">
+        <i class="fas fa-user"></i>
+        <span id="userName">user</span>
+    </div>
+
 </div>
+
+
 </div>
+<div class="main-content">
   <main class="container">
     <h1>Результаты тестов</h1>
     <p>Оценка за устав выставяляется по принципу: "2" - 0-9 баллов, "3" - 10-13 баллов, "4" - 14-17 баллов, "5" - 18-20 баллов.</p>
@@ -49,7 +71,7 @@
       <tbody></tbody>
     </table>
   </main>
-
+</div>
   <script>
     async function loadResults() {
       try {
