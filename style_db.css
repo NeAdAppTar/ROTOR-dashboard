@@ -386,3 +386,14 @@ body.dark #themeToggle {
 .sidebar.collapsed + .main-content {
   margin-left: 70px;
 }
+.user-menu {
+    margin-top: auto;
+    padding: 15px;
+    text-align: center;
+}
+
+.dropdown button {
+    display: block;
+    width: 100%;
+    margin: 5px 0;
+}
