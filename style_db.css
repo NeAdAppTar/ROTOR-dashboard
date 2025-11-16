@@ -436,10 +436,16 @@ body.dark #themeToggle {
 }
 
 .sidebar.collapsed .user-menu-item span,
-.sidebar.collapsed .user-name-display span {
-    display: none; 
+.sidebar.collapsed .user-name-display span,
+.sidebar.collapsed .logo {
+    display: none; /* скрываем текст */
 }
 
 .sidebar.collapsed .user-menu-item {
-    justify-content: center; 
+    justify-content: center;
 }
+
+.sidebar.collapsed .user-name-display {
+    justify-content: center;
+}
+
