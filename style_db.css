@@ -208,19 +208,6 @@ body.dark .table tbody tr:nth-child(even) {
   padding-bottom: 60px;
 }
 
-.tile-button {
-  display: block;
-  width: 100%;
-  text-align: center;
-  padding: 10px 0;
-  background: #007bff;
-  color: #fff;
-  border-radius: 10px;
-  margin-top: 15px;
-  font-weight: 600;
-  text-decoration: none;
-  transition: 0.2s;
-}
 
 .tile:hover {
   transform: translateY(-5px);
