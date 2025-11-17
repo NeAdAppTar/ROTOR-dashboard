@@ -65,6 +65,10 @@
   <p class="highlight" id="nickname">
     <i class="fa-solid fa-spinner fa-spin loading-icon"></i>
   </p>
+  <h3>Должность</h3>
+  <p class="highlight" id="">
+    <i class="fa-solid fa-spinner fa-spin loading-icon"></i>
+  </p>
 </div>
 
 <div class="tile">
@@ -112,9 +116,16 @@
       <p>Водитель, при завершении смены не забывай сдавать маршрутный лист</p>
     </div>
 
-   <a href="https://dashboard.rotorbus.ru/11h1" target="_blank" class="tile important" style="text-decoration: none; color: inherit;">
-      <p>Выплата зарплаты за первый полупериод ноября (кликабельно)</p>
-    </a>
+   <div class="tile important">
+  <p>Выплата зарплаты за первый полупериод ноября</p>
+
+  <a href="https://dashboard.rotorbus.ru/11h1" 
+     target="_blank" 
+     class="tile-button">
+    Открыть
+  </a>
+</div>
+
 
   </div>
 </div>
@@ -154,7 +165,7 @@
       body: JSON.stringify({ login })
     });
 
-    if (!response.ok) throw new Error('Ошибка при получении данных');
+    if (!response.ok) throw new Error('Ошибка');
 
     const data = await response.json();
 
@@ -187,7 +198,7 @@
     periodRoutes.textContent = 'Ошибка';
     periodPassengers.textContent = 'Ошибка';
     salary.textContent = 'Ошибка';
-    console.error('Ошибка загрузки данных:', error);
+    console.error('Ошибка:', error);
   }
 }
 
