@@ -61,32 +61,53 @@
 
   <div class="dashboard">
     <div class="tile">
-      <h3>Никнейм</h3>
-      <p class="highlight" id="nickname">Загрузка...</p>
-    </div>
+  <h3>Никнейм</h3>
+  <p class="highlight" id="nickname">
+    <i class="fa-solid fa-spinner fa-spin loading-icon"></i>
+  </p>
+</div>
 
-    <div class="tile">
-      <h3>Статистика всего</h3>
-      <p>Кругорейсов: <span class="highlight" id="totalRoutes">Загрузка...</span></p>
-      <p>Пассажиров: <span class="highlight" id="totalPassengers">Загрузка...</span></p>
-    </div>
+<div class="tile">
+  <h3>Статистика всего</h3>
+  <p>Кругорейсов:
+    <span class="highlight" id="totalRoutes">
+      <i class="fa-solid fa-spinner fa-spin loading-icon"></i>
+    </span>
+  </p>
+  <p>Пассажиров:
+    <span class="highlight" id="totalPassengers">
+      <i class="fa-solid fa-spinner fa-spin loading-icon"></i>
+    </span>
+  </p>
+</div>
 
-    <div class="tile">
-      <h3>Текущий полупериод</h3>
-      <p>Кругорейсов: <span class="highlight" id="periodRoutes">Загрузка...</span></p>
+<div class="tile">
+  <h3>Текущий полупериод</h3>
 
-      <div class="progress-container">
-        <div class="progress-bar" id="routesProgress"></div>
-        <span class="progress-label" id="routesProgressLabel">0 / 16</span>
-      </div>
+  <p>Кругорейсов:
+    <span class="highlight" id="periodRoutes">
+      <i class="fa-solid fa-spinner fa-spin loading-icon"></i>
+    </span>
+  </p>
 
-      <p>Пассажиров: <span class="highlight" id="periodPassengers">Загрузка...</span></p>
-    </div>
+  <div class="progress-container">
+    <div class="progress-bar" id="routesProgress"></div>
+    <span class="progress-label" id="routesProgressLabel">0 / 16</span>
+  </div>
 
-    <div class="tile">
-      <h3>Оклад за полупериод</h3>
-      <p class="highlight" id="salary">Загрузка...</p>
-    </div>
+  <p>Пассажиров:
+    <span class="highlight" id="periodPassengers">
+      <i class="fa-solid fa-spinner fa-spin loading-icon"></i>
+    </span>
+  </p>
+</div>
+
+<div class="tile">
+  <h3>Оклад за полупериод</h3>
+  <p class="highlight" id="salary">
+    <i class="fa-solid fa-spinner fa-spin loading-icon"></i>
+  </p>
+</div>
 
     <div class="tile important">
       <p>Водитель, при завершении смены не забывай сдавать маршрутный лист</p>
