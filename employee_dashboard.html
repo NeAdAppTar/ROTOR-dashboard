@@ -59,44 +59,54 @@
 
 <div class="main-content">
 
-  <div class="dashboard">
-    <div class="tile">
-      <h3>Никнейм</h3>
-      <p class="highlight" id="nickname">Загрузка...</p>
-    </div>
+  <div class="tile">
+  <h3>Никнейм</h3>
+  <p class="highlight" id="nickname">
+    <i class="fa-solid fa-spinner fa-spin loading-icon"></i>
+  </p>
+</div>
 
-    <div class="tile">
-      <h3>Статистика всего</h3>
-      <p>Кругорейсов: <span class="highlight" id="totalRoutes">Загрузка...</span></p>
-      <p>Пассажиров: <span class="highlight" id="totalPassengers">Загрузка...</span></p>
-    </div>
+<div class="tile">
+  <h3>Статистика всего</h3>
+  <p>Кругорейсов:
+    <span class="highlight" id="totalRoutes">
+      <i class="fa-solid fa-spinner fa-spin loading-icon"></i>
+    </span>
+  </p>
+  <p>Пассажиров:
+    <span class="highlight" id="totalPassengers">
+      <i class="fa-solid fa-spinner fa-spin loading-icon"></i>
+    </span>
+  </p>
+</div>
 
-    <div class="tile">
-      <h3>Текущий полупериод</h3>
-      <p>Кругорейсов: <span class="highlight" id="periodRoutes">Загрузка...</span></p>
+<div class="tile">
+  <h3>Текущий полупериод</h3>
 
-      <div class="progress-container">
-        <div class="progress-bar" id="routesProgress"></div>
-        <span class="progress-label" id="routesProgressLabel">0 / 16</span>
-      </div>
+  <p>Кругорейсов:
+    <span class="highlight" id="periodRoutes">
+      <i class="fa-solid fa-spinner fa-spin loading-icon"></i>
+    </span>
+  </p>
 
-      <p>Пассажиров: <span class="highlight" id="periodPassengers">Загрузка...</span></p>
-    </div>
-
-    <div class="tile">
-      <h3>Оклад за полупериод</h3>
-      <p class="highlight" id="salary">Загрузка...</p>
-    </div>
-
-    <div class="tile important">
-      <p>Водитель, при завершении смены не забывай сдавать маршрутный лист</p>
-    </div>
-
-   <a href="https://dashboard.rotorbus.ru/11h1" target="_blank" class="tile important" style="text-decoration: none; color: inherit;">
-      <p>Выплата зарплаты за первый полупериод ноября (кликабельно)</p>
-    </a>
-
+  <div class="progress-container">
+    <div class="progress-bar" id="routesProgress"></div>
+    <span class="progress-label" id="routesProgressLabel">0 / 16</span>
   </div>
+
+  <p>Пассажиров:
+    <span class="highlight" id="periodPassengers">
+      <i class="fa-solid fa-spinner fa-spin loading-icon"></i>
+    </span>
+  </p>
+
+  <p>Оклад:
+    <span class="highlight" id="salary">
+      <i class="fa-solid fa-spinner fa-spin loading-icon"></i>
+    </span>
+  </p>
+</div>
+
 </div>
   <script>
     function formatNumber(value) {

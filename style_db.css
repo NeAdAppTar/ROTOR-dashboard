@@ -463,3 +463,8 @@ body.dark #themeToggle {
     background: #ffea00; /* цвет подсветки */
     border-radius: 4px 0 0 4px;
 }
+
+  .loading-icon {
+    display: inline-flex;
+    align-items: center;
+  }
