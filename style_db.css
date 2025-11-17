@@ -163,6 +163,8 @@ body.dark button {
   cursor: pointer;
   transition: var(--transition);
   box-shadow: inset 0 -3px 0 var(--primary-dark), var(--shadow);
+  margin-top: 15px;
+  text-decoration: none;
 }
 
 /* ============================= */
