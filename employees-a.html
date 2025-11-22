@@ -8,7 +8,7 @@
   <link rel="icon" type="image/png" href="icon.png">
   <script src="usermenu.js"></script> 
   <style>
-    /* Доп. маленькие правки для админки */
+    /* админки */
     .actions-btn { padding:6px 10px; border-radius:8px; margin-right:6px; cursor:pointer; border:none; }
     .btn-add { background:var(--primary); color:var(--black); }
     .btn-edit { background:#60a5fa; color:#fff; }
@@ -29,13 +29,11 @@
 <body>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-<!-- SIDEBAR (взял вашу структуру) -->
 <div class="sidebar" id="sidebar">
   <div class="sidebar-header"><span class="logo">РОТОР</span></div>
   <ul class="sidebar-menu">
     <li><a href="employee_dashboard.html"><i class="fas fa-user"></i><span>Личный кабинет</span></a></li>
     <li><a href="employees.html"><i class="fas fa-users"></i><span>Список сотрудников</span></a></li>
-    <!-- ... остальные пункты ... -->
   </ul>
   <div class="user-menu" id="userMenu">
     <div class="user-menu-item" id="themeBtn"><i class="fas fa-moon"></i><span>Тёмная тема</span></div>
@@ -44,11 +42,9 @@
   </div>
 </div>
 
-<!-- MAIN -->
 <div class="main-content">
   <div class="container">
     <h1>Админ: Управление пользователями</h1>
-    <p class="note">Используется API TransDigital — добавление/обновление/удаление/список пользователей. (endpoint: <code>/api/*/{company}</code>)</p>
 
     <!-- Форма добавления -->
     <div class="table-card">
@@ -59,7 +55,7 @@
           <button class="actions-btn btn-add" id="addBtn"><i class="fas fa-plus"></i> Добавить</button>
           <select id="companySelect" style="padding:8px 10px; border-radius:8px;">
             <option value="rotor">rotor</option>
-            <!-- при необходимости добавить другие компании -->
+            <!--другие компании -->
           </select>
         </div>
 
@@ -108,9 +104,7 @@
 <div class="toast" id="toast"></div>
 
 <script>
-  // Базовый URL API — используйте company в маршрутах
   const API_BASE = 'https://transdigital.pythonanywhere.com/api';
-  // Элементы
   const usersTable = document.getElementById('usersTable');
   const usersBody = document.getElementById('usersBody');
   const loading = document.getElementById('loading');
@@ -129,7 +123,7 @@
 
   const toastEl = document.getElementById('toast');
 
-  let usersCache = []; // хранит массив пользователей {id, name, password}
+  let usersCache = []; 
   let editingUser = null;
 
   function showToast(text, ok=true){
@@ -139,7 +133,6 @@
     setTimeout(()=> toastEl.style.display = 'none', 3000);
   }
 
-  // Вызов: получить всех пользователей
   async function fetchAllUsers(){
     loading.style.display = 'block';
     usersTable.style.display = 'none';
@@ -166,7 +159,6 @@
 
 
 
-  // Рендер таблицы
   function renderUsersTable(users){
     usersBody.innerHTML = '';
     const q = searchInput.value.trim().toLowerCase();
@@ -186,7 +178,6 @@
     });
   }
 
-  // Защита простая — экранируем спецсимволы для вставки в HTML
   function escapeHtml(str){
     if(str === undefined || str === null) return '';
     return String(str)
