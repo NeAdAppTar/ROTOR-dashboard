@@ -440,3 +440,23 @@ body.dark .styled-table tbody tr:hover {
 }
 
 
+/* Новогодний режим */
+.ny-mode {
+    background-size: cover;
+}
+
+/* Снег */
+.snowflake {
+    position: fixed;
+    top: -10px;
+    color: white;
+    font-size: 1em;
+    opacity: 0.8;
+    animation: fall 10s linear infinite;
+    pointer-events: none;
+}
+
+@keyframes fall {
+    0% { transform: translateY(0) rotate(0deg); }
+    100% { transform: translateY(100vh) rotate(360deg); }
+}

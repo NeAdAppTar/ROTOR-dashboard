@@ -16,6 +16,37 @@ document.addEventListener("DOMContentLoaded", () => {
         localStorage.setItem("theme", isDark ? "dark" : "light");
     });
 
+    document.getElementById("nyBtn").addEventListener("click", () => {
+    document.body.classList.toggle("ny-mode");
+
+    if (document.body.classList.contains("ny-mode")) {
+        startSnow();
+    } else {
+        stopSnow();
+    }
+});
+
+    // снежок
+    let snowInterval;
+
+    function startSnow() {
+        snowInterval = setInterval(() => {
+            const snow = document.createElement("div");
+            snow.classList.add("snowflake");
+            snow.textContent = "❄";
+            snow.style.left = Math.random() * window.innerWidth + "px";
+            snow.style.fontSize = (Math.random() * 8 + 8) + "px";
+            document.body.appendChild(snow);
+
+            setTimeout(() => snow.remove(), 10000);
+        }, 200);
+    }
+
+    function stopSnow() {
+        clearInterval(snowInterval);
+        document.querySelectorAll(".snowflake").forEach(s => s.remove());
+    }
+
     // выход
     logoutBtn.addEventListener("click", () => {
         localStorage.removeItem("userLogin");
