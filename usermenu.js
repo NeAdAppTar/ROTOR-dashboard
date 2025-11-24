@@ -1,51 +1,32 @@
 document.addEventListener("DOMContentLoaded", () => {
     const logoutBtn = document.getElementById("logoutBtn");
     const themeBtn = document.getElementById("themeBtn");
-    const nyBtn = document.getElementById("nyBtn");
     const userName = document.getElementById("userName");
 
     const login = localStorage.getItem("userLogin") || "user";
     userName.textContent = login;
 
-    // ===== Т Е М А =====
-    const savedTheme = getCookie("theme") || localStorage.getItem("theme") || "light";
-
-    if (savedTheme === "dark") {
-        document.body.classList.add("dark");
-    }
+    // тема
+    const currentTheme = localStorage.getItem("theme") || "light";
+    if (currentTheme === "dark") document.body.classList.add("dark");
 
     themeBtn.addEventListener("click", () => {
         document.body.classList.toggle("dark");
         const isDark = document.body.classList.contains("dark");
-
-        // сохраняем в localStorage
         localStorage.setItem("theme", isDark ? "dark" : "light");
-        // сохраняем в cookies
-        setCookie("theme", isDark ? "dark" : "light");
     });
 
-    // ===== Н О В О Г О Д Н И Й   Р Е Ж И М =====
-    const savedNy = getCookie("nyMode") || "off";
+    document.getElementById("nyBtn").addEventListener("click", () => {
+    document.body.classList.toggle("ny-mode");
 
-    if (savedNy === "on") {
-        document.body.classList.add("ny-mode");
+    if (document.body.classList.contains("ny-mode")) {
         startSnow();
+    } else {
+        stopSnow();
     }
+});
 
-    nyBtn.addEventListener("click", () => {
-        document.body.classList.toggle("ny-mode");
-        const isNy = document.body.classList.contains("ny-mode");
-
-        if (isNy) {
-            startSnow();
-            setCookie("nyMode", "on");
-        } else {
-            stopSnow();
-            setCookie("nyMode", "off");
-        }
-    });
-
-    // ===== С Н Е Г =====
+    // снежок
     let snowInterval;
 
     function startSnow() {
@@ -66,7 +47,7 @@ document.addEventListener("DOMContentLoaded", () => {
         document.querySelectorAll(".snowflake").forEach(s => s.remove());
     }
 
-    // ===== В Ы Х О Д =====
+    // выход
     logoutBtn.addEventListener("click", () => {
         localStorage.removeItem("userLogin");
         document.cookie = "userLogin=; path=/; domain=.rotorbus.ru; expires=Thu, 01 Jan 1970 00:00:00 GMT";
