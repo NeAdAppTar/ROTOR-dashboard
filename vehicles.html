@@ -21,6 +21,9 @@
     .state-l {
       background-color: #c8a2c8 !important;
     }
+    .state-d {
+      background-color: #fc9595 !important;
+    }
   </style>
 </head>
 
@@ -125,11 +128,13 @@
           if (state === 'f') tr.classList.add('state-f');
           else if (state === 'n') tr.classList.add('state-n');
           else if (state === 'l') tr.classList.add('state-l');
+          else if (state === 'd') tr.classList.add('state-d');
 
           let stateText = '-';
           if (state === 'f') stateText = 'На заводе / новый';
           else if (state === 'n') stateText = 'Не эксплуатируется';
-          else if (state === 'l') stateText = 'Списан / передан';
+          else if (state === 'l') stateText = 'Передан';
+          else if (state === 'd') stateText = 'Списан';
           else if (state === 'nan' || state === '') stateText = 'В эксплуатации';
 
           tr.innerHTML = `
