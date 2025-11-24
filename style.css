@@ -456,6 +456,12 @@ body.dark .styled-table tbody tr:hover {
     pointer-events: none;
 }
 
+/* Снежинки для светлой темы */
+.light-snowflake {
+    color: #6bb6ff !important; 
+    opacity: 0.95;
+}
+
 @keyframes fall {
     0% { transform: translateY(0) rotate(0deg); }
     100% { transform: translateY(100vh) rotate(360deg); }
