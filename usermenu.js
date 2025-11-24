@@ -27,12 +27,32 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
     // снежок
+    document.getElementById("nyBtn").addEventListener("click", () => {
+    const enabled = document.body.classList.toggle("ny-mode");
+
+    if (enabled) {
+        startSnow();
+        setCookie("nyMode", "on");
+    } else {
+        stopSnow();
+        setCookie("nyMode", "off");
+    }
+});
+
     let snowInterval;
+
+    function isLightTheme() {
+        return !document.body.classList.contains('dark-mode');
+    }
 
     function startSnow() {
         snowInterval = setInterval(() => {
             const snow = document.createElement("div");
+            const light = isLightTheme();
+
             snow.classList.add("snowflake");
+            if (light) snow.classList.add("light-snowflake");
+
             snow.textContent = "❄";
             snow.style.left = Math.random() * window.innerWidth + "px";
             snow.style.fontSize = (Math.random() * 8 + 8) + "px";
@@ -46,6 +66,17 @@ document.addEventListener("DOMContentLoaded", () => {
         clearInterval(snowInterval);
         document.querySelectorAll(".snowflake").forEach(s => s.remove());
     }
+
+    document.addEventListener("DOMContentLoaded", () => {
+    const mode = getCookie("nyMode");
+
+    if (mode === "on") {
+        document.body.classList.add("ny-mode");
+        startSnow();
+    }
+});
+
+
 
     // выход
     logoutBtn.addEventListener("click", () => {
