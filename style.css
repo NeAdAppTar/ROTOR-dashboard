@@ -449,17 +449,11 @@ body.dark .styled-table tbody tr:hover {
 .snowflake {
     position: fixed;
     top: -10px;
-    color: white;
+    color: #6bb6ff;
     font-size: 1em;
     opacity: 0.8;
     animation: fall 10s linear infinite;
     pointer-events: none;
-}
-
-/* Снежинки для светлой темы */
-.light-snowflake {
-    color: #6bb6ff !important; 
-    opacity: 0.95;
 }
 
 @keyframes fall {
