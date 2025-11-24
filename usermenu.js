@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const login = localStorage.getItem("userLogin") || "user";
     userName.textContent = login;
 
-    // тема
+    // Тема
     const currentTheme = localStorage.getItem("theme") || "light";
     if (currentTheme === "dark") document.body.classList.add("dark");
 
@@ -16,17 +16,20 @@ document.addEventListener("DOMContentLoaded", () => {
         localStorage.setItem("theme", isDark ? "dark" : "light");
     });
 
-    document.getElementById("nyBtn").addEventListener("click", () => {
-    document.body.classList.toggle("ny-mode");
-
-    if (document.body.classList.contains("ny-mode")) {
-        startSnow();
-    } else {
-        stopSnow();
+    // ---- COOKIE FUNCTIONS ----
+    function setCookie(name, value, days = 30) {
+        const expires = new Date(Date.now() + days * 864e5).toUTCString();
+        document.cookie = `${name}=${value}; expires=${expires}; path=/`;
     }
-});
 
-    // снежок
+    function getCookie(name) {
+        return document.cookie
+            .split("; ")
+            .find(row => row.startsWith(name + "="))
+            ?.split("=")[1];
+    }
+
+    // ---- SNOW BLOCK ----
     let snowInterval;
 
     function startSnow() {
@@ -47,7 +50,25 @@ document.addEventListener("DOMContentLoaded", () => {
         document.querySelectorAll(".snowflake").forEach(s => s.remove());
     }
 
-    // выход
+    const snowState = getCookie("snow");
+    if (snowState === "1") {
+        document.body.classList.add("ny-mode");
+        startSnow();
+    }
+
+    document.getElementById("nyBtn").addEventListener("click", () => {
+        document.body.classList.toggle("ny-mode");
+
+        if (document.body.classList.contains("ny-mode")) {
+            startSnow();
+            setCookie("snow", "1");
+        } else {
+            stopSnow();
+            setCookie("snow", "0");
+        }
+    });
+
+    // ---- LOGOUT ----
     logoutBtn.addEventListener("click", () => {
         localStorage.removeItem("userLogin");
         document.cookie = "userLogin=; path=/; domain=.rotorbus.ru; expires=Thu, 01 Jan 1970 00:00:00 GMT";
