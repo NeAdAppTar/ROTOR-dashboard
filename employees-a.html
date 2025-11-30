@@ -1,79 +1,103 @@
 <!doctype html>
 <html lang="ru">
 <head>
-  <meta charset="utf-8">
-  <title>ROTOR — Админ: Управление пользователями</title>
-  <link rel="stylesheet" href="style_db.css">
-  <link rel="stylesheet" href="style.css">
+  <meta charset="utf-8" />
+  <title>Управление пользователями — РОТОР</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="style_db.css">
+    <link rel="stylesheet" href="style_a.css">
   <link rel="icon" type="image/png" href="icon.png">
-  <script src="usermenu.js"></script> 
-  <style>
-    /* админки */
-    .actions-btn { padding:6px 10px; border-radius:8px; margin-right:6px; cursor:pointer; border:none; }
-    .btn-add { background:var(--primary); color:var(--black); }
-    .btn-edit { background:#60a5fa; color:#fff; }
-    .btn-delete { background:#ef4444; color:#fff; }
-    .form-inline { display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:18px; }
-    .form-inline input { padding:8px 10px; border-radius:10px; border:1px solid #ddd; min-width:180px; }
-    .note { margin:12px 0; color:var(--muted); }
-    .toast { position:fixed; right:20px; bottom:20px; padding:12px 18px; border-radius:12px; box-shadow:var(--shadow); background:#111; color:#fff; display:none; z-index:9999; }
-    .modal { position:fixed; inset:0; display:none; align-items:center; justify-content:center; background:rgba(0,0,0,0.4); z-index:2000; }
-    .modal .card { background:var(--card-bg); padding:20px; border-radius:12px; width:420px; max-width:95%; box-shadow:var(--shadow); }
-    .modal .card h3 { margin-bottom:12px; }
-    .small { font-size:0.9rem; color:var(--muted); }
-    @media (max-width:720px){
-      .form-inline input { min-width:120px; }
-    }
-  </style>
+    <script src="usermenu.js"></script> 
+
+  
 </head>
 <body>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<div class="sidebar" id="sidebar"> 
+    <div class="sidebar-header">
+        <span class="logo">РОТОР</span>
+    </div>
 
-<div class="sidebar" id="sidebar">
-  <div class="sidebar-header"><span class="logo">РОТОР</span></div>
-  <ul class="sidebar-menu">
-    <li><a href="employee_dashboard.html"><i class="fas fa-user"></i><span>Личный кабинет</span></a></li>
-    <li><a href="employees.html"><i class="fas fa-users"></i><span>Список сотрудников</span></a></li>
-  </ul>
-  <div class="user-menu" id="userMenu">
-    <div class="user-menu-item" id="themeBtn"><i class="fas fa-moon"></i><span>Тёмная тема</span></div>
-    <div class="user-menu-item" id="logoutBtn"><i class="fas fa-sign-out-alt"></i><span>Выйти</span></div>
-    <div class="user-name-display"><i class="fas fa-user"></i><span id="userName">admin</span></div>
-  </div>
-</div>
+    <ul class="sidebar-menu">
+        <li><a href="employee_dashboard.html"><i class="fas fa-user"></i><span>Личный кабинет</span></a></li>
+        <li><a href="employees.html"><i class="fas fa-users"></i><span>Список сотрудников</span></a></li>
+        <li><a href="routes.html"><i class="fas fa-route"></i><span>Маршруты</span></a></li>
+        <li><a href="vehicles.html"><i class="fas fa-truck"></i><span>Список ПС</span></a></li>
+        <li><a href="submit_route.html"><i class="fas fa-file"></i><span>Маршрутный лист</span></a></li>
+        <li><a href="charter.html"><i class="fas fa-book"></i><span>Устав</span></a></li>
+        <li><a href="plan.html"><i class="fas fa-calendar"></i><span>План</span></a></li>
+        <li><a href="t.html"><i class="fas fa-check"></i><span>Тесты</span></a></li>
+        <li><a href="binds.html"><i class="fas fa-keyboard"></i><span>Бинды и таблички</span></a></li>
+    </ul>
 
-<div class="main-content">
-  <div class="container">
-    <h1>Админ: Управление пользователями</h1>
+    <div class="user-menu" id="userMenu">
 
-    <!-- Форма добавления -->
-    <div class="table-card">
-      <div style="display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap;">
-        <div class="form-inline">
-          <input id="newName" placeholder="Логин (name)"/>
-          <input id="newPass" placeholder="Пароль" type="password"/>
-          <button class="actions-btn btn-add" id="addBtn"><i class="fas fa-plus"></i> Добавить</button>
-          <select id="companySelect" style="padding:8px 10px; border-radius:8px;">
-            <option value="rotor">rotor</option>
-            <!--другие компании -->
-          </select>
-        </div>
-
-        <div style="display:flex; gap:8px; align-items:center;">
-          <input id="searchInput" placeholder="Поиск по логину..." />
-          <button class="actions-btn" id="refreshBtn" title="Обновить список"><i class="fas fa-sync"></i></button>
-        </div>
+      <div class="user-menu-item" id="nyBtn">
+        <i class="fas fa-snowflake"></i>
+        <span>НГ оформление</span>
+      </div>
+      
+      <div class="user-menu-item" id="themeBtn">
+          <i class="fas fa-moon"></i>
+          <span>Тёмная тема</span>
       </div>
 
-      <div id="loading" class="loading">Загрузка пользователей...</div>
+      <div class="user-menu-item" id="logoutBtn">
+          <i class="fas fa-sign-out-alt"></i>
+          <span>Выйти</span>
+      </div>
 
-      <div class="table-card" style="margin-top:14px; padding:8px;">
+      <div class="user-name-display">
+          <i class="fas fa-user"></i>
+          <span id="userName">user</span>
+      </div>
+
+    
+    </div>
+</div>
+
+
+
+<div class="main-content">
+<div class="container">
+  <h1>Управление пользователями</h1>
+
+  <div class="table-card" style="margin-bottom:14px;">
+    <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center;">
+      <div class="form-inline" style="flex:1;min-width:420px;">
+        <input id="newName" placeholder="Логин (name)" />
+        <input id="newPass" placeholder="Пароль" type="password" />
+        <input id="newPost" placeholder="Должность" />
+        <input id="newAccount" placeholder="Аккаунт" />
+        <input id="newVK" placeholder="VK" />
+        <input id="newDA" placeholder="Взыскания" />
+        <input id="newNote" placeholder="Заметка" />
+        <button class="actions-btn btn-add" id="addBtn"><i class="fas fa-plus"></i> Добавить</button>
+      </div>
+
+      <div style="display:flex;gap:8px;align-items:center;">
+        <select id="companySelect" style="padding:8px;border-radius:8px;">
+          <option value="rotor">Ротор</option>
+        </select>
+
+        <input id="searchInput" placeholder="Поиск по логину..." style="padding:8px;border-radius:8px;border:1px solid #e6e6ea;" />
+        <button class="actions-btn" id="refreshBtn" title="Обновить список"><i class="fas fa-sync"></i></button>
+      </div>
+    </div>
+
+    <div id="loading" class="loading">Получение информации от сервера...</div>
+
+    <div style="margin-top:12px;">
+      <div class="table-card" style="padding:8px;">
         <table class="styled-table" id="usersTable" style="display:none;">
           <thead>
             <tr>
-              <th>ID</th>
               <th>Логин</th>
-              <th>Пароль</th>
+              <th>Должность</th>
+              <th>Банковский счет</th>
+              <th>VK</th>
+              <th>Взыскания</th>
+              <th>Заметка</th>
               <th>Действия</th>
             </tr>
           </thead>
@@ -81,105 +105,115 @@
         </table>
       </div>
     </div>
+
+    <div class="note">Все поля обязательны при добавлении/сохранении.</div>
   </div>
 </div>
 
-<!-- Модал для редактирования -->
-<div class="modal" id="editModal">
-  <div class="card">
-    <h3>Редактировать пароль</h3>
-    <div>
-      <label class="small">Логин</label>
-      <div id="editLogin" style="font-weight:700;margin-bottom:8px;"></div>
-      <label class="small">Новый пароль</label>
-      <input id="editPass" placeholder="Новый пароль" />
-      <div style="margin-top:12px; display:flex; gap:8px; justify-content:flex-end;">
-        <button class="actions-btn" id="cancelEdit">Отмена</button>
-        <button class="actions-btn btn-edit" id="saveEdit">Сохранить</button>
+<!-- Модал редактирования пользователя -->
+<div id="editUserModal" class="modal">
+  <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="editUserTitle">
+    <h3 id="editUserTitle">Редактирование пользователя</h3>
+
+    <div class="grid">
+      <div>
+        <label class="small">Логин</label>
+        <input id="editName" class="smallinput" />
       </div>
+
+      <div>
+        <label class="small">Пароль</label>
+        <input id="editPassword" class="smallinput" type="password" placeholder="Повторите старый или придумайте новый" />
+      </div>
+
+      <div>
+        <label class="small">Должность</label>
+        <input id="editPost" class="smallinput" />
+      </div>
+
+      <div>
+        <label class="small">Банковский счет</label>
+        <input id="editAccount" class="smallinput" />
+      </div>
+
+      <div>
+        <label class="small">VK</label>
+        <input id="editVK" class="smallinput" />
+      </div>
+
+      <div>
+        <label class="small">Взыскания</label>
+        <input id="editDA" class="smallinput" />
+      </div>
+
+      <div class="full">
+        <label class="small">Заметка</label>
+        <input id="editNote" class="smallinput" />
+      </div>
+    </div>
+
+    <div class="modal-actions">
+      <button id="deleteUserBtn" class="actions-btn btn-delete"><i class="fas fa-trash"></i> Удалить</button>
+      <button id="closeUserEdit" class="actions-btn">Отмена</button>
+      <button id="saveUserEdit" class="actions-btn btn-edit"><i class="fas fa-save"></i> Сохранить</button>
     </div>
   </div>
 </div>
 
-<div class="toast" id="toast"></div>
+<div id="toast" class="toast"></div>
+</div>
 
 <script>
+  // ====== Конфигурация ======
   const API_BASE = 'https://transdigital.pythonanywhere.com/api';
+
+  // ====== Элементы ======
   const usersTable = document.getElementById('usersTable');
   const usersBody = document.getElementById('usersBody');
   const loading = document.getElementById('loading');
+
   const addBtn = document.getElementById('addBtn');
   const newName = document.getElementById('newName');
   const newPass = document.getElementById('newPass');
+  const newPost = document.getElementById('newPost');
+  const newAccount = document.getElementById('newAccount');
+  const newVK = document.getElementById('newVK');
+  const newDA = document.getElementById('newDA');
+  const newNote = document.getElementById('newNote');
+
   const companySelect = document.getElementById('companySelect');
   const refreshBtn = document.getElementById('refreshBtn');
   const searchInput = document.getElementById('searchInput');
 
-  const editModal = document.getElementById('editModal');
-  const editLogin = document.getElementById('editLogin');
-  const editPass = document.getElementById('editPass');
-  const saveEdit = document.getElementById('saveEdit');
-  const cancelEdit = document.getElementById('cancelEdit');
+  const editUserModal = document.getElementById('editUserModal');
+  const editName = document.getElementById('editName');
+  const editPassword = document.getElementById('editPassword');
+  const editPost = document.getElementById('editPost');
+  const editAccount = document.getElementById('editAccount');
+  const editVK = document.getElementById('editVK');
+  const editDA = document.getElementById('editDA');
+  const editNote = document.getElementById('editNote');
+
+  const saveUserEdit = document.getElementById('saveUserEdit');
+  const closeUserEdit = document.getElementById('closeUserEdit');
+  const deleteUserBtn = document.getElementById('deleteUserBtn');
 
   const toastEl = document.getElementById('toast');
 
-  let usersCache = []; 
-  let editingUser = null;
+  // ====== Состояние ======
+  let usersCache = [];
+  let editingUserData = null; 
 
-  function showToast(text, ok=true){
+  // ====== Утилиты ======
+  function showToast(text, ok = true) {
     toastEl.textContent = text;
     toastEl.style.background = ok ? '#111' : '#b91c1c';
     toastEl.style.display = 'block';
-    setTimeout(()=> toastEl.style.display = 'none', 3000);
+    setTimeout(()=> toastEl.style.display = 'none', 3500);
   }
 
-  async function fetchAllUsers(){
-    loading.style.display = 'block';
-    usersTable.style.display = 'none';
-    const company = companySelect.value;
-
-    try {
-        const res = await fetch(`${API_BASE}/get_all_users/${company}`);
-        const data = await res.json();
-
-        if(data.status === 'ok' && Array.isArray(data.users)){
-            usersCache = data.users.map(u => ({ id: u.id, name: u.name, password: u.password }));
-            renderUsersTable(usersCache);
-
-            loading.style.display = 'none';
-            usersTable.style.display = 'table';
-        } else {
-            throw new Error(data.message || 'Неверный ответ');
-        }
-    } catch (err) {
-        loading.textContent = 'Ошибка: ' + err.message;
-        showToast('Ошибка: ' + err.message, false);
-    }
-}
-
-
-
-  function renderUsersTable(users){
-    usersBody.innerHTML = '';
-    const q = searchInput.value.trim().toLowerCase();
-    users.filter(u => !q || u.name.toLowerCase().includes(q)).forEach(user => {
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td>${escapeHtml(user.id)}</td>
-        <td>${escapeHtml(user.name)}</td>
-        <td><input type="password" value="${escapeHtml(user.password)}" readonly style="border:none;background:transparent;"/></td>
-        <td>
-          <button class="actions-btn btn-edit" data-name="${escapeHtml(user.name)}" onclick="onEdit('${escapeHtml(user.name)}')"><i class="fas fa-edit"></i> Изменить</button>
-          <button class="actions-btn" onclick="onView('${escapeHtml(user.name)}')"><i class="fas fa-eye"></i> Просмотр</button>
-          <button class="actions-btn btn-delete" onclick="onDelete('${escapeHtml(user.name)}')"><i class="fas fa-trash"></i> Удалить</button>
-        </td>
-      `;
-      usersBody.appendChild(tr);
-    });
-  }
-
-  function escapeHtml(str){
-    if(str === undefined || str === null) return '';
+  function escapeHtml(str) {
+    if (str === undefined || str === null) return '';
     return String(str)
       .replaceAll('&','&amp;')
       .replaceAll('<','&lt;')
@@ -188,91 +222,208 @@
       .replaceAll("'",'&#039;');
   }
 
-  // Добавить пользователя
-  addBtn.addEventListener('click', async ()=>{
-    const name = newName.value.trim();
-    const password = newPass.value;
+  // ====== API: получение списка пользователей ======
+  async function fetchAllUsers() {
+    loading.style.display = 'block';
+    usersTable.style.display = 'none';
+    usersBody.innerHTML = '';
+
     const company = companySelect.value;
-    if(!name || !password){ showToast('Заполните логин и пароль', false); return; }
+    try {
+      const res = await fetch(`${API_BASE}/get_users_info/${company}`);
+      const data = await res.json();
+
+      if (data.status !== 'ok') {
+        throw new Error(data.message || 'Ошибка сервера');
+      }
+
+      // ожидается { status: "ok", users: [ { name, post, account, vk, disciplinary_actions, note }, ... ] }
+      usersCache = Array.isArray(data.users) ? data.users : [];
+      renderUsersTable(usersCache);
+
+      loading.style.display = 'none';
+      usersTable.style.display = 'table';
+    } catch (err) {
+      loading.textContent = 'Ошибка: ' + (err.message || err);
+      showToast('Ошибка: ' + (err.message || err), false);
+    }
+  }
+
+  function renderUsersTable(users) {
+    usersBody.innerHTML = '';
+    const q = searchInput.value.trim().toLowerCase();
+
+    users
+      .filter(u => !q || (u.name && u.name.toLowerCase().includes(q)))
+      .forEach(user => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${escapeHtml(user.name)}</td>
+          <td>${escapeHtml(user.post)}</td>
+          <td>${escapeHtml(user.account)}</td>
+          <td>${escapeHtml(user.vk)}</td>
+          <td>${escapeHtml(user.disciplinary_actions)}</td>
+          <td>${escapeHtml(user.note)}</td>
+          <td class="actions">
+            <button class="actions-small btn-edit" onclick="onEditUser('${escapeHtml(user.name)}')"><i class="fas fa-edit"></i></button>
+            <button class="actions-small" onclick="onViewUser('${escapeHtml(user.name)}')"><i class="fas fa-eye"></i></button>
+            <button class="actions-small btn-delete" onclick="onDeleteUser('${escapeHtml(user.name)}')"><i class="fas fa-trash"></i></button>
+          </td>
+        `;
+        usersBody.appendChild(tr);
+      });
+  }
+
+  // ====== Добавление пользователя ======
+  addBtn.addEventListener('click', async () => {
+    const name = newName.value.trim();
+    const password = newPass.value.trim();
+    const post = newPost.value.trim();
+    const account = newAccount.value.trim();
+    const vk = newVK.value.trim();
+    const disciplinary_actions = newDA.value.trim();
+    const note = newNote.value.trim();
+    const company = companySelect.value;
+
+    if (!name || !password || !post || !account || !vk || !disciplinary_actions || !note) {
+      showToast('Заполните все поля', false);
+      return;
+    }
+
     try {
       addBtn.disabled = true;
+
       const res = await fetch(`${API_BASE}/add_user/${company}`, {
         method: 'POST',
         headers: {'Content-Type':'application/json'},
-        body: JSON.stringify({ name, password })
+        body: JSON.stringify({ name, password, post, account, vk, disciplinary_actions, note })
       });
+
       const data = await res.json();
-      if(data.status === 'ok'){
-        showToast('Пользователь добавлен');
-        newName.value = ''; newPass.value = '';
-        await fetchAllUsers();
-      } else {
-        throw new Error(data.message || 'Ошибка сервера');
-      }
+      if (data.status !== 'ok') throw new Error(data.message || 'Ошибка при добавлении');
+
+      showToast('Пользователь добавлен');
+      // очистка формы
+      newName.value = ''; newPass.value = ''; newPost.value = ''; newAccount.value = ''; newVK.value = ''; newDA.value = ''; newNote.value = '';
+
+      fetchAllUsers();
     } catch (err) {
-      showToast('Ошибка: ' + err.message, false);
-    } finally { addBtn.disabled = false; }
+      showToast('Ошибка: ' + (err.message || err), false);
+    } finally {
+      addBtn.disabled = false;
+    }
   });
 
-  // Редактировать (открыть модал)
-  window.onEdit = function(name){
-    editingUser = name;
-    editLogin.textContent = name;
-    editPass.value = '';
-    editModal.style.display = 'flex';
+  // ====== Открыть модал редактирования (и заполнить данными) ======
+  window.onEditUser = async function(name) {
+  const company = companySelect.value;
+
+  try {
+    // 1. Получаем расширенную информацию
+    const infoRes = await fetch(`${API_BASE}/get_user_info/${company}`, {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ name })
+    });
+    const info = await infoRes.json();
+    if (info.status !== 'ok') throw new Error(info.message);
+
+    // 2. Получаем пароль
+    const passRes = await fetch(`${API_BASE}/get_user/${company}`, {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ name })
+    });
+    const passData = await passRes.json();
+    if (passData.status !== 'ok') throw new Error(passData.message);
+
+    // 3. Формируем полные данные пользователя
+    editingUserData = {
+      name: info.name || '',
+      password: passData.password || '',
+      post: info.post || '',
+      account: info.account || '',
+      vk: info.vk || '',
+      disciplinary_actions: info.disciplinary_actions || '',
+      note: info.note || ''
+    };
+
+    // 4. Заполняем форму
+    editName.value = editingUserData.name;
+    editPassword.value = editingUserData.password;
+    editPost.value = editingUserData.post;
+    editAccount.value = editingUserData.account;
+    editVK.value = editingUserData.vk;
+    editDA.value = editingUserData.disciplinary_actions;
+    editNote.value = editingUserData.note;
+
+    editUserModal.style.display = 'flex';
+  } catch (err) {
+    showToast('Ошибка: ' + (err.message || err), false);
+  }
+};
+
+  // Для просмотра (без редактирования)
+  window.onViewUser = function(name) {
+    onEditUser(name);
   };
 
-  cancelEdit.addEventListener('click', ()=> { editModal.style.display = 'none'; editingUser = null; });
-
-  saveEdit.addEventListener('click', async ()=>{
-    const newPassword = editPass.value;
+  // ====== Сохранение изменений пользователя ======
+  saveUserEdit.addEventListener('click', async () => {
     const company = companySelect.value;
-    if(!editingUser || !newPassword){ showToast('Укажите новый пароль', false); return; }
+
+    // берем поля из формы; если пароль не введён, пытаемся использовать исходный пароль (editingUserData.password)
+    const name = editName.value.trim();
+    const password = editPassword.value.trim() || editingUserData.password || '';
+    const post = editPost.value.trim();
+    const account = editAccount.value.trim();
+    const vk = editVK.value.trim();
+    const disciplinary_actions = editDA.value.trim();
+    const note = editNote.value.trim();
+
+    if (!name || !password) {
+      showToast('Логин и пароль обязательны', false);
+      return;
+    }
+    if (!post || !account || !vk || !disciplinary_actions || !note) {
+      showToast('Заполните все поля', false);
+      return;
+    }
+
     try {
-      saveEdit.disabled = true;
+      saveUserEdit.disabled = true;
+
       const res = await fetch(`${API_BASE}/update_user/${company}`, {
         method: 'POST',
         headers: {'Content-Type':'application/json'},
-        body: JSON.stringify({ name: editingUser, password: newPassword })
+        body: JSON.stringify({
+          name,
+          password,
+          post,
+          account,
+          vk,
+          disciplinary_actions,
+          note
+        })
       });
+
       const data = await res.json();
-      if(data.status === 'ok'){
-        showToast('Пароль обновлён');
-        editModal.style.display = 'none';
-        editingUser = null;
-        await fetchAllUsers();
-      } else {
-        throw new Error(data.message || 'Ошибка сервера');
-      }
-    } catch(err){
-      showToast('Ошибка: ' + err.message, false);
-    } finally { saveEdit.disabled = false; }
+      if (data.status !== 'ok') throw new Error(data.message || 'Ошибка при сохранении');
+
+      showToast('Изменения сохранены');
+      editUserModal.style.display = 'none';
+      editingUserData = null;
+      fetchAllUsers();
+    } catch (err) {
+      showToast('Ошибка: ' + (err.message || err), false);
+    } finally {
+      saveUserEdit.disabled = false;
+    }
   });
 
-  // Просмотр подробностей пользователя
-  window.onView = async function(name){
-    const company = companySelect.value;
-    try {
-      const res = await fetch(`${API_BASE}/get_user/${company}`, {
-        method: 'POST',
-        headers: {'Content-Type':'application/json'},
-        body: JSON.stringify({ name })
-      });
-      const data = await res.json();
-      if(data.status === 'ok'){
-        // Покажем alert с инфой (можно заменить на модал)
-        alert(`ID: ${data.id}\nИмя: ${data.name}\nПароль: ${data.password}`);
-      } else {
-        throw new Error(data.message || 'Не удалось получить данные');
-      }
-    } catch(err){
-      showToast('Ошибка: ' + err.message, false);
-    }
-  };
-
-  // Удаление
-  window.onDelete = async function(name){
-    if(!confirm(`Удалить пользователя "${name}"?`)) return;
+  // ====== Удаление пользователя (из модалки или кнопки) ======
+  window.onDeleteUser = async function(name) {
+    if (!confirm(`Удалить пользователя "${name}"?`)) return;
     const company = companySelect.value;
     try {
       const res = await fetch(`${API_BASE}/delete_user/${company}`, {
@@ -281,30 +432,45 @@
         body: JSON.stringify({ name })
       });
       const data = await res.json();
-      if(data.status === 'ok'){
-        showToast('Пользователь удалён');
-        await fetchAllUsers();
-      } else {
-        throw new Error(data.message || 'Ошибка удаления');
-      }
-    } catch(err){
-      showToast('Ошибка: ' + err.message, false);
+      if (data.status !== 'ok') throw new Error(data.message || 'Ошибка при удалении');
+
+      showToast('Пользователь удалён');
+      fetchAllUsers();
+    } catch (err) {
+      showToast('Ошибка: ' + (err.message || err), false);
     }
   };
 
-  // Поиск + обновление
-  searchInput.addEventListener('input', ()=> renderUsersTable(usersCache));
+  // кнопка удаления в модалке — использует текущее editingUserData
+  deleteUserBtn.addEventListener('click', async () => {
+    if (!editingUserData || !editingUserData.name) return;
+    if (!confirm(`Удалить пользователя "${editingUserData.name}"?`)) return;
+    onDeleteUser(editingUserData.name);
+    editUserModal.style.display = 'none';
+  });
+
+  // ====== Закрытие модалки ======
+  closeUserEdit.addEventListener('click', () => {
+    editUserModal.style.display = 'none';
+    editingUserData = null;
+  });
+
+  // закрытие по клику вне карточки
+  editUserModal.addEventListener('click', (e) => {
+    if (e.target === editUserModal) {
+      editUserModal.style.display = 'none';
+      editingUserData = null;
+    }
+  });
+
+  // ====== Поиск и обновление ======
+  searchInput.addEventListener('input', () => renderUsersTable(usersCache));
   refreshBtn.addEventListener('click', fetchAllUsers);
   companySelect.addEventListener('change', fetchAllUsers);
 
-  // Начальная загрузка
+  // стартовая загрузка
   fetchAllUsers();
-
-  // Закрытие модала при клике вне карточки
-  editModal.addEventListener('click', (e)=> { if(e.target === editModal) { editModal.style.display = 'none'; editingUser = null; } });
-
 </script>
 
 </body>
-<script defer src="sidebar.js"></script>
 </html>

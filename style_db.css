@@ -106,24 +106,7 @@ nav a:hover {
   box-shadow: 0 10px 25px rgba(0,0,0,0.15);
 }
 
-/* ============================= */
-/*              INPUTS           */
-/* ============================= */
 
-input, select, textarea {
-  width: 100%;
-  padding: 12px;
-  border-radius: var(--radius);
-  border: 2px solid #e5e7eb;
-  transition: var(--transition);
-  margin-bottom: 16px;
-}
-
-input:focus, select:focus, textarea:focus {
-  border-color: var(--primary-dark);
-  box-shadow: 0 0 0 3px rgba(250,204,21,0.4);
-  outline: none;
-}
 
 /* ============================= */
 /*             BUTTONS           */
@@ -457,7 +440,7 @@ body.dark #themeToggle {
 .sidebar.collapsed .user-menu-item span,
 .sidebar.collapsed .user-name-display span,
 .sidebar.collapsed .logo {
-    display: none; /* скрываем текст */
+    display: none; 
 }
 
 .sidebar.collapsed .user-menu-item {
@@ -475,9 +458,9 @@ body.dark #themeToggle {
     position: absolute;
     right: 0;
     top: 0;
-    width: 4px;          /* ширина вертикальной линии */
+    width: 4px;       
     height: 100%;
-    background: #ffea00; /* цвет подсветки */
+    background: #ffea00; 
     border-radius: 4px 0 0 4px;
 }
 
@@ -485,3 +468,9 @@ body.dark #themeToggle {
     display: inline-flex;
     align-items: center;
   }
+
+  .sidebar {
+    position: fixed !important;
+    top: 0;
+    left: 0;
+}
