@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+  <meta charset="utf-8">
+  <title>ROTOR — Таблица выплат</title>
+  <link rel="stylesheet" href="style_db.css">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/png" href="icon.png">
+  <script src="checkauth.js"></script>
+  <script src="usermenu.js"></script>
+</head>
+
+<body>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<div class="sidebar" id="sidebar"> 
+    <div class="sidebar-header">
+        <span class="logo">РОТОР</span>
+    </div>
+
+    <ul class="sidebar-menu">
+        <li><a href="employee_dashboard.html"><i class="fas fa-user"></i><span>Личный кабинет</span></a></li>
+        <li><a href="employees.html"><i class="fas fa-users"></i><span>Список сотрудников</span></a></li>
+        <li><a href="routes.html"><i class="fas fa-route"></i><span>Маршруты</span></a></li>
+        <li><a href="vehicles.html"><i class="fas fa-truck"></i><span>Список ПС</span></a></li>
+        <li><a href="submit_route.html"><i class="fas fa-file"></i><span>Маршрутный лист</span></a></li>
+        <li><a href="charter.html"><i class="fas fa-book"></i><span>Устав</span></a></li>
+        <li><a href="plan.html"><i class="fas fa-calendar"></i><span>План</span></a></li>
+        <li><a href="t.html"><i class="fas fa-check"></i><span>Тесты</span></a></li>
+        <li><a href="binds.html"><i class="fas fa-keyboard"></i><span>Бинды и таблички</span></a></li>
+    </ul>
+
+    <div class="user-menu" id="userMenu">
+
+      <div class="user-menu-item" id="nyBtn">
+      <i class="fas fa-snowflake"></i>
+      <span>НГ оформление</span>
+      </div>
+
+    <div class="user-menu-item" id="themeBtn">
+        <i class="fas fa-moon"></i>
+        <span>Тёмная тема</span>
+    </div>
+
+    <div class="user-menu-item" id="logoutBtn">
+        <i class="fas fa-sign-out-alt"></i>
+        <span>Выйти</span>
+    </div>
+
+    <div class="user-name-display">
+        <i class="fas fa-user"></i>
+        <span id="userName">user</span>
+    </div>
+
+</div>
+
+
+</div>
+<div class="main-content">
+
+  <main class="container">
+    <h1>Таблица выплат сотрудников (16.11 - 30.11)</h1>
+
+    <div class="table-container">
+      <table class="styled-table">
+        <thead>
+          <tr>
+            <th>Никнейм</th>
+            <th>Банк. счет</th>
+            <th>Зарплата (руб)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Kairon_Drake</td>
+            <td>785804</td>
+            <td>129 839</td>
+          </tr>
+          <tr>
+            <td>Aleksey_Samurai</td>
+            <td>609693</td>
+            <td>400 000</td>
+          </tr>
+          <tr>
+            <td>Ilya_Maiorov</td>
+            <td>335905</td>
+            <td>36 500</td>
+          </tr>
+          <tr>
+            <td>Georgiu_Mikasso</td>
+            <td>889387</td>
+            <td>244 500</td>
+          </tr>
+          <tr>
+            <td>Anton_Mikasso</td>
+            <td>287297</td>
+            <td>93 500</td>
+          </tr>
+          <tr>
+            <td>Kazuto_Hasik</td>
+            <td>756306</td>
+            <td>35 000</td>
+          </tr>
+          <tr>
+            <td>Ruslan_Emelianov</td>
+            <td>618344</td>
+            <td>87 500</td>
+          </tr>
+          <tr>
+            <td>Zahar_Makarov</td>
+            <td>—</td>
+            <td>35 000</td>
+          </tr>
+          <tr>
+            <td>Vladislav_Veres</td>
+            <td>513047</td>
+            <td>122 000</td>
+          </tr>
+          <tr>
+            <td>Alexsey_Hasikov</td>
+            <td>477525</td>
+            <td>102 500</td>
+          </tr>
+          <tr>
+            <td>Noah_Lester</td>
+            <td>636619</td>
+            <td>35 000</td>
+          </tr>
+          <tr>
+            <td>Denis_Kydrayvzev</td>
+            <td>878317</td>
+            <td>400 000</td>
+          </tr>
+          <tr>
+            <td>Joker_Lee</td>
+            <td>669703</td>
+            <td>308 500</td>
+          </tr>
+          <tr>
+            <td>Anton_Mikhailov</td>
+            <td>813592</td>
+            <td>20 000</td>
+          </tr>
+
+          <!-- Общая сумма -->
+          <tr style="font-weight: bold; background: #e8ffe8;">
+            <td>ИТОГО</td>
+            <td></td>
+            <td>2 049 839</td>
+          </tr>
+        </tbody>
+
+      </table>
+
+      <p></p>
+    </div>
+  </main>
+</div>
+</body>
+<script src="sidebar.js"></script>
+</html>
