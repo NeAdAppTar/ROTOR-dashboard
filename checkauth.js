@@ -1,5 +1,4 @@
 (function () {
-  // Если переменная не объявлена — доступ запрещён
   const allowedPosts = (typeof pageAccess !== "undefined") ? pageAccess : [];
 
   function getCookie(name) {
@@ -7,15 +6,14 @@
         .split("; ")
         .find(row => row.startsWith(name + "="))
         ?.split("=")[1];
-}
+  }
 
-const login =
-  getCookie("userLogin") ||
-  localStorage.getItem("userLogin") ||
-  localStorage.getItem("username") ||
-  "user";
+  const login =
+    getCookie("userLogin") ||
+    localStorage.getItem("username") ||
+    "user";
 
-userName.textContent = decodeURIComponent(login);
+  userName.textContent = decodeURIComponent(login);
 
 
   async function getUserInfo(username) {
@@ -38,17 +36,14 @@ userName.textContent = decodeURIComponent(login);
   async function check() {
     const user = getCookie("userLogin");
 
-    // Нет логина → на страницу входа
     if (!user) {
       const redirectUrl = encodeURIComponent(window.location.href);
       window.location.href = `https://auth.rotorbus.ru/?redirect=${redirectUrl}`;
       return;
     }
 
-    // Доступ открыт для всех
     if (allowedPosts === null) return;
 
-    // Получить должность
     const info = await getUserInfo(user);
 
     if (!info || info.status !== "ok") {
@@ -58,17 +53,19 @@ userName.textContent = decodeURIComponent(login);
 
     const post = info.post?.trim() || "";
 
-    // Если должность не в списке allowed → запрет
     if (!allowedPosts.includes(post)) {
       window.location.href = "https://auth.rotorbus.ru/no-access.html";
       return;
     }
 
-    // Ок — сохраняем
+    // --- ВНОВЬ ИСПРАВЛЕННЫЕ СТРОКИ ---
     localStorage.setItem("userPost", post);
-    localStorage.setItem("userLogin", user);
+
+    // Перезаписываем только если пусто или отличается
+    if (localStorage.getItem("username") !== user) {
+      localStorage.setItem("username", user);
+    }
   }
 
-  
   check();
 })();
