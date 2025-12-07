@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="style_db.css">
   <link rel="stylesheet" href="style.css">
   <link rel="icon" type="image/png" href="icon.png">
-  <script src="checkauth.js"></script>
+
   <script src="usermenu.js"></script> 
 </head>
 
@@ -153,6 +153,8 @@
   </div>
 </div>
   <script>
+    const pageAccess = null;
+
     function formatNumber(value) {
       if (value === null || value === undefined) return '0';
       const str = String(value).trim();
@@ -238,4 +240,5 @@
   </script>
 </body>
 <script src="sidebar.js"></script>
+  <script src="checkauth.js"></script>
 </html>
