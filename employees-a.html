@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="style_db.css">
     <link rel="stylesheet" href="style_a.css">
   <link rel="icon" type="image/png" href="icon.png">
+    <script src="checkauth.js"></script>
     <script src="usermenu.js"></script> 
 
   
@@ -164,6 +165,8 @@
 </div>
 
 <script>
+  // доступ!!
+  const pageAccess = ["Директор", "Зам. директора", "Технический администратор", "Начальник учебного центра", "Зам. начальника учебного центра"];
   // ====== Конфигурация ======
   const API_BASE = 'https://transdigital.pythonanywhere.com/api';
 
@@ -468,9 +471,10 @@
   refreshBtn.addEventListener('click', fetchAllUsers);
   companySelect.addEventListener('change', fetchAllUsers);
 
-  // стартовая загрузка
+  // стартовая загрузка 
   fetchAllUsers();
 </script>
 
 </body>
+<script src="sidebar.js"></script>
 </html>
