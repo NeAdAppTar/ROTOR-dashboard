@@ -153,6 +153,12 @@
   </div>
 </div>
   <script>
+
+    function getCookie(name) {
+    const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+    return match ? decodeURIComponent(match[2]) : null;
+}
+
     const pageAccess = null;
     function formatNumber(value) {
       if (value === null || value === undefined) return '0';
@@ -165,7 +171,8 @@
     }
 
     async function loadDashboard() {
-  const login = localStorage.getItem('userLogin');
+  const login = getCookie('userLogin');
+
 
   const nickname = document.getElementById('nickname');
   const totalRoutes = document.getElementById('totalRoutes');
