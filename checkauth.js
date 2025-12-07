@@ -1,46 +1,43 @@
 (function () {
-  // ⚠️ Если pageAccess НЕ объявлен на странице — значит доступ СТРОГО ЗАПРЕЩЁН
-  // Чтобы страница была доступна всем, нужно явно прописать pageAccess = null;
-  const allowedPosts = typeof pageAccess !== "undefined" ? pageAccess : [];
+  // Если переменная не объявлена — доступ запрещён
+  const allowedPosts = (typeof pageAccess !== "undefined") ? pageAccess : [];
 
   function getCookie(name) {
     const match = document.cookie.match(new RegExp("(^| )" + name + "=([^;]+)"));
     return match ? decodeURIComponent(match[2]) : null;
   }
 
-  async function getUserInfo(name) {
+  async function getUserInfo(username) {
     try {
       const response = await fetch(
         "https://transdigital.pythonanywhere.com/api/get_user_info/rotor",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ name })
+          body: JSON.stringify({ name: username })
         }
       );
       return await response.json();
-    } catch (e) {
-      console.error("Ошибка API:", e);
+    } catch (err) {
+      console.error("Ошибка API:", err);
       return null;
     }
   }
 
-  async function protectPage() {
+  async function check() {
     const user = getCookie("userLogin");
 
-    // 1. Если не авторизован → на страницу входа
+    // Нет логина → на страницу входа
     if (!user) {
       const redirectUrl = encodeURIComponent(window.location.href);
       window.location.href = `https://auth.rotorbus.ru/?redirect=${redirectUrl}`;
       return;
     }
 
-    // 2. Если страница доступна для всех (pageAccess = null)
-    if (allowedPosts === null) {
-      return; 
-    }
+    // Доступ открыт для всех
+    if (allowedPosts === null) return;
 
-    // 3. Получить данные пользователя из БД
+    // Получить должность
     const info = await getUserInfo(user);
 
     if (!info || info.status !== "ok") {
@@ -48,18 +45,18 @@
       return;
     }
 
-    const userPost = info.post?.trim() || "";
+    const post = info.post?.trim() || "";
 
-    // 4. Проверка должности
-    if (!allowedPosts.includes(userPost)) {
+    // Если должность не в списке allowed → запрет
+    if (!allowedPosts.includes(post)) {
       window.location.href = "https://auth.rotorbus.ru/no-access.html";
       return;
     }
 
-    // 5. Всё ок — сохраняем инфу
+    // Ок — сохраняем
+    localStorage.setItem("userPost", post);
     localStorage.setItem("userLogin", user);
-    localStorage.setItem("userPost", userPost);
   }
 
-  protectPage();
+  check();
 })();
