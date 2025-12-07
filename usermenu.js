@@ -3,7 +3,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const themeBtn = document.getElementById("themeBtn");
     const userName = document.getElementById("userName");
 
-    const login = localStorage.getItem("userLogin") || "user";
+    const login = localStorage.getItem("username") || "user";
+
     userName.textContent = login;
 
     // Тема
@@ -70,8 +71,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // ---- LOGOUT ----
     logoutBtn.addEventListener("click", () => {
-        localStorage.removeItem("userLogin");
+        localStorage.removeItem("username");
         document.cookie = "userLogin=; path=/; domain=.rotorbus.ru; expires=Thu, 01 Jan 1970 00:00:00 GMT";
         window.location.href = "https://auth.rotorbus.ru/";
+
     });
 });
