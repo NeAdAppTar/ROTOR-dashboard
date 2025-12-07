@@ -1,9 +1,15 @@
+function getCookie(name) {
+    const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+    return match ? decodeURIComponent(match[2]) : null;
+}
+
 document.addEventListener("DOMContentLoaded", () => {
     const logoutBtn = document.getElementById("logoutBtn");
     const themeBtn = document.getElementById("themeBtn");
     const userName = document.getElementById("userName");
 
-    const login = localStorage.getItem("userLogin") || "user";
+    const login = getCookie('userLogin');
+
     userName.textContent = login;
 
     // Тема
