@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="style.css">
   <link rel="icon" type="image/png" href="icon.png">
 
-
+  <script src="usermenu.js"></script> 
 </head>
 
 <body>
@@ -166,13 +166,7 @@
     }
 
     async function loadDashboard() {
-  function getCookie(name) {
-  return document.cookie
-    .split("; ")
-    .find(row => row.startsWith(name + "="))
-    ?.split("=")[1];
-}
-
+  const login = localStorage.getItem('userLogin');
 
   const nickname = document.getElementById('nickname');
   const totalRoutes = document.getElementById('totalRoutes');
@@ -247,5 +241,4 @@
 </body>
 <script src="sidebar.js"></script>
   <script src="checkauth.js"></script>
-    <script src="usermenu.js"></script> 
 </html>
