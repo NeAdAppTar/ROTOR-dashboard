@@ -58,17 +58,7 @@
 </div>
 <div class="main-content">
   <div class="container">
-    <h1 class="title-row">
-  <span>Список сотрудников</span>
-  <a id="editEmployeesBtn" 
-     href="employees-a.html" 
-     class="edit-btn"
-     style="display:none !important;">
-    <i class="fas fa-pen"></i>
-  </a>
-</h1>
-
-
+    <h1>Список сотрудников</h1>
     <div id="loading" class="loading">Получение информации от сервера...</div>
     <table class="table" id="usersTable" style="display:none;">
       <thead>
@@ -87,53 +77,6 @@
 </div>
   <script>
 const pageAccess = null;
-
-
-/* ЖДЁМ, пока checkauth.js запишет userPost */
-function waitForRole() {
-    return new Promise(resolve => {
-        const check = () => {
-            const role = localStorage.getItem("userPost");
-            if (role && role.trim() !== "") {
-                resolve(role);
-            } else {
-                setTimeout(check, 50); // ждём 50 мс
-            }
-        };
-        check();
-    });
-}
-
-(async () => {
-    const allowedRoles = [
-        "Директор",
-        "Зам. директора",
-        "Технический администратор",
-        "Начальник учебного центра",
-        "Зам. начальника учебного центра"
-    ];
-
-    const editBtn = document.getElementById("editEmployeesBtn");
-
-    // Кнопка полностью скрыта до проверки
-    editBtn.style.display = "none";
-    editBtn.style.visibility = "hidden";
-
-    // Ждём роль из checkauth.js
-    const role = await waitForRole();
-
-    if (allowedRoles.includes(role)) {
-        // Показываем, если есть права
-        editBtn.style.display = "inline-flex";
-        editBtn.style.visibility = "visible";
-    } else {
-        // Удаляем полностью, если прав нет
-        editBtn.remove();
-    }
-})();
-
-
-
 
 // Правильный API согласно документации
 const API_URL = "https://transdigital.pythonanywhere.com/api/get_users_info/rotor";
