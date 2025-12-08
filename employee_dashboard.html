@@ -194,13 +194,14 @@ try {
     const postData = await postResponse.json();
 
     if (postData.status === "ok") {
-        const postElement = document.getElementById('userPost');
-        if (postElement) postElement.textContent = postData.post;
+        const roleElement = document.getElementById('userRole');
+        if (roleElement) roleElement.textContent = postData.post || 'Не указана';
     } else {
+        document.getElementById('userRole').textContent = 'Ошибка';
         console.warn("post error:", postData.message);
     }
-
 } catch (e) {
+    document.getElementById('userRole').textContent = 'Ошибка';
     console.error("Ошибка получения должности:", e);
 }
 
