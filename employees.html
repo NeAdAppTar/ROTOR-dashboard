@@ -58,24 +58,16 @@
 </div>
 <div class="main-content">
   <div class="container">
-    <h1 style="display:flex;align-items:center;justify-content:space-between;">
+    <h1 class="title-row">
   <span>Список сотрудников</span>
-
-  <button id="editEmployeesBtn" 
-          style="display:none;
-                 background:#111;
-                 color:white;
-                 border:none;
-                 padding:8px 14px;
-                 font-size:14px;
-                 border-radius:8px;
-                 cursor:pointer;
-                 display:flex;
-                 align-items:center;
-                 gap:8px;">
-      <i class="fas fa-pen"></i> Управление
-  </button>
+  <a id="editEmployeesBtn" 
+     href="employees-a.html" 
+     class="edit-btn"
+     style="display:none;">
+    <i class="fas fa-pen"></i>
+  </a>
 </h1>
+
 
     <div id="loading" class="loading">Получение информации от сервера...</div>
     <table class="table" id="usersTable" style="display:none;">
@@ -96,7 +88,7 @@
   <script>
 const pageAccess = null;
 
-const allowedRolesForEdit = [
+const allowedRoles = [
   "Директор",
   "Зам. директора",
   "Технический администратор",
@@ -104,38 +96,16 @@ const allowedRolesForEdit = [
   "Зам. начальника учебного центра"
 ];
 
-function getCookie(name) {
-  const m = document.cookie.match(new RegExp("(^| )" + name + "=([^;]+)"));
-  return m ? decodeURIComponent(m[2]) : null;
+const userRole = localStorage.getItem("userPost"); // Или откуда у тебя роль
+
+const editBtn = document.getElementById("editEmployeesBtn");
+
+if (allowedRoles.includes(userRole)) {
+    editBtn.style.display = "inline-flex";
+} else {
+    editBtn.remove(); // Полностью удалить кнопку, чтобы ее не было
 }
 
-async function loadUserRoleAndShowButton() {
-  const login = getCookie("userLogin");
-  if (!login) return;
-
-  try {
-    const res = await fetch("https://transdigital.pythonanywhere.com/api/get_user_info/rotor", {
-      method: "POST",
-      headers: {"Content-Type": "application/json"},
-      body: JSON.stringify({ name: login })
-    });
-
-    const data = await res.json();
-    if (data.status !== "ok") return;
-
-    const userPost = data.post?.trim();
-    const btn = document.getElementById("editEmployeesBtn");
-
-    if (allowedRolesForEdit.includes(userPost)) {
-      btn.style.display = "flex";
-      btn.onclick = () => window.location.href = "employees-a.html";
-    }
-  } catch (e) {
-    console.error("Ошибка проверки роли:", e);
-  }
-}
-
-loadUserRoleAndShowButton();
 // Правильный API согласно документации
 const API_URL = "https://transdigital.pythonanywhere.com/api/get_users_info/rotor";
 
