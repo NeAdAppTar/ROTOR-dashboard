@@ -78,8 +78,8 @@
   <script>
 const pageAccess = null;
 
-// Новый API
-const API_URL = "https://rotor.pythonanywhere.com/api/users/get_all";
+// Правильный API согласно документации
+const API_URL = "https://transdigital.pythonanywhere.com/api/get_users_info/rotor";
 
 async function loadUsers() {
     const table = document.getElementById('usersTable');
@@ -99,10 +99,10 @@ async function loadUsers() {
         const json = await response.json();
 
         if (!json.status || json.status !== "ok") {
-            throw new Error("Ответ API: " + (json.message || "неизвестная ошибка"));
+            throw new Error(json.message || "Неизвестная ошибка API");
         }
 
-        const users = json.users; // ← Новая структура: массив
+        const users = json.users; // массив пользователей
 
         tbody.innerHTML = "";
 
@@ -117,7 +117,7 @@ async function loadUsers() {
                         : "#";
 
             tr.innerHTML = `
-                <td>${user.login || "-"}</td>
+                <td>${user.name || "-"}</td>
                 <td>${user.post || "—"}</td>
                 <td>
                     ${
@@ -126,7 +126,7 @@ async function loadUsers() {
                             : `<span style="color:#888;">нет</span>`
                     }
                 </td>
-                <td>${user.dis || 0}</td>
+                <td>${user.disciplinary_actions || 0}</td>
                 <td>${user.account || 0}</td>
             `;
 
@@ -144,6 +144,7 @@ async function loadUsers() {
 
 loadUsers();
 </script>
+
 
 
 </body>
