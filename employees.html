@@ -88,23 +88,32 @@
   <script>
 const pageAccess = null;
 
-const allowedRoles = [
-  "Директор",
-  "Зам. директора",
-  "Технический администратор",
-  "Начальник учебного центра",
-  "Зам. начальника учебного центра"
-];
+document.addEventListener("DOMContentLoaded", () => {
+    const allowedRoles = [
+        "Директор",
+        "Зам. директора",
+        "Технический администратор",
+        "Начальник учебного центра",
+        "Зам. начальника учебного центра"
+    ];
 
-const userRole = localStorage.getItem("userPost"); // Или откуда у тебя роль
+    const userRole = localStorage.getItem("userPost"); 
+    const editBtn = document.getElementById("editEmployeesBtn");
 
-const editBtn = document.getElementById("editEmployeesBtn");
+    // На всякий случай — скрыть кнопку железно
+    editBtn.style.display = "none";
+    editBtn.style.visibility = "hidden";
 
-if (allowedRoles.includes(userRole)) {
-    editBtn.style.display = "inline-flex";
-} else {
-    editBtn.remove(); // Полностью удалить кнопку, чтобы ее не было
-}
+    if (allowedRoles.includes(userRole)) {
+        // Полностью показать
+        editBtn.style.display = "inline-flex";
+        editBtn.style.visibility = "visible";
+    } else {
+        // Удалить элемент полностью
+        editBtn.remove();
+    }
+});
+
 
 // Правильный API согласно документации
 const API_URL = "https://transdigital.pythonanywhere.com/api/get_users_info/rotor";
