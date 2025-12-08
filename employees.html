@@ -88,7 +88,23 @@
   <script>
 const pageAccess = null;
 
-document.addEventListener("DOMContentLoaded", () => {
+
+/* ЖДЁМ, пока checkauth.js запишет userPost */
+function waitForRole() {
+    return new Promise(resolve => {
+        const check = () => {
+            const role = localStorage.getItem("userPost");
+            if (role && role.trim() !== "") {
+                resolve(role);
+            } else {
+                setTimeout(check, 50); // ждём 50 мс
+            }
+        };
+        check();
+    });
+}
+
+(async () => {
     const allowedRoles = [
         "Директор",
         "Зам. директора",
@@ -97,22 +113,26 @@ document.addEventListener("DOMContentLoaded", () => {
         "Зам. начальника учебного центра"
     ];
 
-    const userRole = localStorage.getItem("userPost"); 
     const editBtn = document.getElementById("editEmployeesBtn");
 
-    // На всякий случай — скрыть кнопку железно
+    // Кнопка полностью скрыта до проверки
     editBtn.style.display = "none";
     editBtn.style.visibility = "hidden";
 
-    if (allowedRoles.includes(userRole)) {
-        // Полностью показать
+    // Ждём роль из checkauth.js
+    const role = await waitForRole();
+
+    if (allowedRoles.includes(role)) {
+        // Показываем, если есть права
         editBtn.style.display = "inline-flex";
         editBtn.style.visibility = "visible";
     } else {
-        // Удалить элемент полностью
+        // Удаляем полностью, если прав нет
         editBtn.remove();
     }
-});
+})();
+
+
 
 
 // Правильный API согласно документации
