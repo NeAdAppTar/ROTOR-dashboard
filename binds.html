@@ -7,7 +7,7 @@
     <link rel="icon" type="image/png" href="icon.png">
     <link rel="stylesheet" href="style_db.css">
   <link rel="stylesheet" href="style.css" />
- <script src="checkauth.js"></script>
+ 
  <script src="usermenu.js"></script>
 </head>
 <body>
@@ -179,6 +179,8 @@
   </div>
 </div>
   <script>
+    const pageAccess = null;
+
     document.querySelectorAll('pre').forEach(pre => {
       pre.innerHTML = pre.textContent.replace(/\\n/g, '<br>');
     });
@@ -211,4 +213,5 @@
   </script>
 </body>
 <script src="sidebar.js"></script>
+<script src="checkauth.js"></script>
 </html>

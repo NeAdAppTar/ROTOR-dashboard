@@ -8,7 +8,6 @@
   <link rel="stylesheet" href="style.css">
   <link rel="icon" type="image/png" href="icon.png">
   <script src="usermenu.js"></script> 
-  <script src="checkauth.js"></script>
 </head>
 
 <body>
@@ -77,6 +76,8 @@
   </div>
 </div>
   <script>
+    const pageAccess = null;
+    
     async function loadUsers() {
       const apiUrl = 'https://rotor.pythonanywhere.com/users';
       const table = document.getElementById('usersTable');
@@ -118,4 +119,5 @@
 
 </body>
 <script src="sidebar.js"></script>
+<script src="checkauth.js"></script>
 </html>

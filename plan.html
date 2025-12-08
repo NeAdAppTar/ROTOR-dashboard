@@ -7,7 +7,7 @@
   <link rel="icon" type="image/png" href="icon.png">
   <link rel="stylesheet" href="style_db.css">
   <link rel="stylesheet" href="style.css">
-  <script src="checkauth.js"></script>
+  
   <script src="usermenu.js"></script>
 
   <style>
@@ -130,6 +130,8 @@
   </div>
 
   <script>
+    const pageAccess = null;
+
     async function loadPlan() {
       const apiUrl = 'https://rotor.pythonanywhere.com/plan';
       const tbody = document.getElementById('planBody');
@@ -212,4 +214,5 @@
   </script>
 </body>
 <script src="sidebar.js"></script>
+<script src="checkauth.js"></script>
 </html>
