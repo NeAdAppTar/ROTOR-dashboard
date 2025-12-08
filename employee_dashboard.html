@@ -183,6 +183,28 @@
 
   nickname.textContent = login;
 
+  // Получение должности из второй БД
+try {
+    const postResponse = await fetch('https://transdigital.pythonanywhere.com/api/get_user_info/rotor', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: login })
+    });
+
+    const postData = await postResponse.json();
+
+    if (postData.status === "ok") {
+        const postElement = document.getElementById('userPost');
+        if (postElement) postElement.textContent = postData.post;
+    } else {
+        console.warn("post error:", postData.message);
+    }
+
+} catch (e) {
+    console.error("Ошибка получения должности:", e);
+}
+
+
   const userPanelName = document.querySelector('.sidebar .user-panel .user-name');
   const userMenuName = document.querySelector('.user-menu .user-name');
 
