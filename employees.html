@@ -76,46 +76,75 @@
   </div>
 </div>
   <script>
-    const pageAccess = null;
-    
-    async function loadUsers() {
-      const apiUrl = 'https://rotor.pythonanywhere.com/users';
-      const table = document.getElementById('usersTable');
-      const tbody = document.getElementById('usersBody');
-      const loading = document.getElementById('loading');
+const pageAccess = null;
 
-      try {
-        const response = await fetch(apiUrl);
-        if (!response.ok) throw new Error('Ошибка при загрузке данных');
-        const data = await response.json();
+// Новый API
+const API_URL = "https://rotor.pythonanywhere.com/api/users/get_all";
 
-        delete data.len;
+async function loadUsers() {
+    const table = document.getElementById('usersTable');
+    const tbody = document.getElementById('usersBody');
+    const loading = document.getElementById('loading');
 
-        tbody.innerHTML = '';
-
-        Object.values(data).forEach(user => {
-          const tr = document.createElement('tr');
-          const vkUrl = user.vk.startsWith('http') ? user.vk : `https://${user.vk}`;
-
-          tr.innerHTML = `
-            <td>${user.login}</td>
-            <td>${user.post}</td>
-            <td><button class="vk-btn" onclick="window.open('${vkUrl}', '_blank')">VK</button></td>
-            <td>${user.dis}</td>
-            <td>${user.account}</td>
-          `;
-          tbody.appendChild(tr); 
+    try {
+        const response = await fetch(API_URL, {
+            method: "GET",
+            headers: { "Accept": "application/json" }
         });
 
-        loading.style.display = 'none';
-        table.style.display = 'table';
-      } catch (error) {
-        loading.textContent = 'Не удалось загрузить данные: ' + error.message;
-      }
-    }
+        if (!response.ok) {
+            throw new Error("Ошибка сервера: " + response.status);
+        }
 
-    loadUsers();
-  </script>
+        const json = await response.json();
+
+        if (!json.status || json.status !== "ok") {
+            throw new Error("Ответ API: " + (json.message || "неизвестная ошибка"));
+        }
+
+        const users = json.users; // ← Новая структура: массив
+
+        tbody.innerHTML = "";
+
+        users.forEach(user => {
+            const tr = document.createElement("tr");
+
+            const vkUrl =
+                user.vk && user.vk.startsWith("http")
+                    ? user.vk
+                    : user.vk
+                        ? "https://" + user.vk
+                        : "#";
+
+            tr.innerHTML = `
+                <td>${user.login || "-"}</td>
+                <td>${user.post || "—"}</td>
+                <td>
+                    ${
+                        user.vk
+                            ? `<button class="vk-btn" onclick="window.open('${vkUrl}', '_blank')">VK</button>`
+                            : `<span style="color:#888;">нет</span>`
+                    }
+                </td>
+                <td>${user.dis || 0}</td>
+                <td>${user.account || 0}</td>
+            `;
+
+            tbody.appendChild(tr);
+        });
+
+        loading.style.display = "none";
+        table.style.display = "table";
+
+    } catch (err) {
+        loading.textContent = "Не удалось загрузить данные: " + err.message;
+        console.error("loadUsers error:", err);
+    }
+}
+
+loadUsers();
+</script>
+
 
 </body>
 <script src="sidebar.js"></script>
