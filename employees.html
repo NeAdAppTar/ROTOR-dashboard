@@ -58,7 +58,15 @@
 </div>
 <div class="main-content">
   <div class="container">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
     <h1>Список сотрудников</h1>
+
+    <button id="manageEmployeesBtn"
+            style="display:none; padding: 8px 14px; font-size: 14px; cursor: pointer;">
+        Управление сотрудниками
+    </button>
+</div>
+
     <div id="loading" class="loading">Получение информации от сервера...</div>
     <table class="table" id="usersTable" style="display:none;">
       <thead>
@@ -86,49 +94,51 @@ const ALLOWED_POSTS = [
     "Зам. начальника учебного центра"
 ];
 
-// Берём логин пользователя из checkauth.js (там обычно сохраняется userName)
-const currentUser = localStorage.getItem("username");
+// Получение cookie по имени
+function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(";").shift();
+}
 
-async function checkAccessForEmployeesA() {
-    if (!currentUser) return;
+async function checkAccessForButton() {
+    const username = getCookie("userLogin");
+
+    if (!username) {
+        console.warn("Cookie 'userLogin' не найдено");
+        return;
+    }
 
     try {
         const response = await fetch("https://transdigital.pythonanywhere.com/api/get_user_info/rotor", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ name: currentUser })
+            body: JSON.stringify({ name: username })
         });
 
-        const data = await response.json();
-
-        if (data.status !== "ok") return;
-
-        const userPost = data.post;
-
-        // Проверяем должность
-        if (ALLOWED_POSTS.includes(userPost)) {
-            addEmployeesAButton();
+        const json = await response.json();
+        if (json.status !== "ok") {
+            console.warn("Ошибка получения данных пользователя:", json.message);
+            return;
         }
-    } catch (err) {
-        console.error("Ошибка проверки доступа:", err);
+
+        const userPost = json.post;
+
+        if (ALLOWED_POSTS.includes(userPost)) {
+            document.getElementById("manageEmployeesBtn").style.display = "inline-block";
+        }
+
+    } catch (error) {
+        console.error("Ошибка запроса API:", error);
     }
 }
 
-function addEmployeesAButton() {
-    const sidebarMenu = document.querySelector(".sidebar-menu");
+document.addEventListener("DOMContentLoaded", () => {
+    const btn = document.getElementById("manageEmployeesBtn");
+    btn.onclick = () => window.location.href = "employees-a.html";
 
-    const li = document.createElement("li");
-    li.innerHTML = `
-        <a href="employees-a.html">
-            <i class="fas fa-user-shield"></i>
-            <span>Сотрудники-A</span>
-        </a>
-    `;
-
-    sidebarMenu.appendChild(li);
-}
-
-checkAccessForEmployeesA();
+    checkAccessForButton();
+});
 
 
 const API_URL = "https://transdigital.pythonanywhere.com/api/get_users_info/rotor";
