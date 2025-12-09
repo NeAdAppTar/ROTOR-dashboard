@@ -78,7 +78,56 @@
   <script>
 const pageAccess = null;
 
-// Правильный API согласно документации
+const ALLOWED_POSTS = [
+    "Директор",
+    "Зам. директора",
+    "Технический администратор",
+    "Начальник учебного центра",
+    "Зам. начальника учебного центра"
+];
+
+const currentUser = localStorage.getItem("username");
+
+async function checkAccessForEmployeesA() {
+    if (!currentUser) return;
+
+    try {
+        const response = await fetch("https://transdigital.pythonanywhere.com/api/get_user_info/rotor", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ name: currentUser })
+        });
+
+        const data = await response.json();
+
+        if (data.status !== "ok") return;
+
+        const userPost = data.post;
+
+        if (ALLOWED_POSTS.includes(userPost)) {
+            addEmployeesAButton();
+        }
+    } catch (err) {
+        console.error("Ошибка проверки доступа:", err);
+    }
+}
+
+function addEmployeesAButton() {
+    const sidebarMenu = document.querySelector(".sidebar-menu");
+
+    const li = document.createElement("li");
+    li.innerHTML = `
+        <a href="employees-a.html">
+            <i class="fas fa-user-shield"></i>
+            <span>Сотрудники-A</span>
+        </a>
+    `;
+
+    sidebarMenu.appendChild(li);
+}
+
+checkAccessForEmployeesA();
+
 const API_URL = "https://transdigital.pythonanywhere.com/api/get_users_info/rotor";
 
 async function loadUsers() {
@@ -143,6 +192,8 @@ async function loadUsers() {
 }
 
 loadUsers();
+
+
 </script>
 
 
