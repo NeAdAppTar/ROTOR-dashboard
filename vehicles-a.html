@@ -1,0 +1,553 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <title>Управление подвижным составом</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+
+  <!-- FontAwesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style_db.css">
+  <link rel="stylesheet" href="style_a.css">
+  <link rel="icon" type="image/png" href="icon.png">
+
+  <script src="usermenu.js"></script>
+  <style>
+    /* Стили в духе страницы пользователей */
+    .table-card { margin-bottom: 14px; }
+    .form-inline input, .form-inline select { margin-right: 8px; margin-bottom:6px; padding:8px; border-radius:8px; border:1px solid #e6e6ea; }
+    .actions-btn { padding:8px 10px; border-radius:8px; cursor:pointer; border:0; background:#111; color:#fff; }
+    .actions-btn.btn-add { background:#198754; }
+    .actions-btn.btn-delete { background:#dc3545; }
+    .actions-small { padding:6px 8px; border-radius:6px; margin-left:6px; cursor:pointer; border:0; background:#f3f4f6; }
+    .actions-small.btn-edit { background:#0d6efd; color:#fff; }
+    .actions-small.btn-delete { background:#dc3545; color:#fff; }
+    .loading { padding:12px; background:#fff5; border-radius:8px; }
+    .note { color:#666; font-size:13px; margin-top:8px; }
+
+    /* Модалки */
+    .modal { display:none; position:fixed; inset:0; align-items:center; justify-content:center; background:rgba(0,0,0,0.4); z-index:2000; }
+    .modal-card { background:#fff; padding:18px; border-radius:10px; width:720px; max-width:95%; display:flex; flex-direction:column; gap:12px; }
+    .grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
+    .grid .full { grid-column: 1 / -1; }
+    .small { font-size:13px; color:#444; display:block; margin-bottom:6px; }
+    .smallinput { width:100%; padding:8px; border:1px solid #e6e6ea; border-radius:8px; }
+
+    .modal-actions { display:flex; gap:8px; justify-content:flex-end; margin-top:6px; }
+
+    /* Toast */
+    .toast { display:none; position:fixed; right:20px; bottom:20px; padding:12px 16px; border-radius:8px; color:#fff; z-index:3000; }
+
+    /* Цвета для state (new/ne/norm) */
+    .state-new { background-color: #bff0bf !important; }
+    .state-ne  { background-color: #fff3b6 !important; }
+    .state-norm { background-color: transparent !important; }
+
+    /* Таблица */
+    .styled-table { width:100%; border-collapse:collapse; background:#fff; border-radius:8px; overflow:hidden; box-shadow: 0 0 0 1px #f1f1f5 inset; }
+    .styled-table thead { background:#f6f7fb; }
+    .styled-table th, .styled-table td { padding:10px 12px; text-align:left; border-bottom:1px solid #f0f0f3; font-size:14px; }
+    .actions { white-space:nowrap; }
+
+    /* Немного адаптивности */
+    @media (max-width: 900px) {
+      .grid { grid-template-columns: repeat(1,1fr); }
+      .form-inline { min-width: 0; }
+      .form-inline input { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+<div class="sidebar" id="sidebar">
+    <div class="sidebar-header"><span class="logo">РОТОР</span></div>
+    <ul class="sidebar-menu">
+        <li><a href="employee_dashboard.html"><i class="fas fa-user"></i><span>Личный кабинет</span></a></li>
+        <li><a href="employees.html"><i class="fas fa-users"></i><span>Список сотрудников</span></a></li>
+        <li><a href="routes.html"><i class="fas fa-route"></i><span>Маршруты</span></a></li>
+        <li><a href="vehicles.html"><i class="fas fa-truck"></i><span>Список ПС</span></a></li>
+        <li><a href="submit_route.html"><i class="fas fa-file"></i><span>Маршрутный лист</span></a></li>
+        <li><a href="charter.html"><i class="fas fa-book"></i><span>Устав</span></a></li>
+        <li><a href="plan.html"><i class="fas fa-calendar"></i><span>План</span></a></li>
+        <li><a href="t.html"><i class="fas fa-check"></i><span>Тесты</span></a></li>
+        <li><a href="binds.html"><i class="fas fa-keyboard"></i><span>Бинды и таблички</span></a></li>
+    </ul>
+
+    <div class="user-menu" id="userMenu">
+      <div class="user-menu-item" id="nyBtn"><i class="fas fa-snowflake"></i><span>НГ оформление</span></div>
+      <div class="user-menu-item" id="themeBtn"><i class="fas fa-moon"></i><span>Тёмная тема</span></div>
+      <div class="user-menu-item" id="logoutBtn"><i class="fas fa-sign-out-alt"></i><span>Выйти</span></div>
+      <div class="user-name-display"><i class="fas fa-user"></i><span id="userName">user</span></div>
+    </div>
+</div>
+
+<div class="main-content">
+  <div class="container">
+    <h1>Управление подвижным составом</h1>
+
+    <div class="table-card" style="margin-bottom:14px;">
+      <!-- Верхняя панель добавления (inline) -->
+      <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center;">
+        <div class="form-inline" style="flex:1;min-width:520px;">
+          <input id="new_board_number" placeholder="Бортовой номер (обязательно)" />
+          <input id="new_state_number" placeholder="Гос. номер" />
+          <input id="new_model" placeholder="Модель" />
+          <input id="new_built" placeholder="Построен (дата)" type="date" />
+          <input id="new_since" placeholder="Эксплуатация с (дата)" type="date" />
+          <select id="new_state" style="padding:8px;border-radius:8px;">
+            <option value="">Состояние</option>
+            <option value="new">new</option>
+            <option value="ne">ne</option>
+            <option value="norm">norm</option>
+            <option value="active">active</option>
+            <option value="inactive">inactive</option>
+            <option value="maintenance">maintenance</option>
+          </select>
+          <input id="new_owner" placeholder="Владелец" />
+          <input id="new_note" placeholder="Заметка" />
+          <button class="actions-btn btn-add" id="addBtn"><i class="fas fa-plus"></i> Добавить</button>
+        </div>
+
+        <div style="display:flex;gap:8px;align-items:center;">
+          <select id="companySelect" style="padding:8px;border-radius:8px;">
+            <!-- по умолчанию rotor -->
+            <option value="rotor" selected>rotor</option>
+            <option value="demo">demo</option>
+          </select>
+
+          <input id="searchInput" placeholder="Поиск по бортовому / гос. номеру..." style="padding:8px;border-radius:8px;border:1px solid #e6e6ea;" />
+          <button class="actions-btn" id="refreshBtn" title="Обновить список"><i class="fas fa-sync"></i></button>
+        </div>
+      </div>
+
+      <div id="loading" class="loading">Получение информации от сервера...</div>
+
+      <div style="margin-top:12px;">
+        <div class="table-card" style="padding:8px;">
+          <table class="styled-table" id="vehiclesTable" style="display:none;">
+            <thead>
+              <tr>
+                <th>№</th>
+                <th>Бортовой</th>
+                <th>Госномер</th>
+                <th>Модель</th>
+                <th>Построен</th>
+                <th>С (эксплуатации)</th>
+                <th>Состояние</th>
+                <th>Владелец</th>
+                <th>Заметка</th>
+                <th>Действия</th>
+              </tr>
+            </thead>
+            <tbody id="vehiclesBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="note">Поле <strong>Бортовой номер</strong> обязательно при добавлении.</div>
+    </div>
+  </div>
+
+  <!-- МОДАЛКА РЕДАКТИРОВАНИЯ / ПРОСМОТРА -->
+  <div id="editVehicleModal" class="modal">
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="editVehicleTitle">
+      <h3 id="editVehicleTitle">Редактирование транспортного средства</h3>
+
+      <div class="grid">
+        <div>
+          <label class="small">Бортовой номер</label>
+          <input id="edit_board_number" class="smallinput" />
+        </div>
+
+        <div>
+          <label class="small">Гос. номер</label>
+          <input id="edit_state_number" class="smallinput" />
+        </div>
+
+        <div>
+          <label class="small">Модель</label>
+          <input id="edit_model" class="smallinput" />
+        </div>
+
+        <div>
+          <label class="small">Построен</label>
+          <input id="edit_built" class="smallinput" type="date" />
+        </div>
+
+        <div>
+          <label class="small">Эксплуатация с</label>
+          <input id="edit_since" class="smallinput" type="date" />
+        </div>
+
+        <div>
+          <label class="small">Состояние</label>
+          <select id="edit_state" class="smallinput">
+            <option value="">Не указано</option>
+            <option value="new">new</option>
+            <option value="ne">ne</option>
+            <option value="norm">norm</option>
+            <option value="active">active</option>
+            <option value="inactive">inactive</option>
+            <option value="maintenance">maintenance</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="small">Владелец</label>
+          <input id="edit_owner" class="smallinput" />
+        </div>
+
+        <div class="full">
+          <label class="small">Заметка</label>
+          <input id="edit_note" class="smallinput" />
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button id="deleteVehicleBtn" class="actions-btn btn-delete"><i class="fas fa-trash"></i> Удалить</button>
+        <button id="closeVehicleEdit" class="actions-btn">Отмена</button>
+        <button id="saveVehicleEdit" class="actions-btn btn-edit"><i class="fas fa-save"></i> Сохранить</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast"></div>
+</div>
+
+<script>
+    // доступ!!
+  const pageAccess = ["Директор", "Зам. директора", "Технический администратор"];
+  // ====== Конфигурация ======
+  const API_BASE = 'https://transdigital.pythonanywhere.com/api';
+
+  // ====== Элементы ======
+  const vehiclesTable = document.getElementById('vehiclesTable');
+  const vehiclesBody = document.getElementById('vehiclesBody');
+  const loading = document.getElementById('loading');
+
+  const addBtn = document.getElementById('addBtn');
+  const new_board_number = document.getElementById('new_board_number');
+  const new_state_number = document.getElementById('new_state_number');
+  const new_model = document.getElementById('new_model');
+  const new_built = document.getElementById('new_built');
+  const new_since = document.getElementById('new_since');
+  const new_state = document.getElementById('new_state');
+  const new_owner = document.getElementById('new_owner');
+  const new_note = document.getElementById('new_note');
+
+  const companySelect = document.getElementById('companySelect');
+  const refreshBtn = document.getElementById('refreshBtn');
+  const searchInput = document.getElementById('searchInput');
+
+  const editVehicleModal = document.getElementById('editVehicleModal');
+  const edit_board_number = document.getElementById('edit_board_number');
+  const edit_state_number = document.getElementById('edit_state_number');
+  const edit_model = document.getElementById('edit_model');
+  const edit_built = document.getElementById('edit_built');
+  const edit_since = document.getElementById('edit_since');
+  const edit_state = document.getElementById('edit_state');
+  const edit_owner = document.getElementById('edit_owner');
+  const edit_note = document.getElementById('edit_note');
+
+  const saveVehicleEdit = document.getElementById('saveVehicleEdit');
+  const closeVehicleEdit = document.getElementById('closeVehicleEdit');
+  const deleteVehicleBtn = document.getElementById('deleteVehicleBtn');
+
+  const toastEl = document.getElementById('toast');
+
+  // ====== Состояние ======
+  let vehiclesCache = [];      // кеш всех ПС текущей компании
+  let editingVehicle = null;   // объект редактируемого ПС (с полем number)
+
+  // ====== Утилиты ======
+  function showToast(text, ok = true) {
+    toastEl.textContent = text;
+    toastEl.style.background = ok ? '#111' : '#b91c1c';
+    toastEl.style.display = 'block';
+    setTimeout(()=> toastEl.style.display = 'none', 3500);
+  }
+
+  function escapeHtml(str) {
+    if (str === undefined || str === null) return '';
+    return String(str)
+      .replaceAll('&','&amp;')
+      .replaceAll('<','&lt;')
+      .replaceAll('>','&gt;')
+      .replaceAll('"','&quot;')
+      .replaceAll("'",'&#039;');
+  }
+
+  // ====== Загрузить все ПС ======
+  async function fetchAllVehicles() {
+    loading.style.display = 'block';
+    vehiclesTable.style.display = 'none';
+    vehiclesBody.innerHTML = '';
+
+    const company = companySelect.value;
+    try {
+      const res = await fetch(`${API_BASE}/get_vehicles/${company}`);
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const data = await res.json();
+
+      if (data.status !== 'ok') {
+        throw new Error(data.message || 'Ошибка сервера');
+      }
+
+      vehiclesCache = Array.isArray(data.vehicles) ? data.vehicles : [];
+      renderVehiclesTable(vehiclesCache);
+      loading.style.display = 'none';
+      vehiclesTable.style.display = 'table';
+    } catch (err) {
+      // Если ошибка сети / CORS — покажем сообщение и лог
+      console.error('fetchAllVehicles error', err);
+      loading.textContent = 'Ошибка: ' + (err.message || err);
+      showToast('Ошибка: ' + (err.message || err), false);
+    }
+  }
+
+  function renderVehiclesTable(list) {
+    vehiclesBody.innerHTML = '';
+    const q = (searchInput.value || '').trim().toLowerCase();
+
+    list
+      .filter(v => {
+        if (!q) return true;
+        const fields = [
+          v.board_number || '',
+          v.state_number || '',
+          v.model || '',
+          v.owner || '',
+          v.note || ''
+        ].join(' ').toLowerCase();
+        return fields.includes(q);
+      })
+      .forEach(v => {
+        const tr = document.createElement('tr');
+
+        // класс по state
+        const st = (v.state || '').toString().trim().toLowerCase();
+        if (st === 'new') tr.classList.add('state-new');
+        else if (st === 'ne') tr.classList.add('state-ne');
+        else if (st === 'norm') tr.classList.add('state-norm');
+
+        tr.innerHTML = `
+          <td>${escapeHtml(v.number)}</td>
+          <td>${escapeHtml(v.board_number)}</td>
+          <td>${escapeHtml(v.state_number)}</td>
+          <td>${escapeHtml(v.model)}</td>
+          <td>${escapeHtml(v.built)}</td>
+          <td>${escapeHtml(v.since)}</td>
+          <td>${escapeHtml(v.state)}</td>
+          <td>${escapeHtml(v.owner)}</td>
+          <td>${escapeHtml(v.note)}</td>
+          <td class="actions">
+            <button class="actions-small btn-edit" title="Редактировать" data-num="${escapeHtml(v.number)}"><i class="fas fa-edit"></i></button>
+            <button class="actions-small" title="Просмотреть" data-num-view="${escapeHtml(v.number)}"><i class="fas fa-eye"></i></button>
+            <button class="actions-small btn-delete" title="Удалить" data-num-del="${escapeHtml(v.number)}"><i class="fas fa-trash"></i></button>
+          </td>
+        `;
+        vehiclesBody.appendChild(tr);
+      });
+
+    // навесим обработчики на кнопки (делаем после render)
+    document.querySelectorAll('[data-num]').forEach(btn => btn.addEventListener('click', (e) => {
+      const num = e.currentTarget.getAttribute('data-num');
+      onEditVehicle(num);
+    }));
+    document.querySelectorAll('[data-num-view]').forEach(btn => btn.addEventListener('click', (e) => {
+      const num = e.currentTarget.getAttribute('data-num-view');
+      onViewVehicle(num);
+    }));
+    document.querySelectorAll('[data-num-del]').forEach(btn => btn.addEventListener('click', (e) => {
+      const num = e.currentTarget.getAttribute('data-num-del');
+      onDeleteVehicle(num);
+    }));
+  }
+
+  // ====== Добавление ПС ======
+  addBtn.addEventListener('click', async (ev) => {
+    ev.preventDefault();
+    const company = companySelect.value;
+    const board_number = new_board_number.value.trim();
+    if (!board_number) { showToast('Бортовой номер обязателен', false); return; }
+
+    const payload = {
+      board_number,
+      state_number: new_state_number.value.trim(),
+      model: new_model.value.trim(),
+      built: new_built.value || '',
+      since: new_since.value || '',
+      note: new_note.value.trim(),
+      state: new_state.value || '',
+      owner: new_owner.value.trim()
+    };
+
+    try {
+      addBtn.disabled = true;
+      console.log('ADD SEND', payload);
+      const res = await fetch(`${API_BASE}/add_vehicle/${company}`, {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify(payload)
+      });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const data = await res.json();
+
+      if (data.status !== 'ok') throw new Error(data.message || 'Ошибка при добавлении');
+
+      showToast('ПС добавлено');
+      // очистка полей
+      new_board_number.value = ''; new_state_number.value=''; new_model.value=''; new_built.value=''; new_since.value=''; new_state.value=''; new_owner.value=''; new_note.value='';
+      fetchAllVehicles();
+    } catch (err) {
+      console.error('addVehicle error', err);
+      showToast('Ошибка: ' + (err.message || err), false);
+    } finally {
+      addBtn.disabled = false;
+    }
+  });
+
+  // ====== Открыть модал редактирования (по number) ======
+  async function onEditVehicle(number) {
+    const v = vehiclesCache.find(x => String(x.number) === String(number));
+    if (!v) { showToast('ПС не найдено', false); return; }
+
+    editingVehicle = Object.assign({}, v); // клонируем
+    // заполняем поля
+    edit_board_number.value = editingVehicle.board_number || '';
+    edit_state_number.value = editingVehicle.state_number || '';
+    edit_model.value = editingVehicle.model || '';
+    // built и since — строки в формате YYYY-MM-DD ожидаемо; если приходит год только — попробуем преобразовать
+    edit_built.value = normalizeToDateInput(editingVehicle.built);
+    edit_since.value = normalizeToDateInput(editingVehicle.since);
+    edit_state.value = editingVehicle.state || '';
+    edit_owner.value = editingVehicle.owner || '';
+    edit_note.value = editingVehicle.note || '';
+
+    editVehicleModal.style.display = 'flex';
+  }
+
+  function normalizeToDateInput(value) {
+    if (!value) return '';
+    // если формат YYYY-MM-DD — возвращаем как есть
+    if (/^\d{4}-\d{2}-\d{2}$/.test(String(value))) return value;
+    // если только год '2020' — вернуть empty (HTML date требует full date)
+    return '';
+  }
+
+  function onViewVehicle(number) {
+    onEditVehicle(number);
+    // если нужно — можно пометить поля readonly
+  }
+
+  // ====== Сохранение изменений ======
+  saveVehicleEdit.addEventListener('click', async () => {
+    if (!editingVehicle || !editingVehicle.number) { showToast('Нет выбранного ПС', false); return; }
+    const company = companySelect.value;
+
+    const payload = {
+      number: String(editingVehicle.number),
+      board_number: edit_board_number.value.trim(),
+      state_number: edit_state_number.value.trim(),
+      model: edit_model.value.trim(),
+      built: edit_built.value || '',
+      since: edit_since.value || '',
+      note: edit_note.value.trim(),
+      state: edit_state.value || '',
+      owner: edit_owner.value.trim()
+    };
+
+    try {
+      saveVehicleEdit.disabled = true;
+      console.log('UPDATE SEND', payload);
+      const res = await fetch(`${API_BASE}/update_vehicle/${company}`, {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify(payload)
+      });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const data = await res.json();
+      if (data.status !== 'ok') throw new Error(data.message || 'Ошибка при сохранении');
+
+      showToast('Изменения сохранены');
+      editVehicleModal.style.display = 'none';
+      editingVehicle = null;
+      fetchAllVehicles();
+    } catch (err) {
+      console.error('saveVehicle error', err);
+      showToast('Ошибка: ' + (err.message || err), false);
+    } finally {
+      saveVehicleEdit.disabled = false;
+    }
+  });
+
+  // ====== Удаление ПС ======
+  async function onDeleteVehicle(number) {
+    if (!confirm(`Удалить ПС №${number}?`)) return;
+    const company = companySelect.value;
+
+    // Обязательно отправляем number как строку
+    const payload = { number: String(number) };
+
+    try {
+      console.log('DELETE SEND', payload);
+      const res = await fetch(`${API_BASE}/delete_vehicle/${company}`, {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify(payload)
+      });
+
+      if (!res.ok) {
+        // возможно сервер вернул HTML или не выставил CORS — покажем статус
+        throw new Error('HTTP ' + res.status);
+      }
+
+      const data = await res.json();
+      if (data.status !== 'ok') throw new Error(data.message || 'Ошибка при удалении');
+
+      showToast('ПС удалено');
+      fetchAllVehicles();
+    } catch (err) {
+      console.error('deleteVehicle error', err);
+      // Разные варианты ошибки: сеть/CORS/сервер
+      if (err instanceof TypeError) {
+        showToast('Сетевая ошибка или блокировка CORS (см. консоль)', false);
+      } else {
+        showToast('Ошибка: ' + (err.message || err), false);
+      }
+    }
+  }
+
+  // кнопка удаления в модалке использует текущий editingVehicle
+  deleteVehicleBtn.addEventListener('click', async () => {
+    if (!editingVehicle || !editingVehicle.number) return;
+    if (!confirm(`Удалить ПС №${editingVehicle.number}?`)) return;
+    editVehicleModal.style.display = 'none';
+    await onDeleteVehicle(editingVehicle.number);
+    editingVehicle = null;
+  });
+
+  // ====== Закрытие модалки ======
+  closeVehicleEdit.addEventListener('click', () => {
+    editVehicleModal.style.display = 'none';
+    editingVehicle = null;
+  });
+  editVehicleModal.addEventListener('click', (e) => {
+    if (e.target === editVehicleModal) {
+      editVehicleModal.style.display = 'none';
+      editingVehicle = null;
+    }
+  });
+
+  // ====== Поиск / фильтры / обновление ======
+  searchInput.addEventListener('input', () => renderVehiclesTable(vehiclesCache));
+  refreshBtn.addEventListener('click', fetchAllVehicles);
+  companySelect.addEventListener('change', fetchAllVehicles);
+
+  // стартовая загрузка
+  fetchAllVehicles();
+</script>
+
+</body>
+<script src="sidebar.js"></script>
+<script src="checkauth.js"></script>
+</html>
