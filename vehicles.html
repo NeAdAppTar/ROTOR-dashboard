@@ -166,10 +166,21 @@ async function loadVehicles() {
         tbody.innerHTML = "";
         let count = 0;
 
+        data.vehicles.sort((a, b) => { // сортировка по бн
+    const numA = parseInt(a.board_number, 10);
+    const numB = parseInt(b.board_number, 10);
+
+
+    if (isNaN(numA)) return 1;
+    if (isNaN(numB)) return -1;
+
+    return numA - numB;
+});
+
+
         data.vehicles.forEach(v => {
             const tr = document.createElement("tr");
 
-            // Цвет строки
             if (v.state === "new") tr.classList.add("state-new");
             else if (v.state === "ne") tr.classList.add("state-ne");
             else tr.classList.add("state-norm");
