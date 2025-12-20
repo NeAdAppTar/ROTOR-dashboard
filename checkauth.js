@@ -75,7 +75,6 @@
     // Доступ открыт для всех
     if (allowedPosts === null) return;
 
-    // Получить должность
     const info = await getUserInfo(user);
 
     if (!info || info.status !== "ok") {
@@ -85,7 +84,6 @@
 
     const post = info.post?.trim() || "";
 
-    // Если должность не в списке allowed → запрет
     if (!allowedPosts.includes(post)) {
       window.location.href = "https://auth.rotorprov.ru/no-access.html";
       return;
