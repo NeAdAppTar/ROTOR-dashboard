@@ -68,7 +68,7 @@
         <input id="newName" placeholder="Логин (name)" />
         <input id="newPass" placeholder="Пароль" type="password" />
         <input id="newPost" placeholder="Должность" />
-        <input id="newAccount" placeholder="Аккаунт" />
+        <input id="newAccount" placeholder="Банк. счет" />
         <input id="newVK" placeholder="VK" />
         <input id="newDA" placeholder="Взыскания" />
         <input id="newNote" placeholder="Заметка" />
@@ -118,7 +118,8 @@
     <div class="grid">
       <div>
         <label class="small">Логин</label>
-        <input id="editName" class="smallinput" />
+        <input id="editName" class="smallinput" readonly />
+
       </div>
 
       <div>
@@ -267,10 +268,14 @@
           <td>${escapeHtml(user.disciplinary_actions)}</td>
           <td>${escapeHtml(user.note)}</td>
           <td class="actions">
-            <button class="actions-small btn-edit" onclick="onEditUser('${escapeHtml(user.name)}')"><i class="fas fa-edit"></i></button>
-            <button class="actions-small" onclick="onViewUser('${escapeHtml(user.name)}')"><i class="fas fa-eye"></i></button>
-            <button class="actions-small btn-delete" onclick="onDeleteUser('${escapeHtml(user.name)}')"><i class="fas fa-trash"></i></button>
+          <button class="actions-small btn-edit" onclick="onEditUser('${escapeHtml(user.name)}')">
+            <i class="fas fa-edit"></i>
+          </button>
+          <button class="actions-small btn-delete" onclick="onDeleteUser('${escapeHtml(user.name)}')">
+            <i class="fas fa-trash"></i>
+          </button>
           </td>
+
         `;
         usersBody.appendChild(tr);
       });
@@ -364,11 +369,6 @@
     showToast('Ошибка: ' + (err.message || err), false);
   }
 };
-
-  // Для просмотра (без редактирования)
-  window.onViewUser = function(name) {
-    onEditUser(name);
-  };
 
   // ====== Сохранение изменений пользователя ======
   saveUserEdit.addEventListener('click', async () => {
