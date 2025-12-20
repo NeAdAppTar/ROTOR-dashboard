@@ -77,7 +77,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // ---- LOGOUT ----
     logoutBtn.addEventListener("click", () => {
         localStorage.removeItem("userLogin");
-        document.cookie = "userLogin=; path=/; domain=.rotorbus.ru; expires=Thu, 01 Jan 1970 00:00:00 GMT";
-        window.location.href = "https://auth.rotorbus.ru/";
+        document.cookie = "userLogin=; path=/; domain=.rotorprov.ru; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+        window.location.href = "https://auth.rotorprov.ru/";
     });
 });

@@ -53,14 +53,14 @@
 
     if (!user || !storedHash) {
       const redirectUrl = encodeURIComponent(window.location.href);
-      window.location.href = `https://auth.rotorbus.ru/?redirect=${redirectUrl}`;
+      window.location.href = `https://auth.rotorprov.ru/?redirect=${redirectUrl}`;
       return;
     }
 
     // Проверка пароля
     const base = await getUserBase(user);
     if (!base || base.status !== "ok") {
-      window.location.href = "https://auth.rotorbus.ru/no-access.html";
+      window.location.href = "https://auth.rotorprov.ru/no-access.html";
       return;
     }
 
@@ -68,7 +68,7 @@
 
     if (storedHash !== passHash) {
       // Хэш не совпадает — значит cookie подделали
-      window.location.href = "https://auth.rotorbus.ru/";
+      window.location.href = "https://auth.rotorprov.ru/";
       return;
     }
 
@@ -79,7 +79,7 @@
     const info = await getUserInfo(user);
 
     if (!info || info.status !== "ok") {
-      window.location.href = "https://auth.rotorbus.ru/no-access.html";
+      window.location.href = "https://auth.rotorprov.ru/no-access.html";
       return;
     }
 
@@ -87,7 +87,7 @@
 
     // Если должность не в списке allowed → запрет
     if (!allowedPosts.includes(post)) {
-      window.location.href = "https://auth.rotorbus.ru/no-access.html";
+      window.location.href = "https://auth.rotorprov.ru/no-access.html";
       return;
     }
 
