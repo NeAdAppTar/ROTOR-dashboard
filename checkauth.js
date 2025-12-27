@@ -1,97 +1,80 @@
-(function () {
-  const allowedPosts = (typeof pageAccess !== "undefined") ? pageAccess : [];
+import { initializeApp } from
+"https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 
-  function getCookie(name) {
-    const match = document.cookie.match(new RegExp("(^| )" + name + "=([^;]+)"));
-    return match ? decodeURIComponent(match[2]) : null;
+import {
+  getAuth,
+  onAuthStateChanged
+} from
+"https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+import {
+  getFirestore,
+  doc,
+  getDoc
+} from
+"https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+
+/* ================== CONFIG ================== */
+const firebaseConfig = {
+  apiKey: "AIzaSyCW9kzlx94qJWkpphG3kGmVskHezLf6Bb0",
+  authDomain: "rotorbus-ae2a5.firebaseapp.com",
+  projectId: "rotorbus-ae2a5",
+  appId: "1:363736805548:web:590cec31bb5671e115af09",
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+/* ================== ACCESS ================== */
+const allowedPosts =
+  (typeof pageAccess !== "undefined") ? pageAccess : null;
+
+/* ================== CHECK ================== */
+onAuthStateChanged(auth, async (user) => {
+
+  /* ❌ Не авторизован */
+  if (!user) {
+    const redirectUrl = encodeURIComponent(window.location.href);
+    window.location.href =
+      `https://auth.rotorprov.ru/?redirect=${redirectUrl}`;
+    return;
   }
 
-  async function getUserInfo(username) {
-    try {
-      const response = await fetch(
-        "https://transdigital.pythonanywhere.com/api/get_user_info/rotor",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ name: username })
-        }
-      );
-      return await response.json();
-    } catch (err) {
-      console.error("Ошибка API:", err);
-      return null;
-    }
+  /* Авторизован, но роль не важна */
+  if (allowedPosts === null) {
+    localStorage.setItem("userLogin", user.email);
+    return;
   }
 
-  async function getUserBase(username) {
-    try {
-      const response = await fetch(
-        "https://transdigital.pythonanywhere.com/api/get_user/rotor",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ name: username })
-        }
-      );
-      return await response.json();
-    } catch (err) {
-      console.error("Ошибка API:", err);
-      return null;
-    }
-  }
+  try {
+    /* Получаем роль из Firestore */
+    const snap = await getDoc(doc(db, "users", user.uid));
 
-  async function sha256(text) {
-    const encoder = new TextEncoder();
-    const data = encoder.encode(text);
-    const hash = await crypto.subtle.digest("SHA-256", data);
-    return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, "0")).join("");
-  }
-
-  async function check() {
-    const user = getCookie("userLogin");
-    const storedHash = getCookie("userHash");
-
-    if (!user || !storedHash) {
-      const redirectUrl = encodeURIComponent(window.location.href);
-      window.location.href = `https://auth.rotorprov.ru/?redirect=${redirectUrl}`;
+    if (!snap.exists()) {
+      window.location.href =
+        "https://auth.rotorprov.ru/no-access.html";
       return;
     }
 
-    // Проверка пароля
-    const base = await getUserBase(user);
-    if (!base || base.status !== "ok") {
-      window.location.href = "https://auth.rotorprov.ru/no-access.html";
-      return;
-    }
+    const data = snap.data();
+    const post = (data.post || "").trim();
 
-    const passHash = await sha256(base.password);
-
-    if (storedHash !== passHash) {
-      // Хэш не совпадает — значит cookie подделали
-      window.location.href = "https://auth.rotorprov.ru/";
-      return;
-    }
-
-    // Доступ открыт для всех
-    if (allowedPosts === null) return;
-
-    const info = await getUserInfo(user);
-
-    if (!info || info.status !== "ok") {
-      window.location.href = "https://auth.rotorprov.ru/no-access.html";
-      return;
-    }
-
-    const post = info.post?.trim() || "";
-
+    /* Нет доступа */
     if (!allowedPosts.includes(post)) {
-      window.location.href = "https://auth.rotorprov.ru/no-access.html";
+      window.location.href =
+        "https://auth.rotorprov.ru/no-access.html";
       return;
     }
 
+    /* ✅ Всё ок */
     localStorage.setItem("userPost", post);
-    localStorage.setItem("userLogin", user);
-  }
+    localStorage.setItem("userLogin", user.email);
 
-  check();
-})();
+  } catch (err) {
+    console.error("Ошибка Firestore:", err);
+    window.location.href =
+      "https://auth.rotorprov.ru/no-access.html";
+  }
+});
