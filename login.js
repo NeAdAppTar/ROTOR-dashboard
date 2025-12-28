@@ -33,11 +33,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const params = new URLSearchParams(window.location.search);
     let redirect =
       params.get("redirect") ||
-      "https://dashboard.rotorprov.ru/index.html";
+      "https://dashboard.rotorprov.ru/employee_dashboard.html";
 
     // защита от возврата на login
     if (redirect.includes("/login")) {
-      redirect = "https://dashboard.rotorprov.ru/index.html";
+      redirect = "https://dashboard.rotorprov.ru/employee_dashboard.html";
     }
 
     window.location.replace(redirect);
