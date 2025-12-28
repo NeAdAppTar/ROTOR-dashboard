@@ -1,4 +1,3 @@
-// login.js
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import {
   getAuth,
@@ -16,6 +15,8 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
+let loginInProgress = false;
+
 document.addEventListener("DOMContentLoaded", () => {
   const toast = document.getElementById("toast");
 
@@ -27,9 +28,19 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   onAuthStateChanged(auth, (user) => {
-    if (user) {
-      window.location.href = "https://dashboard.rotorprov.ru/index.html";
+    if (!user || !loginInProgress) return;
+
+    const params = new URLSearchParams(window.location.search);
+    let redirect =
+      params.get("redirect") ||
+      "https://dashboard.rotorprov.ru/index.html";
+
+    // защита от возврата на login
+    if (redirect.includes("/login")) {
+      redirect = "https://dashboard.rotorprov.ru/index.html";
     }
+
+    window.location.replace(redirect);
   });
 
   document.getElementById("loginForm").addEventListener("submit", async (e) => {
@@ -50,16 +61,13 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
       const email = `${login}@rotorprov.ru`;
 
+      loginInProgress = true;
+
       await signInWithEmailAndPassword(auth, email, password);
 
-      const params = new URLSearchParams(window.location.search);
-      const redirect =
-        params.get("redirect") ||
-        "https://dashboard.rotorprov.ru/index.html";
-
-      window.location.href = decodeURIComponent(redirect);
 
     } catch (err) {
+      loginInProgress = false;
       console.error(err);
 
       if (err.code === "auth/invalid-credential") {
