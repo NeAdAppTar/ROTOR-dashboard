@@ -37,13 +37,12 @@ onAuthStateChanged(auth, async (user) => {
   /* ❌ Не авторизован */
   if (!user) {
     const redirectUrl = encodeURIComponent(window.location.href);
-    window.location.replace(
-      `https://auth.rotorprov.ru/?redirect=${redirectUrl}`
-    );
+    window.location.href =
+      `https://dashboard.rotorprov.ru/login.html/?redirect=${redirectUrl}`;
     return;
   }
 
-  /* Авторизован, роль не требуется */
+  /* Авторизован, но роль не важна */
   if (allowedPosts === null) {
     localStorage.setItem("userLogin", user.email);
     return;
@@ -54,20 +53,18 @@ onAuthStateChanged(auth, async (user) => {
     const snap = await getDoc(doc(db, "users", user.uid));
 
     if (!snap.exists()) {
-      window.location.replace(
-        "https://auth.rotorprov.ru/no-access.html"
-      );
+      window.location.href =
+        "https://auth.rotorprov.ru/no-access.html";
       return;
     }
 
     const data = snap.data();
     const post = (data.post || "").trim();
 
-    /* ❌ Нет доступа */
+    /* Нет доступа */
     if (!allowedPosts.includes(post)) {
-      window.location.replace(
-        "https://auth.rotorprov.ru/no-access.html"
-      );
+      window.location.href =
+        "https://auth.rotorprov.ru/no-access.html";
       return;
     }
 
@@ -77,9 +74,7 @@ onAuthStateChanged(auth, async (user) => {
 
   } catch (err) {
     console.error("Ошибка Firestore:", err);
-    window.location.replace(
-      "https://auth.rotorprov.ru/no-access.html"
-    );
+    window.location.href =
+      "https://auth.rotorprov.ru/no-access.html";
   }
 });
-
