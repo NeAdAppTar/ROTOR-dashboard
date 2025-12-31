@@ -8,13 +8,11 @@
   <link rel="icon" type="image/png" href="icon.png">
   <link rel="stylesheet" href="style_db.css">
   <link rel="stylesheet" href="style_a.css">
-  <link rel="stylesheet" href="modal.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 
 <body>
 
-<!-- ================= SIDEBAR (НЕ ТРОГАЕМ) ================= -->
 <div class="sidebar" id="sidebar"> 
   <div class="sidebar-header">
     <span class="logo">РОТОР</span>
@@ -29,7 +27,7 @@
     <li><a href="charter.html"><i class="fas fa-book"></i><span>Устав</span></a></li>
     <li><a href="plan.html"><i class="fas fa-calendar"></i><span>План</span></a></li>
     <li><a href="t.html"><i class="fas fa-check"></i><span>Тесты</span></a></li>
-    <li><a href="binds.html"><i class="fas fa-keyboard"></i><span>Бинды</span></a></li>
+    <li><a href="binds.html"><i class="fas fa-keyboard"></i><span>Бинды и таблички</span></a></li>
   </ul>
 
   <div class="user-menu">
@@ -41,6 +39,7 @@
     <div class="user-name-display">
       <i class="fas fa-user"></i>
       <span id="userName">user</span>
+      <small id="userPost"></small>
     </div>
   </div>
 </div>
@@ -50,23 +49,21 @@
   <div class="container">
     <h1>Управление пользователями</h1>
 
-    <!-- ===== ADD ===== -->
+    <!-- Добавление -->
     <div class="table-card">
       <div class="form-inline">
-        <input id="newLogin" placeholder="Логин">
-        <input id="newPassword" type="password" placeholder="Пароль">
-        <input id="newPost" placeholder="Должность">
-        <input id="newAccount" placeholder="Банк">
-        <input id="newVK" placeholder="VK">
-        <input id="newDA" placeholder="Взыскания">
-        <input id="newNote" placeholder="Заметка">
-        <button id="addBtn" class="actions-btn btn-add">
-          <i class="fas fa-plus"></i> Добавить
-        </button>
+        <input id="newLogin" placeholder="Логин" />
+        <input id="newPassword" type="password" placeholder="Пароль" />
+        <input id="newPost" placeholder="Должность" />
+        <input id="newAccount" placeholder="Банк" />
+        <input id="newVK" placeholder="VK" />
+        <input id="newDA" placeholder="Взыскания" />
+        <input id="newNote" placeholder="Заметка" />
+        <button id="addBtn" class="btn-add">Добавить</button>
       </div>
     </div>
 
-    <!-- ===== TABLE ===== -->
+    <!-- Таблица -->
     <div class="table-card">
       <table class="styled-table">
         <thead>
@@ -86,21 +83,17 @@
   </div>
 </div>
 
-<!-- ================= MODAL ================= -->
-<div id="editModal" class="modal">
-  <div class="modal-card">
-    <h3>Редактирование пользователя</h3>
-
-    <div class="modal-field"><label>Должность</label><input id="editPost"></div>
-    <div class="modal-field"><label>Банк</label><input id="editAccount"></div>
-    <div class="modal-field"><label>VK</label><input id="editVK"></div>
-    <div class="modal-field"><label>Взыскания</label><input id="editDA"></div>
-    <div class="modal-field"><label>Заметка</label><input id="editNote"></div>
-
-    <div class="modal-actions">
-      <button class="modal-btn cancel" onclick="closeEdit()">Отмена</button>
-      <button class="modal-btn save" id="saveEdit">Сохранить</button>
-    </div>
+<!-- ====== МОДАЛКА РЕДАКТИРОВАНИЯ ====== -->
+<div id="editModal" class="modal hidden">
+  <div class="modal-content">
+    <h3>Редактирование</h3>
+    <input id="editPost" placeholder="Должность">
+    <input id="editAccount" placeholder="Банк">
+    <input id="editVK" placeholder="VK">
+    <input id="editDA" placeholder="Взыскания">
+    <input id="editNote" placeholder="Заметка">
+    <button id="saveEdit">Сохранить</button>
+    <button onclick="closeEdit()">Отмена</button>
   </div>
 </div>
 
@@ -118,8 +111,8 @@
 <!-- ================= FIREBASE ================= -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getAuth, onAuthStateChanged, signOut, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { getFirestore, collection, getDocs, getDoc, doc, setDoc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { getFirestore, collection, getDocs, doc, getDoc, setDoc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCW9kzlx94qJWkpphG3kGmVskHezLf6Bb0",
@@ -132,42 +125,30 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-let currentPost = "";
+let currentUserRole = null;
 let editUid = null;
 
-const usersBody = document.getElementById("usersBody");
-
-/* ===== AUTH CHECK ===== */
-onAuthStateChanged(auth, async user => {
-  if (!user) {
-    location.href = "login.html";
-    return;
-  }
-
-  const snap = await getDoc(doc(db, "users", user.uid));
-  if (!snap.exists()) {
-    location.href = "no-access.html";
-    return;
-  }
-
-  currentPost = (snap.data().post || "").toLowerCase();
-  document.getElementById("userName").textContent = snap.data().login;
-
-  if (!pageAccess.includes(currentPost)) {
-    location.href = "no-access.html";
-    return;
-  }
-
-  loadUsers();
-});
-
-/* ===== ROLE CHECK ===== */
+/* ===== CHECK ROLE ===== */
 function checkRole() {
-  if (!pageAccess.includes(currentPost)) {
-    alert("Нет прав");
+  if (!pageAccess.includes(currentUserRole)) {
+    alert("Недостаточно прав");
     throw new Error("NO ACCESS");
   }
 }
+
+/* ===== AUTH ===== */
+onAuthStateChanged(auth, async user => {
+  if (!user) return;
+
+  const snap = await getDoc(doc(db, "users", user.uid));
+  if (!snap.exists()) return;
+
+  document.getElementById("userName").textContent = snap.data().login;
+  document.getElementById("userPost").textContent = snap.data().post;
+
+  currentUserRole = snap.data().post.toLowerCase();
+  loadUsers();
+});
 
 /* ===== LOAD USERS ===== */
 async function loadUsers() {
@@ -176,29 +157,28 @@ async function loadUsers() {
 
   snap.forEach(d => {
     const u = d.data();
-    const tr = document.createElement("tr");
-    tr.innerHTML = `
-      <td>${u.login}</td>
-      <td>${u.post}</td>
-      <td>${u.account}</td>
-      <td>${u.vk}</td>
-      <td>${u.disciplinary_actions}</td>
-      <td>${u.note}</td>
-      <td>
-        <button onclick="openEdit('${d.id}')"><i class="fas fa-pen"></i></button>
-        <button onclick="deleteUser('${d.id}')"><i class="fas fa-trash"></i></button>
-      </td>`;
-    usersBody.appendChild(tr);
+    usersBody.innerHTML += `
+      <tr>
+        <td>${u.login}</td>
+        <td>${u.post}</td>
+        <td>${u.account}</td>
+        <td>${u.vk}</td>
+        <td>${u.disciplinary_actions}</td>
+        <td>${u.note}</td>
+        <td>
+          <button onclick="openEdit('${d.id}')"><i class="fas fa-edit"></i></button>
+          <button onclick="removeUser('${d.id}')"><i class="fas fa-trash"></i></button>
+        </td>
+      </tr>`;
   });
 }
 
-/* ===== ADD ===== */
+/* ===== ADD USER ===== */
 addBtn.onclick = async () => {
   checkRole();
 
-  const login = newLogin.value.trim();
-  const password = newPassword.value.trim();
-  if (!login || !password) return;
+  const login = newLogin.value;
+  const password = newPassword.value;
 
   const cred = await createUserWithEmailAndPassword(
     auth,
@@ -222,28 +202,16 @@ addBtn.onclick = async () => {
 window.openEdit = async (uid) => {
   checkRole();
   editUid = uid;
-
-  const snap = await getDoc(doc(db, "users", uid));
-  const u = snap.data();
-
-  editPost.value = u.post || "";
-  editAccount.value = u.account || "";
-  editVK.value = u.vk || "";
-  editDA.value = u.disciplinary_actions || "";
-  editNote.value = u.note || "";
-
-  editModal.classList.add("open");
+  document.getElementById("editModal").classList.remove("hidden");
 };
 
 window.closeEdit = () => {
-  editModal.classList.remove("open");
   editUid = null;
+  document.getElementById("editModal").classList.add("hidden");
 };
 
 saveEdit.onclick = async () => {
   checkRole();
-  if (!editUid) return;
-
   await updateDoc(doc(db, "users", editUid), {
     post: editPost.value,
     account: editAccount.value,
@@ -251,25 +219,21 @@ saveEdit.onclick = async () => {
     disciplinary_actions: editDA.value,
     note: editNote.value
   });
-
   closeEdit();
   loadUsers();
 };
 
 /* ===== DELETE ===== */
-window.deleteUser = async (uid) => {
+window.removeUser = async (uid) => {
   checkRole();
   if (!confirm("Удалить пользователя?")) return;
   await deleteDoc(doc(db, "users", uid));
   loadUsers();
 };
-
-/* ===== LOGOUT ===== */
-logoutBtn.onclick = async () => {
-  await signOut(auth);
-  location.href = "login.html";
-};
 </script>
+
+<script type="module" src="checkauth.js"></script>
+<script src="sidebar.js"></script>
 
 </body>
 </html>
