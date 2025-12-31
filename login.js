@@ -1,7 +1,8 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import {
   getAuth,
-  signInWithEmailAndPassword
+  signInWithEmailAndPassword,
+  onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
 const firebaseConfig = {
@@ -14,6 +15,8 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
+let loginInProgress = false;
+
 document.addEventListener("DOMContentLoaded", () => {
   const toast = document.getElementById("toast");
 
@@ -23,6 +26,22 @@ document.addEventListener("DOMContentLoaded", () => {
     toast.classList.add("show");
     setTimeout(() => toast.classList.remove("show"), 3000);
   }
+
+  onAuthStateChanged(auth, (user) => {
+    if (!user || !loginInProgress) return;
+
+    const params = new URLSearchParams(window.location.search);
+    let redirect =
+      params.get("redirect") ||
+      "https://dashboard.rotorprov.ru/employee_dashboard.html";
+
+    // защита от возврата на login
+    if (redirect.includes("/login")) {
+      redirect = "https://dashboard.rotorprov.ru/employee_dashboard.html";
+    }
+
+    window.location.replace(redirect);
+  });
 
   document.getElementById("loginForm").addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -37,33 +56,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
     button.disabled = true;
     const oldText = button.textContent;
-    button.textContent = "Вход...";
+    button.textContent = "Проверка...";
 
     try {
       const email = `${login}@rotorprov.ru`;
 
-      // ✅ ЛОГИНИМСЯ
+      loginInProgress = true;
+
       await signInWithEmailAndPassword(auth, email, password);
 
-      // ✅ РЕДИРЕКТ СРАЗУ ПОСЛЕ УСПЕХА
-      const params = new URLSearchParams(window.location.search);
-      let redirect =
-        params.get("redirect") ||
-        "https://dashboard.rotorprov.ru/index.html";
-
-      if (redirect.includes("/login")) {
-        redirect = "https://dashboard.rotorprov.ru/index.html";
-      }
-
-      window.location.replace(redirect);
 
     } catch (err) {
+      loginInProgress = false;
       console.error(err);
 
-      if (
-        err.code === "auth/invalid-credential" ||
-        err.code === "auth/wrong-password"
-      ) {
+      if (err.code === "auth/invalid-credential") {
         showToast("Неверный логин или пароль");
       } else if (err.code === "auth/user-not-found") {
         showToast("Пользователь не найден");
