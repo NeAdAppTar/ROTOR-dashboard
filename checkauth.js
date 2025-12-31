@@ -38,7 +38,7 @@ onAuthStateChanged(auth, async (user) => {
   if (!user) {
     const redirectUrl = encodeURIComponent(window.location.href);
     window.location.href =
-      `https://dashboard.rotorprov.ru/login.html/?redirect=${redirectUrl}`;
+      `https://dashboard.rotorprov.ru/login/?redirect=${redirectUrl}`;
     return;
   }
 
