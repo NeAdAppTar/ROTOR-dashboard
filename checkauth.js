@@ -38,10 +38,9 @@ onAuthStateChanged(auth, async (user) => {
   const post = (snap.data().post || "").toLowerCase();
 
   if (!allowedPosts.includes(post)) {
-    console.warn("NO ACCESS:", post, allowedPosts);
+    window.location.replace("https://auth.rotorprov.ru/no-access.html");
     return;
   }
-
 });
 
 /* ===== LOGOUT ===== */
