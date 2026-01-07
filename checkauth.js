@@ -9,7 +9,7 @@
   async function getUserInfo(username) {
     try {
       const response = await fetch(
-        "https://transdigital.pythonanywhere.com/api/get_user_info/rotor",
+        "https://transdigital.pythonanywhere.com/api/get_user/rotor",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
