@@ -233,7 +233,7 @@
 
     const company = companySelect.value;
     try {
-      const res = await fetch(`${API_BASE}/get_users_info/${company}`);
+      const res = await fetch(`${API_BASE}/get_users/${company}`);
       const data = await res.json();
 
       if (data.status !== 'ok') {
@@ -327,7 +327,7 @@
 
   try {
     // 1. Получаем расширенную информацию
-    const infoRes = await fetch(`${API_BASE}/get_user_info/${company}`, {
+    const infoRes = await fetch(`${API_BASE}/get_user/${company}`, {
       method: 'POST',
       headers: {'Content-Type':'application/json'},
       body: JSON.stringify({ name })
