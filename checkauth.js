@@ -9,7 +9,7 @@
   async function getUserInfo(username) {
     try {
       const response = await fetch(
-        "https://transdigital.pythonanywhere.com/api/get_user/rotor",
+        "https://rotorbus.ru/api/get_user/rotor",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -26,7 +26,7 @@
   async function getUserBase(username) {
     try {
       const response = await fetch(
-        "https://transdigital.pythonanywhere.com/api/get_user/rotor",
+        "https://rotorbus.ru/api/get_user/rotor",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

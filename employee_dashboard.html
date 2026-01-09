@@ -172,7 +172,7 @@
 
   // Получение должности из второй БД
 try {
-    const postResponse = await fetch('https://transdigital.pythonanywhere.com/api/get_user/rotor', {
+    const postResponse = await fetch('https://rotorbus.ru/api/get_user/rotor', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name: login })
