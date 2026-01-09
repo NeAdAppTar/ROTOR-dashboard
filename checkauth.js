@@ -9,7 +9,7 @@
   async function getUserInfo(username) {
     try {
       const response = await fetch(
-        "https://rotorbus.ru/api/get_user/rotor",
+        "https://31.184.253.115/api/get_user/rotor",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -26,7 +26,7 @@
   async function getUserBase(username) {
     try {
       const response = await fetch(
-        "https://rotorbus.ru/api/get_user/rotor",
+        "https://31.184.253.115/api/get_user/rotor",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
