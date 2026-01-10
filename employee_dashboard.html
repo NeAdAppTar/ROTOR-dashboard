@@ -136,6 +136,7 @@
   </a>
 </div> 
 
+  
 
   </div>
 </div>
@@ -184,11 +185,11 @@ try {
         const roleElement = document.getElementById('userRole');
         if (roleElement) roleElement.textContent = postData.post || 'Не указана';
     } else {
-        document.getElementById('userRole').textContent = 'Ошибка';
+        document.getElementById('userRole').textContent = 'N/A';
         console.warn("post error:", postData.message);
     }
 } catch (e) {
-    document.getElementById('userRole').textContent = 'Ошибка';
+    document.getElementById('userRole').textContent = 'N/A';
     console.error("Ошибка получения должности:", e);
 }
 
@@ -234,11 +235,11 @@ try {
     }
 
   } catch (error) {
-    totalRoutes.textContent = 'Ошибка';
-    totalPassengers.textContent = 'Ошибка';
-    periodRoutes.textContent = 'Ошибка';
-    periodPassengers.textContent = 'Ошибка';
-    salary.textContent = 'Ошибка';
+    totalRoutes.textContent = 'N/A';
+    totalPassengers.textContent = 'N/A';
+    periodRoutes.textContent = 'N/A';
+    periodPassengers.textContent = 'N/A';
+    salary.textContent = 'N/A';
     console.error('Ошибка:', error);
   }
 }
@@ -249,5 +250,5 @@ try {
   </script>
 </body>
 <script src="sidebar.js"></script>
-  <script src="checkauth.js"></script>
+
 </html>

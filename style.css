@@ -124,27 +124,30 @@ p, label {
   border-radius: var(--radius);
   box-shadow: var(--shadow);
   padding: 40px;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
   text-align: center;
   min-height: 320px;
   display: flex;
   flex-direction: column;
   justify-content: center;
+
+  border: 1px solid yellow;
+  transition: box-shadow 0.3s ease; 
 }
 
 .tile:hover {
-  transform: scale(1.05); 
+  transform: none; 
   box-shadow: 0 15px 35px rgba(0,0,0,0.2);
 }
 
 .tile h3 {
-  font-size: 2rem; 
+  font-size: 2rem;
   margin-bottom: 20px;
 }
 
 .tile p {
-  font-size: 1.4rem; 
+  font-size: 1.4rem;
 }
+
 
 .highlight {
   font-size: 2rem; 
@@ -283,7 +286,7 @@ p, label {
 
 
 .tile.important {
-  background: #000; /* чёрный фон в ЛК плитки*/
+  background: #000000; 
   color: #fff; 
   font-size: 1.1rem;
   font-weight: 600;
@@ -295,17 +298,14 @@ p, label {
   padding: 30px;
   line-height: 1.5;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transform: none; 
 }
 
 .tile.important p {
   color: #fff !important;
 }
 
-.tile.important:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
-}
+
 
 
 
