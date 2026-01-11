@@ -353,50 +353,51 @@
 
   // ====== Сохранение изменений ======
   saveUserEdit.addEventListener('click', async () => {
-    if (!editingUserData) return;
+  if (!editingUserData) return;
 
-    const company = companySelect.value;
-    const payload = {
-      id: editingUserData.id,
-      name: editName.value.trim(),
-      post: editPost.value.trim(),
-      account: editAccount.value.trim(),
-      vk: editVK.value.trim(),
-      disciplinary_actions: editDA.value.trim(),
-      note: editNote.value.trim()
-    };
+  const company = companySelect.value;
 
-    if (editPassword.value.trim()) {
-      payload.password = editPassword.value.trim();
-    }
+  const payload = {
+    id: editingUserData.id,
 
-    if (!payload.name || !payload.post || !payload.account || !payload.vk) {
-      showToast('Заполните обязательные поля', false);
-      return;
-    }
+    name: editName.value.trim() || editingUserData.name,
+    password: editPassword.value.trim() || editingUserData.password,
+    post: editPost.value.trim() || editingUserData.post,
+    account: editAccount.value.trim() || editingUserData.account,
+    vk: editVK.value.trim() || editingUserData.vk,
+    disciplinary_actions: editDA.value.trim() || editingUserData.disciplinary_actions,
+    note: editNote.value.trim() || editingUserData.note
+  };
 
-    try {
-      saveUserEdit.disabled = true;
+  // минимальная проверка
+  if (!payload.name || !payload.password || !payload.post || !payload.account || !payload.vk) {
+    showToast('Заполните обязательные поля', false);
+    return;
+  }
 
-      const res = await fetch(`${API_BASE}/update_user/${company}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
+  try {
+    saveUserEdit.disabled = true;
 
-      const data = await res.json();
-      if (data.status !== 'ok') throw new Error(data.message);
+    const res = await fetch(`${API_BASE}/update_user/${company}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
 
-      showToast('Изменения сохранены');
-      editUserModal.style.display = 'none';
-      editingUserData = null;
-      fetchAllUsers();
-    } catch (err) {
-      showToast('Ошибка: ' + err.message, false);
-    } finally {
-      saveUserEdit.disabled = false;
-    }
-  });
+    const data = await res.json();
+    if (data.status !== 'ok') throw new Error(data.message || 'Ошибка при сохранении');
+
+    showToast('Изменения сохранены');
+    editUserModal.style.display = 'none';
+    editingUserData = null;
+    fetchAllUsers();
+  } catch (err) {
+    showToast('Ошибка: ' + err.message, false);
+  } finally {
+    saveUserEdit.disabled = false;
+  }
+});
+
 
   // ====== Удаление пользователя ======
   window.onDeleteUser = async function (id) {
