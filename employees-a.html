@@ -167,6 +167,7 @@
 <script>
   // доступ!!
   const pageAccess = ["Директор", "Зам. директора", "Технический администратор", "Начальник учебного центра", "Зам. начальника учебного центра"];
+
   // ====== Конфигурация ======
   const API_BASE = 'https://rotorbus.ru/api';
 
@@ -205,24 +206,24 @@
 
   // ====== Состояние ======
   let usersCache = [];
-  let editingUserData = null; 
+  let editingUserData = null;
 
   // ====== Утилиты ======
   function showToast(text, ok = true) {
     toastEl.textContent = text;
     toastEl.style.background = ok ? '#111' : '#b91c1c';
     toastEl.style.display = 'block';
-    setTimeout(()=> toastEl.style.display = 'none', 3500);
+    setTimeout(() => toastEl.style.display = 'none', 3500);
   }
 
   function escapeHtml(str) {
     if (str === undefined || str === null) return '';
     return String(str)
-      .replaceAll('&','&amp;')
-      .replaceAll('<','&lt;')
-      .replaceAll('>','&gt;')
-      .replaceAll('"','&quot;')
-      .replaceAll("'",'&#039;');
+      .replaceAll('&', '&amp;')
+      .replaceAll('<', '&lt;')
+      .replaceAll('>', '&gt;')
+      .replaceAll('"', '&quot;')
+      .replaceAll("'", '&#039;');
   }
 
   // ====== API: получение списка пользователей ======
@@ -240,7 +241,6 @@
         throw new Error(data.message || 'Ошибка сервера');
       }
 
-      // ожидается { status: "ok", users: [ { name, post, account, vk, disciplinary_actions, note }, ... ] }
       usersCache = Array.isArray(data.users) ? data.users : [];
       renderUsersTable(usersCache);
 
@@ -268,14 +268,13 @@
           <td>${escapeHtml(user.disciplinary_actions)}</td>
           <td>${escapeHtml(user.note)}</td>
           <td class="actions">
-          <button class="actions-small btn-edit" onclick="onEditUser('${escapeHtml(user.name)}')">
-            <i class="fas fa-edit"></i>
-          </button>
-          <button class="actions-small btn-delete" onclick="onDeleteUser('${escapeHtml(user.name)}')">
-            <i class="fas fa-trash"></i>
-          </button>
+            <button class="actions-small btn-edit" onclick="onEditUser(${user.id})">
+              <i class="fas fa-edit"></i>
+            </button>
+            <button class="actions-small btn-delete" onclick="onDeleteUser(${user.id})">
+              <i class="fas fa-trash"></i>
+            </button>
           </td>
-
         `;
         usersBody.appendChild(tr);
       });
@@ -283,17 +282,20 @@
 
   // ====== Добавление пользователя ======
   addBtn.addEventListener('click', async () => {
-    const name = newName.value.trim();
-    const password = newPass.value.trim();
-    const post = newPost.value.trim();
-    const account = newAccount.value.trim();
-    const vk = newVK.value.trim();
-    const disciplinary_actions = newDA.value.trim();
-    const note = newNote.value.trim();
     const company = companySelect.value;
 
-    if (!name || !password || !post || !account || !vk || !disciplinary_actions || !note) {
-      showToast('Заполните все поля', false);
+    const payload = {
+      name: newName.value.trim(),
+      password: newPass.value.trim(),
+      post: newPost.value.trim(),
+      account: newAccount.value.trim(),
+      vk: newVK.value.trim(),
+      disciplinary_actions: newDA.value.trim(),
+      note: newNote.value.trim()
+    };
+
+    if (!payload.name || !payload.password || !payload.post || !payload.account || !payload.vk) {
+      showToast('Заполните обязательные поля', false);
       return;
     }
 
@@ -302,93 +304,74 @@
 
       const res = await fetch(`${API_BASE}/add_user/${company}`, {
         method: 'POST',
-        headers: {'Content-Type':'application/json'},
-        body: JSON.stringify({ name, password, post, account, vk, disciplinary_actions, note })
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
       });
 
       const data = await res.json();
-      if (data.status !== 'ok') throw new Error(data.message || 'Ошибка при добавлении');
+      if (data.status !== 'ok') throw new Error(data.message);
 
       showToast('Пользователь добавлен');
-      // очистка формы
-      newName.value = ''; newPass.value = ''; newPost.value = ''; newAccount.value = ''; newVK.value = ''; newDA.value = ''; newNote.value = '';
-
+      newName.value = newPass.value = newPost.value = newAccount.value = newVK.value = newDA.value = newNote.value = '';
       fetchAllUsers();
     } catch (err) {
-      showToast('Ошибка: ' + (err.message || err), false);
+      showToast('Ошибка: ' + err.message, false);
     } finally {
       addBtn.disabled = false;
     }
   });
 
-  // ====== Открыть модал редактирования (и заполнить данными) ======
-  window.onEditUser = async function(name) {
-  const company = companySelect.value;
-
-  try {
-    // 1. Получаем расширенную информацию
-    const infoRes = await fetch(`${API_BASE}/get_user/${company}`, {
-      method: 'POST',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({ name })
-    });
-    const info = await infoRes.json();
-    if (info.status !== 'ok') throw new Error(info.message);
-
-    // 2. Получаем пароль
-    const passRes = await fetch(`${API_BASE}/get_user/${company}`, {
-      method: 'POST',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({ name })
-    });
-    const passData = await passRes.json();
-    if (passData.status !== 'ok') throw new Error(passData.message);
-
-    // 3. Формируем полные данные пользователя
-    editingUserData = {
-      name: info.name || '',
-      password: passData.password || '',
-      post: info.post || '',
-      account: info.account || '',
-      vk: info.vk || '',
-      disciplinary_actions: info.disciplinary_actions || '',
-      note: info.note || ''
-    };
-
-    // 4. Заполняем форму
-    editName.value = editingUserData.name;
-    editPassword.value = editingUserData.password;
-    editPost.value = editingUserData.post;
-    editAccount.value = editingUserData.account;
-    editVK.value = editingUserData.vk;
-    editDA.value = editingUserData.disciplinary_actions;
-    editNote.value = editingUserData.note;
-
-    editUserModal.style.display = 'flex';
-  } catch (err) {
-    showToast('Ошибка: ' + (err.message || err), false);
-  }
-};
-
-  // ====== Сохранение изменений пользователя ======
-  saveUserEdit.addEventListener('click', async () => {
+  // ====== Открыть модал редактирования ======
+  window.onEditUser = async function (id) {
     const company = companySelect.value;
 
-    // берем поля из формы; если пароль не введён, пытаемся использовать исходный пароль (editingUserData.password)
-    const name = editName.value.trim();
-    const password = editPassword.value.trim() || editingUserData.password || '';
-    const post = editPost.value.trim();
-    const account = editAccount.value.trim();
-    const vk = editVK.value.trim();
-    const disciplinary_actions = editDA.value.trim();
-    const note = editNote.value.trim();
+    try {
+      const res = await fetch(`${API_BASE}/get_user/${company}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id })
+      });
 
-    if (!name || !password) {
-      showToast('Логин и пароль обязательны', false);
-      return;
+      const data = await res.json();
+      if (data.status !== 'ok') throw new Error(data.message);
+
+      editingUserData = data;
+
+      editName.value = data.name || '';
+      editPassword.value = '';
+      editPost.value = data.post || '';
+      editAccount.value = data.account || '';
+      editVK.value = data.vk || '';
+      editDA.value = data.disciplinary_actions || '';
+      editNote.value = data.note || '';
+
+      editUserModal.style.display = 'flex';
+    } catch (err) {
+      showToast('Ошибка: ' + err.message, false);
     }
-    if (!post || !account || !vk || !disciplinary_actions || !note) {
-      showToast('Заполните все поля', false);
+  };
+
+  // ====== Сохранение изменений ======
+  saveUserEdit.addEventListener('click', async () => {
+    if (!editingUserData) return;
+
+    const company = companySelect.value;
+    const payload = {
+      id: editingUserData.id,
+      name: editName.value.trim(),
+      post: editPost.value.trim(),
+      account: editAccount.value.trim(),
+      vk: editVK.value.trim(),
+      disciplinary_actions: editDA.value.trim(),
+      note: editNote.value.trim()
+    };
+
+    if (editPassword.value.trim()) {
+      payload.password = editPassword.value.trim();
+    }
+
+    if (!payload.name || !payload.post || !payload.account || !payload.vk) {
+      showToast('Заполните обязательные поля', false);
       return;
     }
 
@@ -397,67 +380,57 @@
 
       const res = await fetch(`${API_BASE}/update_user/${company}`, {
         method: 'POST',
-        headers: {'Content-Type':'application/json'},
-        body: JSON.stringify({
-          name,
-          password,
-          post,
-          account,
-          vk,
-          disciplinary_actions,
-          note
-        })
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
       });
 
       const data = await res.json();
-      if (data.status !== 'ok') throw new Error(data.message || 'Ошибка при сохранении');
+      if (data.status !== 'ok') throw new Error(data.message);
 
       showToast('Изменения сохранены');
       editUserModal.style.display = 'none';
       editingUserData = null;
       fetchAllUsers();
     } catch (err) {
-      showToast('Ошибка: ' + (err.message || err), false);
+      showToast('Ошибка: ' + err.message, false);
     } finally {
       saveUserEdit.disabled = false;
     }
   });
 
-  // ====== Удаление пользователя (из модалки или кнопки) ======
-  window.onDeleteUser = async function(name) {
-    if (!confirm(`Удалить пользователя "${name}"?`)) return;
+  // ====== Удаление пользователя ======
+  window.onDeleteUser = async function (id) {
+    if (!confirm('Удалить пользователя?')) return;
+
     const company = companySelect.value;
     try {
       const res = await fetch(`${API_BASE}/delete_user/${company}`, {
         method: 'POST',
-        headers: {'Content-Type':'application/json'},
-        body: JSON.stringify({ name })
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id })
       });
+
       const data = await res.json();
-      if (data.status !== 'ok') throw new Error(data.message || 'Ошибка при удалении');
+      if (data.status !== 'ok') throw new Error(data.message);
 
       showToast('Пользователь удалён');
       fetchAllUsers();
     } catch (err) {
-      showToast('Ошибка: ' + (err.message || err), false);
+      showToast('Ошибка: ' + err.message, false);
     }
   };
 
-  // кнопка удаления в модалке — использует текущее editingUserData
-  deleteUserBtn.addEventListener('click', async () => {
-    if (!editingUserData || !editingUserData.name) return;
-    if (!confirm(`Удалить пользователя "${editingUserData.name}"?`)) return;
-    onDeleteUser(editingUserData.name);
+  deleteUserBtn.addEventListener('click', () => {
+    if (!editingUserData) return;
+    onDeleteUser(editingUserData.id);
     editUserModal.style.display = 'none';
   });
 
-  // ====== Закрытие модалки ======
   closeUserEdit.addEventListener('click', () => {
     editUserModal.style.display = 'none';
     editingUserData = null;
   });
 
-  // закрытие по клику вне карточки
   editUserModal.addEventListener('click', (e) => {
     if (e.target === editUserModal) {
       editUserModal.style.display = 'none';
@@ -465,14 +438,13 @@
     }
   });
 
-  // ====== Поиск и обновление ======
   searchInput.addEventListener('input', () => renderUsersTable(usersCache));
   refreshBtn.addEventListener('click', fetchAllUsers);
   companySelect.addEventListener('change', fetchAllUsers);
 
-  // стартовая загрузка 
   fetchAllUsers();
 </script>
+
 
 </body>
 <script src="sidebar.js"></script>

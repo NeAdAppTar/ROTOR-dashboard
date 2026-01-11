@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Начало смены</title>
+
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style_db.css">
+<link rel="icon" href="icon.png">
+
+<script src="sidebar.js"></script>
+
+
+<style>
+.select-grid {
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap:30px;
+}
+select {
+  width:100%;
+  padding:14px;
+  border-radius:12px;
+  font-size:16px;
+}
+</style>
+</head>
+
+<body>
+<div class="sidebar"><div class="sidebar-header"><span class="logo">РОТОР</span></div></div>
+
+<div class="main-content">
+<main class="container">
+
+<h1>Начало смены</h1>
+<p>Выберите маршрут и транспортное средство</p>
+
+<div class="form-card">
+  <div class="select-grid">
+    <div>
+      <label>Маршрут</label>
+      <select id="routeSelect"></select>
+    </div>
+
+    <div>
+      <label>Автобус</label>
+      <select id="busSelect"></select>
+    </div>
+  </div>
+
+  <br>
+  <button onclick="startShift()">Начать смену</button>
+</div>
+
+</main>
+</div>
+
+<script>
+const COMPANY = "rotor";
+
+async function loadData() {
+  const routesRes = await fetch(`https://rotorbus.ru/api/get_routes/${COMPANY}`);
+  const vehiclesRes = await fetch(`https://rotorbus.ru/api/get_vehicles/${COMPANY}`);
+
+  const routes = (await routesRes.json()).routes;
+  const vehicles = (await vehiclesRes.json()).vehicles;
+
+  routes.forEach(r => {
+    routeSelect.innerHTML += `<option>${r}</option>`;
+  });
+
+  vehicles.forEach(v => {
+    busSelect.innerHTML += `<option>${v.board_number} — ${v.model}</option>`;
+  });
+}
+
+function startShift() {
+  const shift = {
+    route: routeSelect.value,
+    bus: busSelect.value,
+    start: new Date().toISOString()
+  };
+  localStorage.setItem("activeShift", JSON.stringify(shift));
+  window.location.href = "shift_active.html";
+}
+
+loadData();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Смена</title>
+
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style_db.css">
+<link rel="icon" href="icon.png">
+
+<script src="sidebar.js"></script>
+
+
+<style>
+.state-row {
+  display:flex;
+  gap:15px;
+  margin:25px 0;
+}
+.state-btn {
+  flex:1;
+  padding:16px;
+  border-radius:14px;
+  font-weight:700;
+  cursor:pointer;
+  text-align:center;
+}
+.state-active { outline:4px solid #000; }
+.state-green { background:#bbf7d0; }
+.state-yellow { background:#fef08a; }
+.state-red { background:#fecaca; }
+</style>
+</head>
+
+<body>
+<div class="sidebar"><div class="sidebar-header"><span class="logo">РОТОР</span></div></div>
+
+<div class="main-content">
+<main class="container">
+
+<h1 id="routeTitle"></h1>
+
+<div class="card">
+  <img id="routeImg" class="route-img">
+</div>
+
+<h2>Состояние</h2>
+<div class="state-row">
+  <div class="state-btn state-green" onclick="setState(this,'На маршруте')">На маршруте</div>
+  <div class="state-btn state-yellow" onclick="setState(this,'Обед')">Обед</div>
+  <div class="state-btn state-red" onclick="setState(this,'Вылет')">Вылет</div>
+</div>
+
+<button onclick="finishShift()">Завершить смену</button>
+
+</main>
+</div>
+
+<script>
+const shift = JSON.parse(localStorage.getItem("activeShift"));
+let state = "На маршруте";
+
+routeTitle.textContent = shift.route;
+routeImg.src = `route${shift.route.replace(/\D/g,'')}.jpg`;
+
+function setState(el, s) {
+  document.querySelectorAll(".state-btn").forEach(b => b.classList.remove("state-active"));
+  el.classList.add("state-active");
+  state = s;
+}
+
+function finishShift() {
+  shift.state = state;
+  localStorage.setItem("activeShift", JSON.stringify(shift));
+  window.location.href = "shift_report.html";
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Отчёты водителей</title>
+
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style_db.css">
+<link rel="icon" href="icon.png">
+
+<style>
+.status-not { background:#fff6cc; }
+.status-ok { background:#c6f6d5; }
+.status-rej { background:#fecaca; }
+.actions button { margin-right:6px; }
+</style>
+
+<script src="sidebar.js"></script>
+</head>
+
+<body>
+
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <span class="logo">РОТОР</span>
+  </div>
+
+  <ul class="sidebar-menu">
+    <li><a href="reports_manage.html" class="active">
+      <i class="fas fa-check"></i><span>Отчёты</span>
+    </a></li>
+  </ul>
+</div>
+
+<div class="main-content">
+<main class="container">
+
+<h1>Отчёты водителей</h1>
+
+<div class="table-card">
+<table class="styled-table">
+<thead>
+<tr>
+<th>ФИО</th>
+<th>Дата</th>
+<th>Маршрут</th>
+<th>Круги</th>
+<th>Пасс.</th>
+<th>Подтверждение</th>
+<th>Статус</th>
+<th>Действия</th>
+</tr>
+</thead>
+<tbody id="reportsBody"></tbody>
+</table>
+</div>
+
+</main>
+</div>
+
+<script>
+const COMPANY = "rotor";
+
+async function loadReports() {
+  const res = await fetch(`https://rotorbus.ru/api/get_reports/${COMPANY}`);
+  const data = await res.json();
+
+  reportsBody.innerHTML = "";
+
+  data.reports.forEach(r => {
+    const tr = document.createElement("tr");
+
+    if (r.status === "verified") tr.className="status-ok";
+    if (r.status === "rejected") tr.className="status-rej";
+    if (r.status === "not verified") tr.className="status-not";
+
+    tr.innerHTML = `
+      <td>${r.user_name}</td>
+      <td>${r.date}</td>
+      <td>${r.route}</td>
+      <td>${r.num_round_trips}</td>
+      <td>${r.num_passengers}</td>
+      <td>${r.proof}</td>
+      <td>${r.status}</td>
+      <td class="actions">
+        <button onclick="verify(${r.id})">✔</button>
+        <button onclick="reject(${r.id})">✖</button>
+        <button onclick="del(${r.id})">🗑</button>
+      </td>
+    `;
+    reportsBody.appendChild(tr);
+  });
+}
+
+async function verify(id) {
+  await fetch(`https://rotorbus.ru/api/verify_report/${COMPANY}`, {
+    method:"POST",
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({id})
+  });
+  loadReports();
+}
+
+async function reject(id) {
+  await fetch(`https://rotorbus.ru/api/reject_report/${COMPANY}`, {
+    method:"POST",
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({id})
+  });
+  loadReports();
+}
+
+async function del(id) {
+  if (!confirm("Удалить отчёт?")) return;
+  await fetch(`https://rotorbus.ru/api/delete_report/${COMPANY}`, {
+    method:"POST",
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({id})
+  });
+  loadReports();
+}
+
+loadReports();
+</script>
+
+</body>
+</html>

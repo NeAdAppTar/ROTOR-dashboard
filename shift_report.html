@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Отчёт</title>
+
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style_db.css">
+<link rel="icon" href="icon.png">
+</head>
+
+<body>
+<div class="main-content">
+<main class="container">
+
+<h1>Завершение смены</h1>
+
+<div class="form-card">
+  <label>Кругорейсы</label>
+  <input id="rounds" type="number">
+
+  <label>Пассажиры</label>
+  <input id="passengers" type="number">
+
+  <label>Доказательства</label>
+  <input id="proof">
+
+  <br><br>
+  <button onclick="send()">Отправить отчёт</button>
+</div>
+
+</main>
+</div>
+
+<script>
+const COMPANY = "rotor";
+const shift = JSON.parse(localStorage.getItem("activeShift"));
+
+async function send() {
+  await fetch(`https://rotorbus.ru/api/add_report/${COMPANY}`, {
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body:JSON.stringify({
+      user_name: getCookie("userLogin"),
+      date: new Date().toISOString().split("T")[0],
+      route: shift.route,
+      num_round_trip: rounds.value,
+      num_passengers: passengers.value,
+      proof: proof.value
+    })
+  });
+
+  localStorage.removeItem("activeShift");
+  alert("Смена завершена");
+  window.location.href = "employee_dashboard.html";
+}
+</script>
+
+</body>
+</html>
