@@ -176,7 +176,8 @@ async function loadUsers() {
             throw new Error(json.message || "Неизвестная ошибка API");
         }
 
-        const users = json.users; // массив пользователей
+        const users = sortUsersByPost(json.users);
+
 
         tbody.innerHTML = "";
 
@@ -214,6 +215,30 @@ async function loadUsers() {
         loading.textContent = "Не удалось загрузить данные: " + err.message;
         console.error("loadUsers error:", err);
     }
+}
+
+const POST_ORDER = [
+    "Директор",
+    "Зам. директора",
+    "Начальник учебного центра",
+    "Инструктор",
+    "Водитель 1 класса",
+    "Водитель 2 класса",
+    "Водитель 3 класса",
+    "Водитель-стажер"
+];
+
+function sortUsersByPost(users) {
+    return users.sort((a, b) => {
+        const aIndex = POST_ORDER.indexOf(a.post);
+        const bIndex = POST_ORDER.indexOf(b.post);
+
+        if (aIndex === -1 && bIndex === -1) return 0;
+        if (aIndex === -1) return 1;
+        if (bIndex === -1) return -1;
+
+        return aIndex - bIndex;
+    });
 }
 
 loadUsers();
