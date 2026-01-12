@@ -381,7 +381,6 @@
     const res = await fetch(`${API_BASE}/update_user/${company}`, {
   method: 'POST',
   mode: 'cors',
-  credentials: 'include',
   headers: {
     'Content-Type': 'application/json'
   },
@@ -389,8 +388,8 @@
 });
 
     const data = await res.json();
-    if (data.status !== 'ok') throw new Error(data.message || 'Ошибка при сохранении'); //
- 
+    if (data.status !== 'ok') throw new Error(data.message || 'Ошибка при сохранении');
+
     showToast('Изменения сохранены');
     editUserModal.style.display = 'none';
     editingUserData = null;
@@ -453,4 +452,5 @@
 
 </body>
 <script src="sidebar.js"></script>
+<script src="checkauth.js"></script>
 </html>
