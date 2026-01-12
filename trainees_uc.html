@@ -88,6 +88,7 @@
           <th>Устав (не спользуется)</th>
           <th>ПДД (не используется)</th>
           <th>Практика (не используется)</th>
+          <th>Примечание</th>
           <th>Действие</th>
         </tr>
       </thead>
@@ -135,25 +136,28 @@ const pageAccess = ["Директор", "Зам. директора", "Техн�
         const tr = document.createElement('tr');
 
         tr.innerHTML = `
-          <td>${u.name}</td>
+        <td>${u.name}</td>
 
-          <td class="status-ok">Вручную</td>
-          <td class="status-ok">Вручную</td>
+        <td class="status-ok">Вручную</td>
+        <td class="status-ok">Вручную</td>
 
-          <td>
+        <td>
             <select data-id="${u.id}">
-              <option value="yes">Вручную</option>
-              <option value="no">Вручную</option>
+            <option value="yes">Вручную</option>
+            <option value="no">Вручную</option>
             </select>
-          </td>
+        </td>
 
-          <td>
+        <td>${u.note ? u.note : '—'}</td>
+
+        <td>
             <button class="actions-small btn-release"
-              onclick="releaseTrainee(${u.id}, '${u.name}')">
-              Выпустить стажёра
+            onclick="releaseTrainee(${u.id}, '${u.name}')">
+            Выпустить стажёра
             </button>
-          </td>
+        </td>
         `;
+
 
         body.appendChild(tr);
       });
