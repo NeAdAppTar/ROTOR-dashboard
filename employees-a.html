@@ -389,8 +389,8 @@
 });
 
     const data = await res.json();
-    if (data.status !== 'ok') throw new Error(data.message || 'Ошибка при сохранении');
-
+    if (data.status !== 'ok') throw new Error(data.message || 'Ошибка при сохранении'); //
+ 
     showToast('Изменения сохранены');
     editUserModal.style.display = 'none';
     editingUserData = null;
