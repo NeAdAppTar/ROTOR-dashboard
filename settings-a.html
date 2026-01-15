@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <title>Коэффициенты должностей</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="style_db.css">
+  <link rel="stylesheet" href="style_a.css">
+</head>
+<body>
+
+<div class="main-content">
+<div class="container">
+
+<h1>📊 Коэффициенты должностей</h1>
+
+<div class="table-card">
+  <div class="form-inline">
+    <input id="postInput" placeholder="Должность">
+    <input id="coefInput" placeholder="Коэффициент" type="number" step="0.01">
+    <button class="actions-btn btn-add" onclick="addCoef()">Добавить</button>
+  </div>
+</div>
+
+<div class="table-card">
+<table class="styled-table">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Должность</th>
+      <th>Коэффициент</th>
+      <th>Действия</th>
+    </tr>
+  </thead>
+  <tbody id="coefsBody"></tbody>
+</table>
+</div>
+
+</div>
+</div>
+
+<script>
+const API = 'https://rotorbus.ru/api';
+const COMPANY = 'rotor';
+
+async function fetchCoefs() {
+  const res = await fetch(`${API}/get_coefs/${COMPANY}`);
+  const data = await res.json();
+
+  const body = document.getElementById('coefsBody');
+  body.innerHTML = '';
+
+  data.coefs.forEach(c => {
+    body.innerHTML += `
+      <tr>
+        <td>${c.id}</td>
+        <td><input value="${c.post}" id="post-${c.id}"></td>
+        <td><input value="${c.coef}" id="coef-${c.id}"></td>
+        <td>
+          <button onclick="updateCoef('${c.id}')">💾</button>
+          <button onclick="deleteCoef('${c.id}')">🗑️</button>
+        </td>
+      </tr>`;
+  });
+}
+
+async function addCoef() {
+  await fetch(`${API}/add_coef/${COMPANY}`, {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({
+      post: postInput.value,
+      coef: coefInput.value
+    })
+  });
+  fetchCoefs();
+}
+
+async function updateCoef(id) {
+  await fetch(`${API}/update_coef/${COMPANY}`, {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({
+      id,
+      post: document.getElementById(`post-${id}`).value,
+      coef: document.getElementById(`coef-${id}`).value
+    })
+  });
+  fetchCoefs();
+}
+
+async function deleteCoef(id) {
+  await fetch(`${API}/delete_coef/${COMPANY}`, {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({ id })
+  });
+  fetchCoefs();
+}
+
+fetchCoefs();
+</script>
+</body>
+</html>

@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <title>Управление маршрутами</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style_db.css">
+  <link rel="stylesheet" href="style_a.css">
+  <link rel="icon" type="image/png" href="icon.png">
+
+  <script src="usermenu.js"></script>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar" id="sidebar"> 
+  <div class="sidebar-header">
+    <span class="logo">РОТОР</span>
+  </div>
+
+  <ul class="sidebar-menu">
+    <li><a href="employee_dashboard.html"><i class="fas fa-user"></i><span>Личный кабинет</span></a></li>
+    <li><a href="employees.html"><i class="fas fa-users"></i><span>Список сотрудников</span></a></li>
+    <li><a href="routes.html" class="active"><i class="fas fa-route"></i><span>Маршруты</span></a></li>
+    <li><a href="vehicles.html"><i class="fas fa-truck"></i><span>Список ПС</span></a></li>
+  </ul>
+
+  <div class="user-menu" id="userMenu">
+    <div class="user-menu-item" id="themeBtn">
+      <i class="fas fa-moon"></i>
+      <span>Тёмная тема</span>
+    </div>
+    <div class="user-menu-item" id="logoutBtn">
+      <i class="fas fa-sign-out-alt"></i>
+      <span>Выйти</span>
+    </div>
+    <div class="user-name-display">
+      <i class="fas fa-user"></i>
+      <span id="userName">admin</span>
+    </div>
+  </div>
+</div>
+
+<!-- CONTENT -->
+<div class="main-content">
+<div class="container">
+
+  <h1>🗺️ Управление маршрутами</h1>
+
+  <!-- ADD ROUTE -->
+  <div class="table-card" style="margin-bottom:14px;">
+    <div class="form-inline">
+      <input id="routeName" placeholder="Название маршрута" />
+      <input id="routeSalary" placeholder="Стоимость (salary)" type="number" />
+      <button class="actions-btn btn-add" id="addRouteBtn">
+        <i class="fas fa-plus"></i> Добавить
+      </button>
+    </div>
+  </div>
+
+  <!-- LOADING -->
+  <div id="loading" class="loading">Загрузка маршрутов...</div>
+
+  <!-- TABLE -->
+  <div class="table-card">
+    <table class="styled-table" id="routesTable" style="display:none;">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Маршрут</th>
+          <th>Стоимость</th>
+          <th>Действия</th>
+        </tr>
+      </thead>
+      <tbody id="routesBody"></tbody>
+    </table>
+  </div>
+
+</div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script>
+const API_BASE = 'https://rotorbus.ru/api';
+const COMPANY = 'rotor';
+
+const routesTable = document.getElementById('routesTable');
+const routesBody  = document.getElementById('routesBody');
+const loading     = document.getElementById('loading');
+
+const routeName   = document.getElementById('routeName');
+const routeSalary = document.getElementById('routeSalary');
+const addRouteBtn = document.getElementById('addRouteBtn');
+
+const toastEl = document.getElementById('toast');
+
+let cachedRoutes = [];
+
+// ===== TOAST =====
+function showToast(text, ok = true) {
+  toastEl.textContent = text;
+  toastEl.style.background = ok ? '#111' : '#b91c1c';
+  toastEl.style.display = 'block';
+  setTimeout(() => toastEl.style.display = 'none', 3500);
+}
+
+// ===== GET ROUTES =====
+async function fetchRoutes() {
+  loading.style.display = 'block';
+  routesTable.style.display = 'none';
+  routesBody.innerHTML = '';
+
+  try {
+    const res = await fetch(`${API_BASE}/get_routes/${COMPANY}`);
+    const data = await res.json();
+
+    // ⬇️ ПУСТАЯ ТАБЛИЦА — ЭТО НОРМАЛЬНО
+    if (data.status === 'error' && data.message === 'no routes found') {
+      cachedRoutes = [];
+      loading.style.display = 'none';
+      routesTable.style.display = 'table';
+      return;
+    }
+
+    if (data.status !== 'ok') {
+      throw new Error(data.message || 'Ошибка сервера');
+    }
+
+    cachedRoutes = data.routes;
+
+    data.routes.forEach(route => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${route.id}</td>
+        <td>${route.route}</td>
+        <td>${route.salary}</td>
+        <td>
+          <button class="actions-small btn-delete" onclick="deleteRoute(${route.id})">
+            <i class="fas fa-trash"></i>
+          </button>
+        </td>
+      `;
+      routesBody.appendChild(tr);
+    });
+
+    loading.style.display = 'none';
+    routesTable.style.display = 'table';
+
+  } catch (err) {
+    loading.textContent = 'Ошибка загрузки';
+    showToast(err.message, false);
+  }
+}
+
+// ===== ADD ROUTE =====
+addRouteBtn.addEventListener('click', async () => {
+  const route = routeName.value.trim();
+  const salary = routeSalary.value.trim();
+
+  if (!route || !salary) {
+    showToast('Заполните все поля', false);
+    return;
+  }
+
+  // ⬇️ ПРОВЕРКА ДУБЛИКАТОВ (так как API не умеет)
+  if (cachedRoutes.some(r => r.route === route)) {
+    showToast('Маршрут уже существует', false);
+    return;
+  }
+
+  try {
+    addRouteBtn.disabled = true;
+
+    const res = await fetch(`${API_BASE}/add_route/${COMPANY}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ route, salary })
+    });
+
+    const data = await res.json();
+    if (data.status !== 'ok') throw new Error(data.message);
+
+    showToast('Маршрут добавлен');
+    routeName.value = '';
+    routeSalary.value = '';
+    fetchRoutes();
+
+  } catch (err) {
+    showToast(err.message, false);
+  } finally {
+    addRouteBtn.disabled = false;
+  }
+});
+
+// ===== DELETE ROUTE =====
+async function deleteRoute(id) {
+  if (!confirm('Удалить маршрут?')) return;
+
+  try {
+    const res = await fetch(`${API_BASE}/delete_route/${COMPANY}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      // ⬇️ id ЧИСЛОМ, а не строкой
+      body: JSON.stringify({ id: Number(id) })
+    });
+
+    const data = await res.json();
+    if (data.status !== 'ok') throw new Error(data.message);
+
+    showToast('Маршрут удалён');
+    fetchRoutes();
+
+  } catch (err) {
+    showToast(err.message, false);
+  }
+}
+
+// INIT
+fetchRoutes();
+</script>
+
+
+<script src="sidebar.js"></script>
+
+</body>
+</html>

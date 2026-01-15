@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <title>Статистика зарплаты</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="style_db.css">
+  <link rel="stylesheet" href="style_a.css">
+</head>
+<body>
+
+<div class="main-content">
+<div class="container">
+
+<h1>💰 Статистика зарплаты</h1>
+
+<div class="table-card">
+  <div class="form-inline">
+    <input id="userName" placeholder="Имя пользователя">
+    <button class="actions-btn" onclick="loadStats()">Показать</button>
+  </div>
+</div>
+
+<div class="table-card" id="stats" style="display:none;">
+  <p><b>Общая зарплата:</b> <span id="total_salary"></span></p>
+  <p><b>За период:</b> <span id="period_salary"></span></p>
+  <p><b>Рейсы всего:</b> <span id="total_round_trips"></span></p>
+  <p><b>Рейсы за период:</b> <span id="period_round_trips"></span></p>
+  <p><b>Пассажиры всего:</b> <span id="total_passengers"></span></p>
+  <p><b>Пассажиры за период:</b> <span id="period_passengers"></span></p>
+</div>
+
+</div>
+</div>
+
+<script>
+const API = 'https://rotorbus.ru/api';
+const COMPANY = 'rotor';
+
+async function loadStats() {
+  const res = await fetch(`${API}/get_user_statistics/${COMPANY}`, {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({ user_name: userName.value })
+  });
+
+  const d = await res.json();
+  if (d.status !== 'ok') return alert(d.message);
+
+  Object.keys(d).forEach(k => {
+    if (document.getElementById(k)) {
+      document.getElementById(k).textContent = d[k];
+    }
+  });
+
+  document.getElementById('stats').style.display = 'block';
+}
+</script>
+</body>
+</html>
