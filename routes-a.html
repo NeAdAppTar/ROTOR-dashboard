@@ -99,36 +99,30 @@ const toastEl = document.getElementById('toast');
 
 let cachedRoutes = [];
 
+// ===== TOAST =====
 function showToast(text, ok = true) {
   toastEl.textContent = text;
   toastEl.style.background = ok ? '#111' : '#b91c1c';
   toastEl.style.display = 'block';
-  setTimeout(() => toastEl.style.display = 'none', 3500);
+  setTimeout(() => toastEl.style.display = 'none', 3000);
 }
 
+// ===== GET ROUTES =====
 async function fetchRoutes() {
   loading.style.display = 'block';
   routesTable.style.display = 'none';
   routesBody.innerHTML = '';
 
   try {
-    const res = await fetch(`${API_BASE}/get_routes/${COMPANY}`);
+    const res = await fetch(`${API_BASE}/routes/${COMPANY}`);
+    if (!res.ok) throw new Error('Ошибка сервера');
+
     const data = await res.json();
+    if (data.status !== 'ok') throw new Error(data.message);
 
-    if (data.status === 'error' && data.message === 'no routes found') {
-      cachedRoutes = [];
-      loading.style.display = 'none';
-      routesTable.style.display = 'table';
-      return;
-    }
+    cachedRoutes = data.routes || [];
 
-    if (data.status !== 'ok') {
-      throw new Error(data.message || 'Ошибка сервера');
-    }
-
-    cachedRoutes = data.routes;
-
-    data.routes.forEach(route => {
+    cachedRoutes.forEach(route => {
       const tr = document.createElement('tr');
       tr.innerHTML = `
         <td>${route.id}</td>
@@ -155,9 +149,9 @@ async function fetchRoutes() {
 // ADD ROUTE
 addRouteBtn.addEventListener('click', async () => {
   const route = routeName.value.trim();
-  const salary = routeSalary.value.trim();
+  const salary = Number(routeSalary.value);
 
-  if (!route || !salary) {
+  if (!route || isNaN(salary)) {
     showToast('Заполните все поля', false);
     return;
   }
@@ -170,13 +164,15 @@ addRouteBtn.addEventListener('click', async () => {
   try {
     addRouteBtn.disabled = true;
 
-    const res = await fetch(`${API_BASE}/add_route/${COMPANY}`, {
+    const res = await fetch(`${API_BASE}/route/${COMPANY}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ route, salary })
     });
 
+    if (!res.ok) throw new Error('Ошибка сервера');
     const data = await res.json();
+
     if (data.status !== 'ok') throw new Error(data.message);
 
     showToast('Маршрут добавлен');
@@ -191,19 +187,18 @@ addRouteBtn.addEventListener('click', async () => {
   }
 });
 
-// DELETE
+// DELETE ROUTE
 async function deleteRoute(id) {
   if (!confirm('Удалить маршрут?')) return;
 
   try {
-    const res = await fetch(`${API_BASE}/delete_route/${COMPANY}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      // ⬇️ id ЧИСЛОМ, а не строкой
-      body: JSON.stringify({ id: Number(id) })
+    const res = await fetch(`${API_BASE}/route/${COMPANY}/${id}`, {
+      method: 'DELETE'
     });
 
+    if (!res.ok) throw new Error('Ошибка сервера');
     const data = await res.json();
+
     if (data.status !== 'ok') throw new Error(data.message);
 
     showToast('Маршрут удалён');
@@ -217,6 +212,7 @@ async function deleteRoute(id) {
 // INIT
 fetchRoutes();
 </script>
+
 
 
 <script src="sidebar.js"></script>
