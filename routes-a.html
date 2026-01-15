@@ -99,7 +99,6 @@ const toastEl = document.getElementById('toast');
 
 let cachedRoutes = [];
 
-// ===== TOAST =====
 function showToast(text, ok = true) {
   toastEl.textContent = text;
   toastEl.style.background = ok ? '#111' : '#b91c1c';
@@ -107,7 +106,6 @@ function showToast(text, ok = true) {
   setTimeout(() => toastEl.style.display = 'none', 3500);
 }
 
-// ===== GET ROUTES =====
 async function fetchRoutes() {
   loading.style.display = 'block';
   routesTable.style.display = 'none';
@@ -117,7 +115,6 @@ async function fetchRoutes() {
     const res = await fetch(`${API_BASE}/get_routes/${COMPANY}`);
     const data = await res.json();
 
-    // ⬇️ ПУСТАЯ ТАБЛИЦА — ЭТО НОРМАЛЬНО
     if (data.status === 'error' && data.message === 'no routes found') {
       cachedRoutes = [];
       loading.style.display = 'none';
@@ -155,7 +152,7 @@ async function fetchRoutes() {
   }
 }
 
-// ===== ADD ROUTE =====
+// ADD ROUTE
 addRouteBtn.addEventListener('click', async () => {
   const route = routeName.value.trim();
   const salary = routeSalary.value.trim();
@@ -165,7 +162,6 @@ addRouteBtn.addEventListener('click', async () => {
     return;
   }
 
-  // ⬇️ ПРОВЕРКА ДУБЛИКАТОВ (так как API не умеет)
   if (cachedRoutes.some(r => r.route === route)) {
     showToast('Маршрут уже существует', false);
     return;
@@ -195,7 +191,7 @@ addRouteBtn.addEventListener('click', async () => {
   }
 });
 
-// ===== DELETE ROUTE =====
+// DELETE
 async function deleteRoute(id) {
   if (!confirm('Удалить маршрут?')) return;
 
