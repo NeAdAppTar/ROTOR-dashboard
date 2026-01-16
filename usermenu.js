@@ -1,5 +1,7 @@
 function getCookie(name) {
-    const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+    const match = document.cookie.match(
+        new RegExp('(^| )' + name + '=([^;]+)')
+    );
     return match ? decodeURIComponent(match[2]) : null;
 }
 
@@ -7,35 +9,38 @@ document.addEventListener("DOMContentLoaded", () => {
     const logoutBtn = document.getElementById("logoutBtn");
     const themeBtn = document.getElementById("themeBtn");
     const userName = document.getElementById("userName");
+    const nyBtn = document.getElementById("nyBtn");
 
     const login = getCookie('userLogin');
+    if (userName) {
+        userName.textContent = login || '—';
+    }
 
-    userName.textContent = login;
-
-    // Тема
+    // ===== ТЕМА =====
     const currentTheme = localStorage.getItem("theme") || "light";
-    if (currentTheme === "dark") document.body.classList.add("dark");
+    if (currentTheme === "dark") {
+        document.body.classList.add("dark");
+    }
 
-    themeBtn.addEventListener("click", () => {
+    themeBtn?.addEventListener("click", () => {
         document.body.classList.toggle("dark");
         const isDark = document.body.classList.contains("dark");
         localStorage.setItem("theme", isDark ? "dark" : "light");
     });
 
-    // ---- COOKIE FUNCTIONS ----
+    // ===== COOKIE HELPERS =====
     function setCookie(name, value, days = 30) {
         const expires = new Date(Date.now() + days * 864e5).toUTCString();
-        document.cookie = `${name}=${value}; expires=${expires}; path=/`;
+        document.cookie =
+            `${name}=${encodeURIComponent(value)}; expires=${expires}; path=/; domain=.rotorprov.ru`;
     }
 
-    function getCookie(name) {
-        return document.cookie
-            .split("; ")
-            .find(row => row.startsWith(name + "="))
-            ?.split("=")[1];
+    function deleteCookie(name) {
+        document.cookie =
+            `${name}=; path=/; domain=.rotorprov.ru; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
     }
 
-    // ---- SNOW BLOCK ----
+    // ===== SNOW =====
     let snowInterval;
 
     function startSnow() {
@@ -56,13 +61,12 @@ document.addEventListener("DOMContentLoaded", () => {
         document.querySelectorAll(".snowflake").forEach(s => s.remove());
     }
 
-    const snowState = getCookie("snow");
-    if (snowState === "1") {
+    if (getCookie("snow") === "1") {
         document.body.classList.add("ny-mode");
         startSnow();
     }
 
-    document.getElementById("nyBtn").addEventListener("click", () => {
+    nyBtn?.addEventListener("click", () => {
         document.body.classList.toggle("ny-mode");
 
         if (document.body.classList.contains("ny-mode")) {
@@ -74,10 +78,12 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // ---- LOGOUT ----
-    logoutBtn.addEventListener("click", () => {
-        localStorage.removeItem("userLogin");
-        document.cookie = "userLogin=; path=/; domain=.rotorprov.ru; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+    // ===== LOGOUT =====
+    logoutBtn?.addEventListener("click", () => {
+        deleteCookie("userLogin");
+        deleteCookie("userHash");
+        deleteCookie("snow");
+
         window.location.href = "https://auth.rotorprov.ru/";
     });
 });

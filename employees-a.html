@@ -230,8 +230,9 @@
     usersBody.innerHTML = '';
 
     const company = companySelect.value;
+
     try {
-      const res = await fetch(`${API_BASE}/get_users/${company}`);
+      const res = await fetch(`${API_BASE}/users/${company}`);
       const data = await res.json();
 
       if (data.status !== 'ok') {
@@ -244,10 +245,11 @@
       loading.style.display = 'none';
       usersTable.style.display = 'table';
     } catch (err) {
-      loading.textContent = 'Ошибка: ' + (err.message || err);
-      showToast('Ошибка: ' + (err.message || err), false);
+      loading.textContent = 'Ошибка: ' + err.message;
+      showToast(err.message, false);
     }
   }
+
 
   function renderUsersTable(users) {
     usersBody.innerHTML = '';
@@ -279,74 +281,75 @@
 
   // Добавление пользователя
   addBtn.addEventListener('click', async () => {
-    const company = companySelect.value;
+  const company = companySelect.value;
 
-    const payload = {
-      name: newName.value.trim(),
-      password: newPass.value.trim(),
-      post: newPost.value.trim(),
-      account: newAccount.value.trim(),
-      vk: newVK.value.trim(),
-      disciplinary_actions: newDA.value.trim(),
-      note: newNote.value.trim()
-    };
+  const payload = {
+    name: newName.value.trim(),
+    password: newPass.value.trim(),
+    post: newPost.value.trim(),
+    account: newAccount.value.trim(),
+    vk: newVK.value.trim(),
+    disciplinary_actions: newDA.value.trim(),
+    note: newNote.value.trim()
+  };
 
-    if (!payload.name || !payload.password || !payload.post || !payload.account || !payload.vk) {
-      showToast('Заполните обязательные поля', false);
-      return;
-    }
+  if (!payload.name || !payload.password || !payload.post) {
+    showToast('name, password и post обязательны', false);
+    return;
+  }
 
-    try {
-      addBtn.disabled = true;
+  try {
+    addBtn.disabled = true;
 
-      const res = await fetch(`${API_BASE}/add_user/${company}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
+    const res = await fetch(`${API_BASE}/user/${company}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
 
-      const data = await res.json();
-      if (data.status !== 'ok') throw new Error(data.message);
+    const data = await res.json();
+    if (data.status !== 'ok') throw new Error(data.message);
 
-      showToast('Пользователь добавлен');
-      newName.value = newPass.value = newPost.value = newAccount.value = newVK.value = newDA.value = newNote.value = '';
-      fetchAllUsers();
-    } catch (err) {
-      showToast('Ошибка: ' + err.message, false);
-    } finally {
-      addBtn.disabled = false;
-    }
-  });
+    showToast('Пользователь добавлен');
+    newName.value = newPass.value = newPost.value =
+    newAccount.value = newVK.value = newDA.value = newNote.value = '';
+
+    fetchAllUsers();
+  } catch (err) {
+    showToast(err.message, false);
+  } finally {
+    addBtn.disabled = false;
+  }
+});
+
 
   // ====== Открыть модал редактирования ======
   window.onEditUser = async function (id) {
-    const company = companySelect.value;
+  const company = companySelect.value;
 
-    try {
-      const res = await fetch(`${API_BASE}/get_user/${company}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id })
-      });
+  try {
+    const res = await fetch(`${API_BASE}/user/${company}/${id}`);
+    const data = await res.json();
 
-      const data = await res.json();
-      if (data.status !== 'ok') throw new Error(data.message);
+    if (data.status !== 'ok') throw new Error(data.message);
 
-      editingUserData = data;
+    editingUserData = data;
 
-      editName.value = data.name || '';
-      editPassword.value = '';
-      editPost.value = data.post || '';
-      editAccount.value = data.account || '';
-      editVK.value = data.vk || '';
-      editDA.value = data.disciplinary_actions || '';
-      editNote.value = data.note || '';
+    editName.value = data.name || '';
+    editPost.value = data.post || '';
+    editAccount.value = data.account || '';
+    editVK.value = data.vk || '';
+    editDA.value = data.disciplinary_actions || '';
+    editNote.value = data.note || '';
 
-      editUserModal.style.display = 'flex';
-    } catch (err) {
-      showToast('Ошибка: ' + err.message, false);
-    }
-  };
+    editPassword.value = ''; // НЕ обязателен
+
+    editUserModal.style.display = 'flex';
+  } catch (err) {
+    showToast(err.message, false);
+  }
+};
+
 
   // ====== Сохранение изменений ======
   saveUserEdit.addEventListener('click', async () => {
@@ -355,74 +358,63 @@
   const company = companySelect.value;
 
   const payload = {
-  id: String(editingUserData.id),
-
-  name: String(editName.value || editingUserData.name || ''),
-  password: String(editPassword.value || editingUserData.password || ''),
-  post: String(editPost.value || editingUserData.post || ''),
-  account: String(editAccount.value || editingUserData.account || ''),
-  vk: String(editVK.value || editingUserData.vk || ''),
-  disciplinary_actions: String(
-    editDA.value || editingUserData.disciplinary_actions || '0'
-  ),
-  note: String(editNote.value || editingUserData.note || '')
-};
-
-
-
-  if (!payload.name || !payload.password || !payload.post || !payload.account || !payload.vk) {
-    showToast('Заполните обязательные поля', false);
-    return;
-  }
+    post: editPost.value.trim(),
+    account: editAccount.value.trim(),
+    vk: editVK.value.trim(),
+    disciplinary_actions: editDA.value.trim(),
+    note: editNote.value.trim()
+  };
 
   try {
     saveUserEdit.disabled = true;
 
-    const res = await fetch(`${API_BASE}/update_user/${company}`, {
-  method: 'POST',
-  mode: 'cors',
-  headers: {
-    'Content-Type': 'application/json'
-  },
-  body: JSON.stringify(payload)
-});
+    const res = await fetch(
+      `${API_BASE}/user/${company}/${editingUserData.id}`,
+      {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      }
+    );
 
     const data = await res.json();
-    if (data.status !== 'ok') throw new Error(data.message || 'Ошибка при сохранении');
+    if (data.status !== 'ok') throw new Error(data.message);
 
     showToast('Изменения сохранены');
     editUserModal.style.display = 'none';
     editingUserData = null;
     fetchAllUsers();
   } catch (err) {
-    showToast('Ошибка: ' + err.message, false);
+    showToast(err.message, false);
   } finally {
     saveUserEdit.disabled = false;
   }
 });
 
 
+
   // Удаление пользователя
   window.onDeleteUser = async function (id) {
-    if (!confirm('Удалить пользователя?')) return;
+  if (!confirm('Удалить пользователя?')) return;
 
-    const company = companySelect.value;
-    try {
-      const res = await fetch(`${API_BASE}/delete_user/${company}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id })
-      });
+  const company = companySelect.value;
 
-      const data = await res.json();
-      if (data.status !== 'ok') throw new Error(data.message);
+  try {
+    const res = await fetch(
+      `${API_BASE}/user/${company}/${id}`,
+      { method: 'DELETE' }
+    );
 
-      showToast('Пользователь удалён');
-      fetchAllUsers();
-    } catch (err) {
-      showToast('Ошибка: ' + err.message, false);
-    }
-  };
+    const data = await res.json();
+    if (data.status !== 'ok') throw new Error(data.message);
+
+    showToast('Пользователь удалён');
+    fetchAllUsers();
+  } catch (err) {
+    showToast(err.message, false);
+  }
+};
+
 
   deleteUserBtn.addEventListener('click', () => {
     if (!editingUserData) return;
