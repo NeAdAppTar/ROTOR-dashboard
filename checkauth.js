@@ -1,57 +1,76 @@
 (function () {
-  const COMPANY = "rotor";
-  const allowedPosts = (typeof pageAccess !== "undefined") ? pageAccess : null;
+  const allowedPosts = (typeof pageAccess !== "undefined") ? pageAccess : [];
 
   function getCookie(name) {
     const match = document.cookie.match(new RegExp("(^| )" + name + "=([^;]+)"));
     return match ? decodeURIComponent(match[2]) : null;
   }
 
-  async function getUsers() {
+  async function sha256(text) {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(text);
+    const hash = await crypto.subtle.digest("SHA-256", data);
+    return Array.from(new Uint8Array(hash))
+      .map(b => b.toString(16).padStart(2, "0"))
+      .join("");
+  }
+
+  async function getUserByName(username) {
     try {
-      const res = await fetch(`https://rotorbus.ru/api/users/${COMPANY}`);
-      if (!res.ok) return null;
-      return await res.json();
-    } catch (e) {
-      console.error("API error:", e);
+      const response = await fetch(
+        "https://rotorbus.ru/api/users/rotor"
+      );
+      const data = await response.json();
+
+      if (data.status !== "ok") return null;
+
+      return data.users.find(u => u.name === username) || null;
+    } catch (err) {
+      console.error("Ошибка API:", err);
       return null;
     }
   }
 
-  async function checkAccess() {
-    const username = getCookie("userLogin");
+  async function check() {
+    const user = getCookie("userLogin");
+    const storedHash = getCookie("userHash");
 
-    if (!username) {
-      const redirect = encodeURIComponent(location.href);
-      location.href = `https://auth.rotorprov.ru/?redirect=${redirect}`;
+    if (!user || !storedHash) {
+      const redirectUrl = encodeURIComponent(window.location.href);
+      window.location.href = `https://auth.rotorprov.ru/?redirect=${redirectUrl}`;
       return;
     }
 
-    const data = await getUsers();
+    // 🔐 Проверка пользователя
+    const userData = await getUserByName(user);
 
-    if (!data || data.status !== "ok") {
-      location.href = "https://auth.rotorprov.ru/no-access.html";
+    if (!userData) {
+      window.location.href = "https://auth.rotorprov.ru/no-access.html";
       return;
     }
 
-    const user = data.users.find(u => u.name === username);
+    // Проверка подлинности cookie
+    const passHash = await sha256(userData.password || "");
 
-    if (!user) {
-      location.href = "https://auth.rotorprov.ru/no-access.html";
+    if (storedHash !== passHash) {
+      // Cookie подделаны
+      window.location.href = "https://auth.rotorprov.ru/";
       return;
     }
 
-    const post = user.post?.trim() || "";
+    // Если доступ открыт для всех
+    if (allowedPosts === null) return;
 
-    // если страница не ограничивает роли — пускаем
-    if (allowedPosts && !allowedPosts.includes(post)) {
-      location.href = "https://auth.rotorprov.ru/no-access.html";
+    const post = (userData.post || "").trim();
+
+    if (!allowedPosts.includes(post)) {
+      window.location.href = "https://auth.rotorprov.ru/no-access.html";
       return;
     }
 
-    localStorage.setItem("userLogin", user.name);
     localStorage.setItem("userPost", post);
+    localStorage.setItem("userLogin", user);
   }
 
-  checkAccess();
+  check();
 })();
