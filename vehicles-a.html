@@ -247,31 +247,31 @@
 
   // ====== Загрузить все ПС ======
   async function fetchAllVehicles() {
-    loading.style.display = 'block';
-    vehiclesTable.style.display = 'none';
-    vehiclesBody.innerHTML = '';
+  loading.style.display = 'block';
+  vehiclesTable.style.display = 'none';
+  vehiclesBody.innerHTML = '';
 
-    const company = companySelect.value;
-    try {
-      const res = await fetch(`${API_BASE}/get_vehicles/${company}`);
-      if (!res.ok) throw new Error('HTTP ' + res.status);
-      const data = await res.json();
+  const company = companySelect.value;
 
-      if (data.status !== 'ok') {
-        throw new Error(data.message || 'Ошибка сервера');
-      }
+  try {
+    const res = await fetch(`${API_BASE}/vehicles/${company}`);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
 
-      vehiclesCache = Array.isArray(data.vehicles) ? data.vehicles : [];
-      renderVehiclesTable(vehiclesCache);
-      loading.style.display = 'none';
-      vehiclesTable.style.display = 'table';
-    } catch (err) {
-      // Если ошибка сети / CORS — покажем сообщение и лог
-      console.error('fetchAllVehicles error', err);
-      loading.textContent = 'Ошибка: ' + (err.message || err);
-      showToast('Ошибка: ' + (err.message || err), false);
-    }
+    const data = await res.json();
+    if (data.status !== 'ok') throw new Error(data.message || 'Ошибка API');
+
+    vehiclesCache = data.vehicles || [];
+    renderVehiclesTable(vehiclesCache);
+
+    loading.style.display = 'none';
+    vehiclesTable.style.display = 'table';
+  } catch (err) {
+    console.error(err);
+    loading.textContent = 'Ошибка: ' + err.message;
+    showToast(err.message, false);
   }
+}
+
 
   function renderVehiclesTable(list) {
     vehiclesBody.innerHTML = '';
@@ -333,47 +333,53 @@
   }
 
   // ====== Добавление ПС ======
-  addBtn.addEventListener('click', async (ev) => {
-    ev.preventDefault();
-    const company = companySelect.value;
-    const board_number = new_board_number.value.trim();
-    if (!board_number) { showToast('Бортовой номер обязателен', false); return; }
+  addBtn.addEventListener('click', async () => {
+  const company = companySelect.value;
+  const board_number = new_board_number.value.trim();
+  if (!board_number) return showToast('Бортовой номер обязателен', false);
 
-    const payload = {
-      board_number,
-      state_number: new_state_number.value.trim(),
-      model: new_model.value.trim(),
-      built: new_built.value || '',
-      since: new_since.value || '',
-      note: new_note.value.trim(),
-      state: new_state.value || '',
-      owner: new_owner.value.trim()
-    };
+  const payload = {
+    board_number,
+    state_number: new_state_number.value.trim(),
+    model: new_model.value.trim(),
+    built: new_built.value || '',
+    since: new_since.value || '',
+    note: new_note.value.trim(),
+    state: new_state.value || '',
+    owner: new_owner.value.trim()
+  };
 
-    try {
-      addBtn.disabled = true;
-      console.log('ADD SEND', payload);
-      const res = await fetch(`${API_BASE}/add_vehicle/${company}`, {
-        method: 'POST',
-        headers: {'Content-Type':'application/json'},
-        body: JSON.stringify(payload)
-      });
-      if (!res.ok) throw new Error('HTTP ' + res.status);
-      const data = await res.json();
+  try {
+    addBtn.disabled = true;
 
-      if (data.status !== 'ok') throw new Error(data.message || 'Ошибка при добавлении');
+    const res = await fetch(`${API_BASE}/vehicle/${company}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
 
-      showToast('ПС добавлено');
-      // очистка полей
-      new_board_number.value = ''; new_state_number.value=''; new_model.value=''; new_built.value=''; new_since.value=''; new_state.value=''; new_owner.value=''; new_note.value='';
-      fetchAllVehicles();
-    } catch (err) {
-      console.error('addVehicle error', err);
-      showToast('Ошибка: ' + (err.message || err), false);
-    } finally {
-      addBtn.disabled = false;
-    }
-  });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    if (data.status !== 'ok') throw new Error(data.message);
+
+    showToast('ПС добавлено');
+    new_board_number.value = '';
+    new_state_number.value = '';
+    new_model.value = '';
+    new_built.value = '';
+    new_since.value = '';
+    new_state.value = '';
+    new_owner.value = '';
+    new_note.value = '';
+
+    fetchAllVehicles();
+  } catch (e) {
+    showToast(e.message, false);
+  } finally {
+    addBtn.disabled = false;
+  }
+});
+
 
   // ====== Открыть модал редактирования (по number) ======
   async function onEditVehicle(number) {
@@ -410,81 +416,68 @@
 
   // ====== Сохранение изменений ======
   saveVehicleEdit.addEventListener('click', async () => {
-    if (!editingVehicle || !editingVehicle.number) { showToast('Нет выбранного ПС', false); return; }
-    const company = companySelect.value;
+  if (!editingVehicle) return;
 
-    const payload = {
-      number: String(editingVehicle.number),
-      board_number: edit_board_number.value.trim(),
-      state_number: edit_state_number.value.trim(),
-      model: edit_model.value.trim(),
-      built: edit_built.value || '',
-      since: edit_since.value || '',
-      note: edit_note.value.trim(),
-      state: edit_state.value || '',
-      owner: edit_owner.value.trim()
-    };
+  const company = companySelect.value;
+  const id = editingVehicle.number;
 
-    try {
-      saveVehicleEdit.disabled = true;
-      console.log('UPDATE SEND', payload);
-      const res = await fetch(`${API_BASE}/update_vehicle/${company}`, {
-        method: 'POST',
-        headers: {'Content-Type':'application/json'},
-        body: JSON.stringify(payload)
-      });
-      if (!res.ok) throw new Error('HTTP ' + res.status);
-      const data = await res.json();
-      if (data.status !== 'ok') throw new Error(data.message || 'Ошибка при сохранении');
+  const payload = {
+    board_number: edit_board_number.value.trim(),
+    state_number: edit_state_number.value.trim(),
+    model: edit_model.value.trim(),
+    built: edit_built.value || '',
+    since: edit_since.value || '',
+    state: edit_state.value || '',
+    owner: edit_owner.value.trim(),
+    note: edit_note.value.trim()
+  };
 
-      showToast('Изменения сохранены');
-      editVehicleModal.style.display = 'none';
-      editingVehicle = null;
-      fetchAllVehicles();
-    } catch (err) {
-      console.error('saveVehicle error', err);
-      showToast('Ошибка: ' + (err.message || err), false);
-    } finally {
-      saveVehicleEdit.disabled = false;
-    }
-  });
+  try {
+    saveVehicleEdit.disabled = true;
+
+    const res = await fetch(`${API_BASE}/vehicle/${company}/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    if (data.status !== 'ok') throw new Error(data.message);
+
+    showToast('Изменения сохранены');
+    editVehicleModal.style.display = 'none';
+    editingVehicle = null;
+    fetchAllVehicles();
+  } catch (e) {
+    showToast(e.message, false);
+  } finally {
+    saveVehicleEdit.disabled = false;
+  }
+});
+
 
   // ====== Удаление ПС ======
-  async function onDeleteVehicle(number) {
-    if (!confirm(`Удалить ПС №${number}?`)) return;
-    const company = companySelect.value;
+async function onDeleteVehicle(id) {
+  if (!confirm(`Удалить ПС №${id}?`)) return;
+  const company = companySelect.value;
 
-    // Обязательно отправляем number как строку
-    const payload = { number: String(number) };
+  try {
+    const res = await fetch(`${API_BASE}/vehicle/${company}/${id}`, {
+      method: 'DELETE'
+    });
 
-    try {
-      console.log('DELETE SEND', payload);
-      const res = await fetch(`${API_BASE}/delete_vehicle/${company}`, {
-        method: 'POST',
-        headers: {'Content-Type':'application/json'},
-        body: JSON.stringify(payload)
-      });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    if (data.status !== 'ok') throw new Error(data.message);
 
-      if (!res.ok) {
-        // возможно сервер вернул HTML или не выставил CORS — покажем статус
-        throw new Error('HTTP ' + res.status);
-      }
-
-      const data = await res.json();
-      if (data.status !== 'ok') throw new Error(data.message || 'Ошибка при удалении');
-
-      showToast('ПС удалено');
-      fetchAllVehicles();
-    } catch (err) {
-      console.error('deleteVehicle error', err);
-      // Разные варианты ошибки: сеть/CORS/сервер
-      if (err instanceof TypeError) {
-        showToast('Сетевая ошибка или блокировка CORS (см. консоль)', false);
-      } else {
-        showToast('Ошибка: ' + (err.message || err), false);
-      }
-    }
+    showToast('ПС удалено');
+    fetchAllVehicles();
+  } catch (e) {
+    showToast(e.message, false);
   }
+}
+
 
   // кнопка удаления в модалке использует текущий editingVehicle
   deleteVehicleBtn.addEventListener('click', async () => {
