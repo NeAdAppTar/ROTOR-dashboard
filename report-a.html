@@ -26,9 +26,11 @@
   </div>
 
   <ul class="sidebar-menu">
-    <li><a href="reports_manage.html" class="active">
-      <i class="fas fa-check"></i><span>Отчёты</span>
-    </a></li>
+    <li>
+      <a href="reports_manage.html" class="active">
+        <span>Отчёты</span>
+      </a>
+    </li>
   </ul>
 </div>
 
@@ -46,7 +48,7 @@
 <th>Маршрут</th>
 <th>Круги</th>
 <th>Пасс.</th>
-<th>Подтверждение</th>
+<th>Доказательство</th>
 <th>Статус</th>
 <th>Действия</th>
 </tr>
@@ -61,8 +63,12 @@
 <script>
 const COMPANY = "rotor";
 
+/* =========================
+   Загрузка отчётов
+========================= */
+
 async function loadReports() {
-  const res = await fetch(`https://rotorbus.ru/api/get_reports/${COMPANY}`);
+  const res = await fetch(`https://rotorbus.ru/api/reports/${COMPANY}`);
   const data = await res.json();
 
   reportsBody.innerHTML = "";
@@ -70,9 +76,9 @@ async function loadReports() {
   data.reports.forEach(r => {
     const tr = document.createElement("tr");
 
-    if (r.status === "verified") tr.className="status-ok";
-    if (r.status === "rejected") tr.className="status-rej";
-    if (r.status === "not verified") tr.className="status-not";
+    if (r.status === "verified") tr.className = "status-ok";
+    if (r.status === "rejected") tr.className = "status-rej";
+    if (r.status === "not_verified") tr.className = "status-not";
 
     tr.innerHTML = `
       <td>${r.user_name}</td>
@@ -80,7 +86,9 @@ async function loadReports() {
       <td>${r.route}</td>
       <td>${r.num_round_trips}</td>
       <td>${r.num_passengers}</td>
-      <td>${r.proof}</td>
+      <td>
+        ${r.proof ? `<a href="${r.proof}" target="_blank">ссылка</a>` : ""}
+      </td>
       <td>${r.status}</td>
       <td class="actions">
         <button onclick="verify(${r.id})">✔</button>
@@ -92,33 +100,36 @@ async function loadReports() {
   });
 }
 
+/* =========================
+   Действия
+========================= */
+
 async function verify(id) {
-  await fetch(`https://rotorbus.ru/api/verify_report/${COMPANY}`, {
-    method:"POST",
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({id})
+  await fetch(`https://rotorbus.ru/api/report/verify/${COMPANY}/${id}`, {
+    method: "POST"
   });
   loadReports();
 }
 
 async function reject(id) {
-  await fetch(`https://rotorbus.ru/api/reject_report/${COMPANY}`, {
-    method:"POST",
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({id})
+  await fetch(`https://rotorbus.ru/api/report/reject/${COMPANY}/${id}`, {
+    method: "POST"
   });
   loadReports();
 }
 
 async function del(id) {
   if (!confirm("Удалить отчёт?")) return;
-  await fetch(`https://rotorbus.ru/api/delete_report/${COMPANY}`, {
-    method:"POST",
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({id})
+
+  await fetch(`https://rotorbus.ru/api/report/${COMPANY}/${id}`, {
+    method: "DELETE"
   });
   loadReports();
 }
+
+/* =========================
+   Инициализация
+========================= */
 
 loadReports();
 </script>

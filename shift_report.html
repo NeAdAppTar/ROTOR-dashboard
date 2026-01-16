@@ -16,14 +16,21 @@
 <h1>Завершение смены</h1>
 
 <div class="form-card">
+
+  <label>Маршрут</label>
+  <select id="routeSelect"></select>
+
+  <label>Автобус</label>
+  <select id="vehicleSelect"></select>
+
   <label>Кругорейсы</label>
-  <input id="rounds" type="number">
+  <input id="rounds" type="number" min="0">
 
   <label>Пассажиры</label>
-  <input id="passengers" type="number">
+  <input id="passengers" type="number" min="0">
 
   <label>Доказательства</label>
-  <input id="proof">
+  <input id="proof" placeholder="Ссылка на фото">
 
   <br><br>
   <button onclick="send()">Отправить отчёт</button>
@@ -34,26 +41,95 @@
 
 <script>
 const COMPANY = "rotor";
-const shift = JSON.parse(localStorage.getItem("activeShift"));
+
+/* =========================
+   Вспомогательные функции
+========================= */
+
+function getCookie(name) {
+  return document.cookie
+    .split('; ')
+    .find(row => row.startsWith(name + '='))
+    ?.split('=')[1];
+}
+
+const userName = decodeURIComponent(getCookie("userLogin") || "");
+
+/* =========================
+   Загрузка данных
+========================= */
+
+async function loadRoutes() {
+  const res = await fetch(`https://rotorbus.ru/api/routes/${COMPANY}`);
+  const data = await res.json();
+
+  const select = document.getElementById("routeSelect");
+  select.innerHTML = "";
+
+  data.routes.forEach(r => {
+    const option = document.createElement("option");
+    option.value = r.route;
+    option.textContent = r.route;
+    select.appendChild(option);
+  });
+}
+
+async function loadVehicles() {
+  const res = await fetch(`https://rotorbus.ru/api/vehicles/${COMPANY}`);
+  const data = await res.json();
+
+  const select = document.getElementById("vehicleSelect");
+  select.innerHTML = "";
+
+  data.vehicles.forEach(v => {
+    const option = document.createElement("option");
+    option.value = v.id;
+    option.textContent = `${v.model} (${v.board_number})`;
+    select.appendChild(option);
+  });
+}
+
+/* =========================
+   Отправка отчёта
+========================= */
 
 async function send() {
-  await fetch(`https://rotorbus.ru/api/add_report/${COMPANY}`, {
-    method:"POST",
-    headers:{ "Content-Type":"application/json" },
-    body:JSON.stringify({
-      user_name: getCookie("userLogin"),
-      date: new Date().toISOString().split("T")[0],
-      route: shift.route,
-      num_round_trip: rounds.value,
-      num_passengers: passengers.value,
-      proof: proof.value
-    })
+  if (!userName) {
+    alert("Пользователь не найден");
+    return;
+  }
+
+  const body = {
+    user_name: userName,
+    date: new Date().toISOString().split("T")[0],
+    route: routeSelect.value,
+    num_round_trips: Number(rounds.value),
+    num_passengers: Number(passengers.value),
+    proof: proof.value,
+    vehicle_id: Number(vehicleSelect.value)
+  };
+
+  const res = await fetch(`https://rotorbus.ru/api/report/${COMPANY}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body)
   });
 
-  localStorage.removeItem("activeShift");
+  if (!res.ok) {
+    alert("Ошибка отправки отчёта");
+    return;
+  }
+
   alert("Смена завершена");
-  window.location.href = "employee_dashboard.html";
+  window.location.href = `/dashboard/${userName}`;
 }
+
+/* =========================
+   Инициализация
+========================= */
+
+loadRoutes();
+loadVehicles();
 </script>
 
 </body>
