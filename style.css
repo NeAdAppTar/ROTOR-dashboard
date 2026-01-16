@@ -472,3 +472,65 @@ body.dark .styled-table tbody tr:hover {
     color:white;
     border-radius:8px;
 }
+
+/* ====== Строки по статусу ====== */
+tr.status-not {
+  background: linear-gradient(90deg, #fff7d6, #fff);
+}
+
+tr.status-ok {
+  background: linear-gradient(90deg, #e6fffa, #fff);
+}
+
+tr.status-rej {
+  background: linear-gradient(90deg, #ffe4e6, #fff);
+}
+
+/* ====== Бейджи ====== */
+.status-badge {
+  padding: 4px 10px;
+  border-radius: 14px;
+  font-size: 12px;
+  font-weight: 600;
+  display: inline-block;
+}
+
+.badge-not {
+  background: #fde68a;
+  color: #92400e;
+}
+
+.badge-ok {
+  background: #bbf7d0;
+  color: #065f46;
+}
+
+.badge-rej {
+  background: #fecaca;
+  color: #7f1d1d;
+}
+
+/* ====== Кнопки ====== */
+.actions button {
+  border: none;
+  padding: 6px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  background: #f1f5f9;
+  transition: all 0.2s ease;
+}
+
+.actions button:hover {
+  transform: scale(1.05);
+}
+
+.btn-ok:hover { background:#bbf7d0; }
+.btn-rej:hover { background:#fecaca; }
+.btn-del:hover { background:#e5e7eb; }
+
+/* ====== Ссылка на доказательство ====== */
+.proof-link {
+  text-decoration: none;
+  font-size: 18px;
+}

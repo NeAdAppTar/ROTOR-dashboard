@@ -80,22 +80,57 @@ async function loadReports() {
     if (r.status === "rejected") tr.className = "status-rej";
     if (r.status === "not_verified") tr.className = "status-not";
 
-    tr.innerHTML = `
-      <td>${r.user_name}</td>
-      <td>${r.date}</td>
-      <td>${r.route}</td>
-      <td>${r.num_round_trips}</td>
-      <td>${r.num_passengers}</td>
-      <td>
-        ${r.proof ? `<a href="${r.proof}" target="_blank">ссылка</a>` : ""}
-      </td>
-      <td>${r.status}</td>
-      <td class="actions">
-        <button onclick="verify(${r.id})">✔</button>
-        <button onclick="reject(${r.id})">✖</button>
-        <button onclick="del(${r.id})">🗑</button>
-      </td>
-    `;
+    let statusClass = "";
+let badgeClass = "";
+let statusText = "";
+
+if (r.status === "verified") {
+  statusClass = "status-ok";
+  badgeClass = "badge-ok";
+  statusText = "Подтверждён";
+}
+
+if (r.status === "rejected") {
+  statusClass = "status-rej";
+  badgeClass = "badge-rej";
+  statusText = "Отклонён";
+}
+
+if (r.status === "not_verified") {
+  statusClass = "status-not";
+  badgeClass = "badge-not";
+  statusText = "Ожидает";
+}
+
+tr.className = statusClass;
+
+tr.innerHTML = `
+  <td>${r.user_name}</td>
+  <td>${r.date}</td>
+  <td>${r.route}</td>
+  <td>${r.num_round_trips}</td>
+  <td>${r.num_passengers}</td>
+  <td>
+    ${r.proof ? `<a class="proof-link" href="${r.proof}" target="_blank">📎</a>` : ""}
+  </td>
+  <td>
+    <span class="status-badge ${badgeClass}">
+      ${statusText}
+    </span>
+  </td>
+  <td class="actions">
+    ${
+      r.status === "not_verified"
+        ? `
+          <button class="btn-ok" onclick="verify(${r.id})">✔</button>
+          <button class="btn-rej" onclick="reject(${r.id})">✖</button>
+        `
+        : ""
+    }
+    <button class="btn-del" onclick="del(${r.id})">🗑</button>
+  </td>
+`;
+
     reportsBody.appendChild(tr);
   });
 }
