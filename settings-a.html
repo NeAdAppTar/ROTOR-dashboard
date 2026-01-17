@@ -2,103 +2,269 @@
 <html lang="ru">
 <head>
   <meta charset="utf-8">
-  <title>Коэффициенты должностей</title>
+  <title>Настройки</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+
   <link rel="stylesheet" href="style_db.css">
   <link rel="stylesheet" href="style_a.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <style>
+    .section {
+      margin-bottom: 30px;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .section-header h2 {
+      margin: 0;
+    }
+
+    .icon-btn {
+      background: #e5e7eb;
+      border: none;
+      border-radius: 6px;
+      padding: 6px 10px;
+      cursor: pointer;
+    }
+
+    .icon-btn:hover {
+      background: #d1d5db;
+    }
+
+    .coef-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .coef-row input {
+      width: 80px;
+    }
+
+    .danger-btn {
+      background: #fee2e2;
+      color: #7f1d1d;
+      border: none;
+      padding: 10px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .danger-btn:hover {
+      background: #fecaca;
+    }
+
+    /* ===== Модалка ===== */
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.4);
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      width: 300px;
+    }
+
+    .modal-content h3 {
+      margin-top: 0;
+    }
+
+    .modal-content input {
+      width: 100%;
+      margin-bottom: 10px;
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+  </style>
 </head>
 <body>
 
 <div class="main-content">
 <div class="container">
 
-<h1>📊 Коэффициенты должностей</h1>
+<h1>Настройки</h1>
 
-<div class="table-card">
-  <div class="form-inline">
-    <input id="postInput" placeholder="Должность">
-    <input id="coefInput" placeholder="Коэффициент" type="number" step="0.01">
-    <button class="actions-btn btn-add" onclick="addCoef()">Добавить</button>
+<!-- ================= Коэффициенты ================= -->
+<div class="table-card section">
+  <div class="section-header">
+    <h2>Коэффициенты</h2>
+    <button class="icon-btn" onclick="openCoefModal()">
+      <i class="fa fa-plus"></i>
+    </button>
   </div>
+  <div id="coefs"></div>
 </div>
 
-<div class="table-card">
-<table class="styled-table">
-  <thead>
-    <tr>
-      <th>ID</th>
-      <th>Должность</th>
-      <th>Коэффициент</th>
-      <th>Действия</th>
-    </tr>
-  </thead>
-  <tbody id="coefsBody"></tbody>
-</table>
+<!-- ================= Стоимость пассажира ================= -->
+<div class="table-card section">
+  <div class="section-header">
+    <h2>Стоимость пассажира</h2>
+  </div>
+
+  <input id="passCost">
+  <button class="actions-btn" onclick="saveConfig()">Сохранить</button>
+</div>
+
+<!-- ================= Сброс статистики ================= -->
+<div class="table-card section">
+  <div class="section-header">
+    <h2>Периодическая статистика</h2>
+  </div>
+
+  <button class="danger-btn" onclick="resetStats()">
+    Сбросить периодическую статистику
+  </button>
 </div>
 
 </div>
+</div>
+
+<!-- ================= Модалка ================= -->
+<div class="modal" id="coefModal">
+  <div class="modal-content">
+    <h3>Новый коэффициент</h3>
+
+    <input id="newPost" placeholder="Должность">
+    <input id="newCoef" type="number" step="0.1" placeholder="Коэффициент">
+
+    <div class="modal-actions">
+      <button onclick="closeCoefModal()">Отмена</button>
+      <button class="actions-btn" onclick="addCoef()">Добавить</button>
+    </div>
+  </div>
 </div>
 
 <script>
 const API = 'https://rotorbus.ru/api';
 const COMPANY = 'rotor';
 
-async function fetchCoefs() {
-  const res = await fetch(`${API}/get_coefs/${COMPANY}`);
+/* ================= Коэффициенты ================= */
+
+async function loadCoefs() {
+  const res = await fetch(`${API}/coefs/${COMPANY}`);
   const data = await res.json();
 
-  const body = document.getElementById('coefsBody');
-  body.innerHTML = '';
+  coefs.innerHTML = "";
 
   data.coefs.forEach(c => {
-    body.innerHTML += `
-      <tr>
-        <td>${c.id}</td>
-        <td><input value="${c.post}" id="post-${c.id}"></td>
-        <td><input value="${c.coef}" id="coef-${c.id}"></td>
-        <td>
-          <button onclick="updateCoef('${c.id}')">💾</button>
-          <button onclick="deleteCoef('${c.id}')">🗑️</button>
-        </td>
-      </tr>`;
+    const div = document.createElement("div");
+    div.className = "coef-row";
+
+    div.innerHTML = `
+      <span>${c.post}</span>
+      <div>
+        <input value="${c.coef}" onchange="updateCoef(${c.id}, this.value)">
+        <button class="icon-btn" onclick="deleteCoef(${c.id})">
+          <i class="fa fa-trash"></i>
+        </button>
+      </div>
+    `;
+
+    coefs.appendChild(div);
   });
 }
 
-async function addCoef() {
-  await fetch(`${API}/add_coef/${COMPANY}`, {
-    method: 'POST',
+async function updateCoef(id, value) {
+  await fetch(`${API}/coef/${COMPANY}/${id}`, {
+    method: "PUT",
     headers: {'Content-Type':'application/json'},
-    body: JSON.stringify({
-      post: postInput.value,
-      coef: coefInput.value
-    })
+    body: JSON.stringify({ coef: value })
   });
-  fetchCoefs();
-}
-
-async function updateCoef(id) {
-  await fetch(`${API}/update_coef/${COMPANY}`, {
-    method: 'POST',
-    headers: {'Content-Type':'application/json'},
-    body: JSON.stringify({
-      id,
-      post: document.getElementById(`post-${id}`).value,
-      coef: document.getElementById(`coef-${id}`).value
-    })
-  });
-  fetchCoefs();
 }
 
 async function deleteCoef(id) {
-  await fetch(`${API}/delete_coef/${COMPANY}`, {
-    method: 'POST',
-    headers: {'Content-Type':'application/json'},
-    body: JSON.stringify({ id })
+  if (!confirm("Удалить коэффициент?")) return;
+
+  await fetch(`${API}/coef/${COMPANY}/${id}`, {
+    method: "DELETE"
   });
-  fetchCoefs();
+
+  loadCoefs();
 }
 
-fetchCoefs();
+async function addCoef() {
+  await fetch(`${API}/coef/${COMPANY}`, {
+    method: "POST",
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({
+      post: newPost.value,
+      coef: newCoef.value
+    })
+  });
+
+  closeCoefModal();
+  loadCoefs();
+}
+
+/* ================= Конфигурация ================= */
+
+async function loadConfig() {
+  const res = await fetch(`${API}/config/${COMPANY}`);
+  const data = await res.json();
+
+  passCost.value = data.configs.passanger_cost || "";
+}
+
+async function saveConfig() {
+  await fetch(`${API}/config/${COMPANY}`, {
+    method: "POST",
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({
+      key: "passanger_cost",
+      value: passCost.value
+    })
+  });
+
+  alert("Сохранено");
+}
+
+/* ================= Статистика ================= */
+
+async function resetStats() {
+  if (!confirm("Сбросить периодическую статистику у всех?")) return;
+
+  await fetch(`${API}/statistics/${COMPANY}/reset`, {
+    method: "POST"
+  });
+
+  alert("Статистика сброшена");
+}
+
+/* ================= Модалка ================= */
+
+function openCoefModal() {
+  coefModal.style.display = "flex";
+}
+
+function closeCoefModal() {
+  coefModal.style.display = "none";
+  newPost.value = "";
+  newCoef.value = "";
+}
+
+/* ================= Init ================= */
+
+loadCoefs();
+loadConfig();
 </script>
+
 </body>
 </html>

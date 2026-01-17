@@ -4,30 +4,55 @@
   <meta charset="utf-8">
   <title>Статистика зарплаты</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+
   <link rel="stylesheet" href="style_db.css">
   <link rel="stylesheet" href="style_a.css">
+
+  <style>
+    .salary-table td, .salary-table th {
+      padding: 10px;
+      text-align: left;
+    }
+
+    .money {
+      font-weight: 600;
+      color: #047857;
+    }
+
+    .period {
+      color: #1d4ed8;
+    }
+
+    .user {
+      font-weight: 500;
+    }
+
+    tr:hover {
+      background: #f8fafc;
+    }
+  </style>
 </head>
 <body>
 
 <div class="main-content">
 <div class="container">
 
-<h1>💰 Статистика зарплаты</h1>
+<h1>💰 Зарплата сотрудников</h1>
 
 <div class="table-card">
-  <div class="form-inline">
-    <input id="userName" placeholder="Имя пользователя">
-    <button class="actions-btn" onclick="loadStats()">Показать</button>
-  </div>
-</div>
-
-<div class="table-card" id="stats" style="display:none;">
-  <p><b>Общая зарплата:</b> <span id="total_salary"></span></p>
-  <p><b>За период:</b> <span id="period_salary"></span></p>
-  <p><b>Рейсы всего:</b> <span id="total_round_trips"></span></p>
-  <p><b>Рейсы за период:</b> <span id="period_round_trips"></span></p>
-  <p><b>Пассажиры всего:</b> <span id="total_passengers"></span></p>
-  <p><b>Пассажиры за период:</b> <span id="period_passengers"></span></p>
+<table class="styled-table salary-table">
+<thead>
+<tr>
+  <th>Сотрудник</th>
+  <th>Должность</th>
+  <th>Зарплата всего</th>
+  <th>Зарплата за период</th>
+  <th>Рейсы</th>
+  <th>Пассажиры</th>
+</tr>
+</thead>
+<tbody id="statsBody"></tbody>
+</table>
 </div>
 
 </div>
@@ -38,23 +63,34 @@ const API = 'https://rotorbus.ru/api';
 const COMPANY = 'rotor';
 
 async function loadStats() {
-  const res = await fetch(`${API}/get_user_statistics/${COMPANY}`, {
-    method: 'POST',
-    headers: {'Content-Type':'application/json'},
-    body: JSON.stringify({ user_name: userName.value })
+  const res = await fetch(`${API}/statistics/${COMPANY}`);
+  const data = await res.json();
+
+  if (data.status !== "ok") {
+    alert("Ошибка загрузки статистики");
+    return;
+  }
+
+  statsBody.innerHTML = "";
+
+  data.statistics.forEach(s => {
+    const tr = document.createElement("tr");
+
+    tr.innerHTML = `
+      <td class="user">${s.user_name}</td>
+      <td>${s.post}</td>
+      <td class="money">${s.total_salary} ₽</td>
+      <td class="money period">${s.period_salary} ₽</td>
+      <td>${s.total_round_trips} / ${s.period_round_trips}</td>
+      <td>${s.total_passengers} / ${s.period_passengers}</td>
+    `;
+
+    statsBody.appendChild(tr);
   });
-
-  const d = await res.json();
-  if (d.status !== 'ok') return alert(d.message);
-
-  Object.keys(d).forEach(k => {
-    if (document.getElementById(k)) {
-      document.getElementById(k).textContent = d[k];
-    }
-  });
-
-  document.getElementById('stats').style.display = 'block';
 }
+
+loadStats();
 </script>
+
 </body>
 </html>
