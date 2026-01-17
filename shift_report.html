@@ -38,7 +38,7 @@
   .form-group input,
   .form-group select {
     width: 100%;
-    padding: 10px 12px;
+    padding: 10px 0px;
     border-radius: 10px;
     border: 1px solid #e5e7eb;
     font-size: 14px;
@@ -73,6 +73,47 @@
     color: #94a3b8;
     margin-top: 4px;
   }
+  /* Ночная тема */
+.dark .shift-card {
+  background: #1e293b;         /* тёмно-синий графит */
+  color: #e2e8f0;              /* светлый текст */
+}
+
+.dark-theme .shift-card h2 {
+  color: #f1f5f9;
+}
+
+.dark .form-group label {
+  color: #94a3b8;              /* серый текст */
+}
+
+.dark .form-group input,
+.dark .form-group select {
+  background: #0f172a;         /* почти чёрный */
+  color: #e2e8f0;
+  border: 1px solid #334155;   /* тёмная рамка */
+}
+
+.dark .form-group input:focus,
+.dark .form-group select:focus {
+  outline: none;
+  border-color: #3b82f6;       /* синий акцент */
+  background: #1e293b;
+}
+
+.dark .submit-btn {
+  background: #059669;         /* мятно-зелёный */
+  color: white;
+}
+
+.dark .submit-btn:hover {
+  background: #047857;         /* темнее при наведении */
+}
+
+.dark .hint {
+  color: #64748b;
+}
+
 </style>
 </head>
 
@@ -119,48 +160,7 @@
     </div>
 
 </div>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
-<div class="sidebar" id="sidebar"> 
-    <div class="sidebar-header">
-        <span class="logo">РОТОР</span>
-    </div>
-
-    <ul class="sidebar-menu">
-        <li><a href="employee_dashboard.html"><i class="fas fa-user"></i><span>Личный кабинет</span></a></li>
-        <li><a href="employees.html"><i class="fas fa-users"></i><span>Список сотрудников</span></a></li>
-        <li><a href="routes.html"><i class="fas fa-route"></i><span>Маршруты</span></a></li>
-        <li><a href="vehicles.html"><i class="fas fa-truck"></i><span>Список ПС</span></a></li>
-        <li><a href="submit_route.html"><i class="fas fa-file"></i><span>Маршрутный лист</span></a></li>
-        <li><a href="charter.html"><i class="fas fa-book"></i><span>Устав</span></a></li>
-        <li><a href="plan.html"><i class="fas fa-calendar"></i><span>План</span></a></li>
-        <li><a href="t.html"><i class="fas fa-check"></i><span>Тесты</span></a></li>
-        <li><a href="binds.html"><i class="fas fa-keyboard"></i><span>Бинды и таблички</span></a></li>
-    </ul>
-
-    <div class="user-menu" id="userMenu">
-
-      <div class="user-menu-item" id="nyBtn">
-      <i class="fas fa-snowflake"></i>
-      <span>НГ оформление</span>
-      </div>
-
-    <div class="user-menu-item" id="themeBtn">
-        <i class="fas fa-moon"></i>
-        <span>Тёмная тема</span>
-    </div>
-
-    <div class="user-menu-item" id="logoutBtn">
-        <i class="fas fa-sign-out-alt"></i>
-        <span>Выйти</span>
-    </div>
-
-    <div class="user-name-display">
-        <i class="fas fa-user"></i>
-        <span id="userName">user</span>
-    </div>
-
-</div>
+</div> 
 
 <div class="main-content">
 <main class="container">
