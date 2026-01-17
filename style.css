@@ -495,7 +495,7 @@ tr.status-rej {
   display: inline-block;
 }
 
-.badge-not {
+.badge-not  {
   background: #fde68a;
   color: #92400e;
 }
