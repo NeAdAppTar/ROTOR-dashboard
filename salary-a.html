@@ -4,7 +4,8 @@
   <meta charset="utf-8">
   <title>Статистика зарплаты</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-
+  <script src="usermenu.js"></script> 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" href="style_db.css">
   <link rel="stylesheet" href="style_a.css">
 
@@ -34,10 +35,53 @@
 </head>
 <body>
 
+  <div class="sidebar" id="sidebar"> 
+    <div class="sidebar-header">
+        <span class="logo">РОТОР</span>
+    </div>
+
+    <ul class="sidebar-menu">
+        <li><a href="employee_dashboard.html"><i class="fas fa-user"></i><span>Личный кабинет</span></a></li>
+        <li><a href="employees.html"><i class="fas fa-users"></i><span>Список сотрудников</span></a></li>
+        <li><a href="routes.html"><i class="fas fa-route"></i><span>Маршруты</span></a></li>
+        <li><a href="vehicles.html"><i class="fas fa-truck"></i><span>Список ПС</span></a></li>
+        <li><a href="submit_route.html"><i class="fas fa-file"></i><span>Маршрутный лист</span></a></li>
+        <li><a href="charter.html"><i class="fas fa-book"></i><span>Устав</span></a></li>
+        <li><a href="plan.html"><i class="fas fa-calendar"></i><span>План</span></a></li>
+        <li><a href="t.html"><i class="fas fa-check"></i><span>Тесты</span></a></li>
+        <li><a href="binds.html"><i class="fas fa-keyboard"></i><span>Бинды и таблички</span></a></li>
+    </ul>
+
+    <div class="user-menu" id="userMenu">
+
+      <div class="user-menu-item" id="nyBtn">
+        <i class="fas fa-snowflake"></i>
+        <span>НГ оформление</span>
+      </div>
+      
+      <div class="user-menu-item" id="themeBtn">
+          <i class="fas fa-moon"></i>
+          <span>Тёмная тема</span>
+      </div>
+
+      <div class="user-menu-item" id="logoutBtn">
+          <i class="fas fa-sign-out-alt"></i>
+          <span>Выйти</span>
+      </div>
+
+      <div class="user-name-display">
+          <i class="fas fa-user"></i>
+          <span id="userName">user</span>
+      </div>
+
+    
+    </div>
+</div>
+
 <div class="main-content">
 <div class="container">
 
-<h1>💰 Зарплата сотрудников</h1>
+<h1>Зарплата сотрудников</h1>
 
 <div class="table-card">
 <table class="styled-table salary-table">
@@ -59,6 +103,7 @@
 </div>
 
 <script>
+const pageAccess = ["Директор", "Технический администратор"];
 const API = 'https://rotorbus.ru/api';
 const COMPANY = 'rotor';
 
@@ -93,4 +138,6 @@ loadStats();
 </script>
 
 </body>
+<script src="sidebar.js"></script>
+<script src="checkauth.js"></script>
 </html>
