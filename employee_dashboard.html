@@ -141,7 +141,6 @@
   </div>
 </div>
   <script>
-
     const pageAccess = null;
 /* =========================
    Константы
@@ -169,12 +168,9 @@ function formatNumber(value) {
 ========================= */
 async function loadDashboard() {
   const login = getCookie("userLogin");
-  if (!login) {
-    console.warn("Пользователь не найден в cookie");
-    return;
-  }
+  if (!login) return;
 
-  // Имя пользователя
+  // Никнейм
   const nicknameEl = document.getElementById("nickname");
   if (nicknameEl) nicknameEl.textContent = login;
 
@@ -186,74 +182,57 @@ async function loadDashboard() {
     if (!res.ok) throw new Error("HTTP " + res.status);
 
     const data = await res.json();
-    if (data.status !== "ok") {
-      console.error("API error:", data);
-      throw new Error("Статус не ok");
-    }
+    if (data.status !== "ok") throw new Error("API error");
 
-    // Универсально: объект или массив
-    const stats = Array.isArray(data.statistics)
-      ? data.statistics[0]
-      : data.statistics;
+    // statistics ВСЕГДА массив
+    const statsArray = Array.isArray(data.statistics)
+      ? data.statistics
+      : [];
 
-    if (!stats) throw new Error("Пустая статистика");
+    // Если статистики нет — показываем нули
+    const stats = statsArray.length > 0
+      ? statsArray[0]
+      : {
+          post: "—",
+          total_round_trips: 0,
+          period_round_trips: 0,
+          total_passengers: 0,
+          period_passengers: 0,
+          period_salary: 0
+        };
 
     /* ===== Должность ===== */
     const roleEl = document.getElementById("userRole");
     if (roleEl) roleEl.textContent = stats.post || "—";
 
     /* ===== Общая статистика ===== */
-    const totalRoutesEl = document.getElementById("totalRoutes");
-    const totalPassengersEl = document.getElementById("totalPassengers");
-
-    if (totalRoutesEl)
-      totalRoutesEl.textContent = formatNumber(stats.total_round_trips);
-
-    if (totalPassengersEl)
-      totalPassengersEl.textContent = formatNumber(stats.total_passengers);
+    totalRoutes.textContent = formatNumber(stats.total_round_trips);
+    totalPassengers.textContent = formatNumber(stats.total_passengers);
 
     /* ===== Период ===== */
-    const periodRoutesEl = document.getElementById("periodRoutes");
-    const periodPassengersEl = document.getElementById("periodPassengers");
-    const salaryEl = document.getElementById("salary");
-
-    if (periodRoutesEl)
-      periodRoutesEl.textContent = formatNumber(stats.period_round_trips);
-
-    if (periodPassengersEl)
-      periodPassengersEl.textContent = formatNumber(stats.period_passengers);
-
-    if (salaryEl)
-      salaryEl.textContent =
-        formatNumber(stats.period_salary) + " ₽";
+    periodRoutes.textContent = formatNumber(stats.period_round_trips);
+    periodPassengers.textContent = formatNumber(stats.period_passengers);
+    salary.textContent = formatNumber(stats.period_salary) + " ₽";
 
     /* ===== Прогресс ===== */
-    const routesProgress = document.getElementById("routesProgress");
-    const routesProgressLabel =
-      document.getElementById("routesProgressLabel");
-
     const max = 16;
     const current = Number(stats.period_round_trips) || 0;
     let percent = (current / max) * 100;
     if (percent > 100) percent = 100;
 
-    if (routesProgress)
-      routesProgress.style.width = percent + "%";
+    routesProgress.style.width = percent + "%";
+    routesProgressLabel.textContent = `${current} / ${max}`;
 
-    if (routesProgressLabel)
-      routesProgressLabel.textContent = `${current} / ${max}`;
-
-    if (routesProgress) {
-      if (current > max) {
-        routesProgress.classList.add("progress-over");
-      } else {
-        routesProgress.classList.remove("progress-over");
-      }
+    if (current > max) {
+      routesProgress.classList.add("progress-over");
+    } else {
+      routesProgress.classList.remove("progress-over");
     }
 
   } catch (error) {
     console.error("Ошибка загрузки:", error);
 
+    // fallback — безопасно
     [
       "totalRoutes",
       "totalPassengers",
@@ -263,7 +242,7 @@ async function loadDashboard() {
       "userRole"
     ].forEach(id => {
       const el = document.getElementById(id);
-      if (el) el.textContent = "—";
+      if (el) el.textContent = "0";
     });
   }
 }
@@ -273,7 +252,6 @@ async function loadDashboard() {
 ========================= */
 window.addEventListener("DOMContentLoaded", loadDashboard);
 </script>
-
 
 </body>
 <script src="sidebar.js"></script>
