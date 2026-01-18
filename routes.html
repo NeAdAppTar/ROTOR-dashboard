@@ -134,11 +134,11 @@
     function getRouteImage(routeName) {
       const digits = String(routeName || "").match(/\d+/g);
       const num = digits ? digits.join("") : "";
-      const known = new Set(["8", "10", "15", "28", "35", "77", "92", "99"]);
+      const known = new Set(["12", "35", "71", "98", "99", "138", "м1"]);
       if (known.has(num)) {
         return "route" + num + ".jpg";
       }
-      return "route10.jpg";
+      return "route.jpg";
     }
 
     async function fetchJson(url) {
@@ -153,7 +153,7 @@
 
       const userName = getCookie("userLogin");
       if (!userName) {
-        routesStatus.textContent = "No userLogin cookie.";
+        routesStatus.textContent = "Для начала вам необходимо авторизоваться";
         return;
       }
 
@@ -197,8 +197,8 @@
           tile.innerHTML = `
             <img src="${getRouteImage(route.route)}" alt="Route ${escapeHtml(route.route)}" class="route-img">
             <h3>${escapeHtml(route.route)}</h3>
-            <p>Base pay per trip: <span class="highlight">${formatMoney(baseSalary)}</span></p>
-            <p>With coef (${escapeHtml(post || "n/a")}): <span class="highlight">${formatMoney(salaryWithCoef)}</span></p>
+            <p>Стандартная зарплата <span class="highlight">${formatMoney(baseSalary)}</span></p>
+            <p>С учетом вашей должности (${escapeHtml(post || "n/a")}): <span class="highlight">${formatMoney(salaryWithCoef)}</span></p>
           `;
           routesGrid.appendChild(tile);
         });
