@@ -25,7 +25,7 @@
         <li><a href="employees.html"><i class="fas fa-users"></i><span>Список сотрудников</span></a></li>
         <li><a href="routes.html"><i class="fas fa-route"></i><span>Маршруты</span></a></li>
         <li><a href="vehicles.html"><i class="fas fa-truck"></i><span>Список ПС</span></a></li>
-        <li><a href="submit_route.html"><i class="fas fa-file"></i><span>Маршрутный лист</span></a></li>
+        <li><a href="shift_report.html"><i class="fas fa-file"></i><span>Отчет</span></a></li>
         <li><a href="charter.html"><i class="fas fa-book"></i><span>Устав</span></a></li>
         <li><a href="plan.html"><i class="fas fa-calendar"></i><span>План</span></a></li>
         <li><a href="t.html"><i class="fas fa-check"></i><span>Тесты</span></a></li>
@@ -58,26 +58,44 @@
     </div>
 </div>
 
+<div class="main-content">
+  <div class="container">
+    <h1>Зарплаты</h1>
 
-  <!-- LOADING -->
-  <div id="loading" class="loading">Загрузка маршрутов...</div>
+    <div class="table-card" style="margin-bottom:14px;">
+      <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center;">
+        <div class="form-inline" style="flex:1;min-width:320px;">
+          <input id="routeName" placeholder="Номер" />
+          <input id="routeSalary" placeholder="Зарплата за круг" type="number" step="0.01" />
+          <button class="actions-btn btn-add" id="addRouteBtn"><i class="fas fa-plus"></i> Добавить</button>
+        </div>
 
-  <!-- TABLE -->
-  <div class="table-card">
-    <table class="styled-table" id="routesTable" style="display:none;">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Маршрут</th>
-          <th>Стоимость</th>
-          <th>Действия</th>
-        </tr>
-      </thead>
-      <tbody id="routesBody"></tbody>
-    </table>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <button class="actions-btn" id="refreshBtn" title="Обновить"><i class="fas fa-sync"></i></button>
+        </div>
+      </div>
+
+      <!-- LOADING -->
+      <div id="loading" class="loading">Загрузка</div>
+
+      <!-- TABLE -->
+      <div style="margin-top:12px;">
+        <div class="table-card" style="padding:8px;">
+          <table class="styled-table" id="routesTable" style="display:none;">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Маршрут</th>
+                <th>Зарплата за круг</th>
+                <th>Действия</th>
+              </tr>
+            </thead>
+            <tbody id="routesBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
   </div>
-
-</div>
 </div>
 
 <div id="toast" class="toast"></div>
@@ -95,6 +113,7 @@ const loading     = document.getElementById('loading');
 const routeName   = document.getElementById('routeName');
 const routeSalary = document.getElementById('routeSalary');
 const addRouteBtn = document.getElementById('addRouteBtn');
+const refreshBtn  = document.getElementById('refreshBtn');
 
 const toastEl = document.getElementById('toast');
 
@@ -188,6 +207,8 @@ addRouteBtn.addEventListener('click', async () => {
   }
 });
 
+refreshBtn.addEventListener('click', fetchRoutes);
+
 // DELETE ROUTE
 async function deleteRoute(id) {
   if (!confirm('Удалить маршрут?')) return;
@@ -217,7 +238,7 @@ fetchRoutes();
 
 
 <script src="sidebar.js"></script>
-<script src="checkauth.js"></script>
+
 
 </body>
 </html>

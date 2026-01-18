@@ -55,7 +55,7 @@
         <li><a href="employees.html"><i class="fas fa-users"></i><span>Список сотрудников</span></a></li>
         <li><a href="routes.html"><i class="fas fa-route"></i><span>Маршруты</span></a></li>
         <li><a href="vehicles.html"><i class="fas fa-truck"></i><span>Список ПС</span></a></li>
-        <li><a href="submit_route.html"><i class="fas fa-file"></i><span>Маршрутный лист</span></a></li>
+        <li><a href="shift_report.html"><i class="fas fa-file"></i><span>Отчет</span></a></li>
         <li><a href="charter.html"><i class="fas fa-book"></i><span>Устав</span></a></li>
         <li><a href="plan.html"><i class="fas fa-calendar"></i><span>План</span></a></li>
         <li><a href="t.html"><i class="fas fa-check"></i><span>Тесты</span></a></li>
@@ -134,7 +134,7 @@
     function getRouteImage(routeName) {
       const digits = String(routeName || "").match(/\d+/g);
       const num = digits ? digits.join("") : "";
-      const known = new Set(["12", "35", "71", "98", "99", "138", "м1"]);
+      const known = new Set(["12", "35", "71", "98", "99", "138", "m1"]);
       if (known.has(num)) {
         return "route" + num + ".jpg";
       }
