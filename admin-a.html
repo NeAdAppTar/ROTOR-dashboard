@@ -1,0 +1,233 @@
+﻿<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Админ-панель</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style_db.css">
+  <link rel="stylesheet" href="style_a.css">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/png" href="icon.png">
+  <script src="usermenu.js"></script>
+  <style>
+    :root {
+      --admin-accent: #0f766e;
+      --admin-accent-2: #0ea5e9;
+      --admin-bg: #f6f7fb;
+      --admin-card: #ffffff;
+      --admin-text: #0f172a;
+      --admin-muted: #64748b;
+    }
+
+    .admin-hero {
+      background: linear-gradient(120deg, rgba(14,165,233,0.12), rgba(15,118,110,0.12));
+      border: 1px solid rgba(15, 118, 110, 0.2);
+      border-radius: 18px;
+      padding: 24px 28px;
+      margin-bottom: 20px;
+    }
+
+    .admin-hero h1 {
+      margin: 0 0 6px;
+      font-size: 28px;
+      color: var(--admin-text);
+    }
+
+    .admin-hero p {
+      margin: 0;
+      color: var(--admin-muted);
+    }
+
+    .admin-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+    }
+
+    .admin-card {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 18px 20px;
+      background: var(--admin-card);
+      border-radius: 16px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 12px 25px rgba(15, 23, 42, 0.06);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .admin-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 18px 30px rgba(15, 23, 42, 0.12);
+    }
+
+    .admin-card .card-icon {
+      width: 46px;
+      height: 46px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(140deg, rgba(14,165,233,0.18), rgba(15,118,110,0.18));
+      color: var(--admin-accent);
+      font-size: 20px;
+    }
+
+    .admin-card h3 {
+      margin: 0;
+      font-size: 18px;
+      color: var(--admin-text);
+    }
+
+    .admin-card p {
+      margin: 0;
+      color: var(--admin-muted);
+      font-size: 14px;
+    }
+
+    .admin-card .card-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--admin-accent-2);
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    @media (max-width: 640px) {
+      .admin-hero {
+        padding: 20px;
+      }
+
+      .admin-hero h1 {
+        font-size: 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <span class="logo">Ротор</span>
+  </div>
+
+  <ul class="sidebar-menu">
+    <li><a href="employee_dashboard.html"><i class="fas fa-user"></i><span>Профиль сотрудника</span></a></li>
+    <li><a href="employees-a.html"><i class="fas fa-users"></i><span>Список сотрудников</span></a></li>
+    <li><a href="routes-a.html"><i class="fas fa-route"></i><span>Маршруты</span></a></li>
+    <li><a href="vehicles-a.html"><i class="fas fa-truck"></i><span>Транспорт</span></a></li>
+    <li><a href="report-a.html"><i class="fas fa-file"></i><span>Отчеты</span></a></li>
+    <li><a href="settings-a.html"><i class="fas fa-gear"></i><span>Настройки</span></a></li>
+    <li><a href="salary-a.html"><i class="fas fa-wallet"></i><span>Зарплаты</span></a></li>
+    <li><a href="trainers_uc.html"><i class="fas fa-chalkboard-teacher"></i><span>Инструкторы</span></a></li>
+  </ul>
+
+  <div class="user-menu" id="userMenu">
+    <div class="user-menu-item" id="nyBtn">
+      <i class="fas fa-snowflake"></i>
+      <span>Новый год</span>
+    </div>
+
+    <div class="user-menu-item" id="themeBtn">
+      <i class="fas fa-moon"></i>
+      <span>Темная тема</span>
+    </div>
+
+    <div class="user-menu-item" id="logoutBtn">
+      <i class="fas fa-sign-out-alt"></i>
+      <span>Выход</span>
+    </div>
+
+    <div class="user-name-display">
+      <i class="fas fa-user"></i>
+      <span id="userName">user</span>
+    </div>
+  </div>
+</div>
+
+<div class="main-content">
+  <div class="container">
+    <div class="admin-hero">
+      <h1>Административный раздел</h1>
+      <p>Выберите нужный модуль для управления системой.</p>
+    </div>
+
+    <div class="admin-grid">
+      <a class="admin-card" href="settings-a.html">
+        <div class="card-icon"><i class="fas fa-gear"></i></div>
+        <div>
+          <h3>Настройки</h3>
+          <p>Конфигурация компании и параметров системы.</p>
+        </div>
+        <div class="card-link">Открыть <i class="fas fa-arrow-right"></i></div>
+      </a>
+
+      <a class="admin-card" href="report-a.html">
+        <div class="card-icon"><i class="fas fa-file"></i></div>
+        <div>
+          <h3>Отчеты</h3>
+          <p>Проверка и верификация ежедневных отчетов.</p>
+        </div>
+        <div class="card-link">Открыть <i class="fas fa-arrow-right"></i></div>
+      </a>
+
+      <a class="admin-card" href="salary-a.html">
+        <div class="card-icon"><i class="fas fa-wallet"></i></div>
+        <div>
+          <h3>Зарплаты</h3>
+          <p>Статистика по выплатам и рейсам.</p>
+        </div>
+        <div class="card-link">Открыть <i class="fas fa-arrow-right"></i></div>
+      </a>
+
+      <a class="admin-card" href="routes-a.html">
+        <div class="card-icon"><i class="fas fa-route"></i></div>
+        <div>
+          <h3>Маршруты</h3>
+          <p>Управление маршрутами.</p>
+        </div>
+        <div class="card-link">Открыть <i class="fas fa-arrow-right"></i></div>
+      </a>
+
+      <a class="admin-card" href="employees-a.html">
+        <div class="card-icon"><i class="fas fa-users"></i></div>
+        <div>
+          <h3>Сотрудники</h3>
+          <p>Список, роли и данные сотрудников.</p>
+        </div>
+        <div class="card-link">Открыть <i class="fas fa-arrow-right"></i></div>
+      </a>
+
+      <a class="admin-card" href="trainers_uc.html">
+        <div class="card-icon"><i class="fas fa-chalkboard-teacher"></i></div>
+        <div>
+          <h3>Инструкторы</h3>
+          <p>Данные по обучению.</p>
+        </div>
+        <div class="card-link">Открыть <i class="fas fa-arrow-right"></i></div>
+      </a>
+
+      <a class="admin-card" href="vehicles-a.html">
+        <div class="card-icon"><i class="fas fa-truck"></i></div>
+        <div>
+          <h3>Транспорт</h3>
+          <p>Карточки автобусов и статусы.</p>
+        </div>
+        <div class="card-link">Открыть <i class="fas fa-arrow-right"></i></div>
+      </a>
+    </div>
+  </div>
+</div>
+
+<script>
+  const pageAccess = ["Директор", "Технический администратор"];
+</script>
+
+</body>
+<script src="sidebar.js"></script>
+<script src="checkauth.js"></script>
+</html>
