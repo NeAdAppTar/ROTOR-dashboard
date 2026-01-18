@@ -134,7 +134,7 @@
     function getRouteImage(routeName) {
       const digits = String(routeName || "").match(/\d+/g);
       const num = digits ? digits.join("") : "";
-      const known = new Set(["12", "35", "71", "98", "99", "138", "m1"]);
+      const known = new Set(["12", "35", "71", "98", "99", "138", "1"]);
       if (known.has(num)) {
         return "route" + num + ".jpg";
       }
