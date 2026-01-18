@@ -92,56 +92,8 @@
 
   <div class="container">
     <h1>Маршруты</h1>
-    <div class="routes-grid">
-      <div class="tile">
-        <img src="route77.jpg" alt="Схема маршрута №77" class="route-img">
-        <h3>Маршрут №77</h3>
-        <p>Цена проезда: <span class="highlight">80 ₽</span></p>
-        <p>Зарплата за кругорейс: <span class="highlight">9600 ₽</span> </p>
-      </div>
-
-      <div class="tile">
-        <img src="route35.jpg" alt="Схема маршрута №35" class="route-img">
-        <h3>Маршрут №35</h3>
-        <p>Цена проезда: <span class="highlight">80 ₽</span></p>
-        <p>Зарплата за кругорейс: <span class="highlight">6000 ₽</span></p>
-      </div>
-
-      <div class="tile">
-        <img src="route92.jpg" alt="Схема маршрута №92п" class="route-img">
-        <h3>Маршрут №92п</h3>
-        <p>Цена проезда: <span class="highlight">125 ₽</span></p>
-        <p>Зарплата за кругорейс: <span class="highlight">4200 ₽</span></p>
-      </div>
-
-      <div class="tile">
-        <img src="route99.jpg" alt="Схема маршрута №99" class="route-img">
-        <h3>Маршрут №99</h3>
-        <p>Цена проезда: <span class="highlight">80 ₽</span></p>
-        <p>Зарплата за кругорейс: <span class="highlight">6000 ₽</span></p>
-      </div>
-
-          <div class="tile">
-        <img src="routem1.jpg" alt="Схема маршрута №м3" class="route-img">
-        <h3>Маршрут №м1</h3>
-        <p>Цена проезда: <span class="highlight">200 ₽</span></p>
-        <p>Зарплата за кругорейс: <span class="highlight">8400 ₽</span></p>
-      </div>
-
-          <div class="tile">
-        <img src="routem2.jpg" alt="Схема маршрута №м2" class="route-img">
-        <h3>Маршрут №м2</h3>
-        <p>Цена проезда: <span class="highlight">200 ₽</span></p>
-        <p>Зарплата за кругорейс: <span class="highlight">13200 ₽</span></p>
-      </div>
-
-          <div class="tile">
-        <img src="routem3.jpg" alt="Схема маршрута №м3" class="route-img">
-        <h3>Маршрут №м3</h3>
-        <p>Цена проезда: <span class="highlight">200 ₽</span></p>
-        <p>Зарплата за кругорейс: <span class="highlight">10800 ₽</span></p>
-      </div>
-    </div>
+    <div id="routesStatus" style="text-align:center; margin-top: 12px;">Loading...</div>
+    <div class="routes-grid" id="routesGrid"></div>
 
     <div class="bonus-info" style="margin-top: 30px; text-align: center; font-size: 18px;">
       <p><strong>Надбавки:</strong> за каждого пассажира — <span class="highlight">+2000 ₽</span>, за каждый класс — <span class="highlight">+1000 ₽</span> к кругорейсу.</p>
@@ -151,6 +103,111 @@
 
   <script>
     const pageAccess = null;
+    const API_BASE = "https://rotorbus.ru/api";
+    const COMPANY = "rotor";
+
+    const routesGrid = document.getElementById("routesGrid");
+    const routesStatus = document.getElementById("routesStatus");
+
+    function getCookie(name) {
+      const match = document.cookie.match(
+        new RegExp("(^| )" + name + "=([^;]+)")
+      );
+      return match ? decodeURIComponent(match[2]) : null;
+    }
+
+    function escapeHtml(str) {
+      if (str === undefined || str === null) return "";
+      return String(str)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll("\"", "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function formatMoney(value) {
+      const num = Number(value) || 0;
+      return Number.isInteger(num) ? String(num) : num.toFixed(2);
+    }
+
+    function getRouteImage(routeName) {
+      const digits = String(routeName || "").match(/\d+/g);
+      const num = digits ? digits.join("") : "";
+      const known = new Set(["8", "10", "15", "28", "35", "77", "92", "99"]);
+      if (known.has(num)) {
+        return "route" + num + ".jpg";
+      }
+      return "route10.jpg";
+    }
+
+    async function fetchJson(url) {
+      const res = await fetch(url);
+      if (!res.ok) throw new Error("Request failed");
+      return res.json();
+    }
+
+    async function loadRoutes() {
+      routesStatus.textContent = "Loading...";
+      routesGrid.innerHTML = "";
+
+      const userName = getCookie("userLogin");
+      if (!userName) {
+        routesStatus.textContent = "No userLogin cookie.";
+        return;
+      }
+
+      try {
+        const [usersData, routesData, coefsData] = await Promise.all([
+          fetchJson(API_BASE + "/users/" + COMPANY),
+          fetchJson(API_BASE + "/routes/" + COMPANY),
+          fetchJson(API_BASE + "/coefs/" + COMPANY)
+        ]);
+
+        if (usersData.status !== "ok") throw new Error(usersData.message || "Users error");
+        if (routesData.status !== "ok") throw new Error(routesData.message || "Routes error");
+        if (coefsData.status !== "ok") throw new Error(coefsData.message || "Coefs error");
+
+        const user = (usersData.users || []).find(u => u.name === userName);
+        if (!user) {
+          routesStatus.textContent = "User not found.";
+          return;
+        }
+
+        const post = (user.post || "").trim();
+        const coefRow = (coefsData.coefs || []).find(
+          c => (c.post || "").trim().toLowerCase() === post.toLowerCase()
+        );
+        const coef = coefRow && Number(coefRow.coef) ? Number(coefRow.coef) : 1;
+
+        const routes = Array.isArray(routesData.routes) ? routesData.routes : [];
+        if (!routes.length) {
+          routesStatus.textContent = "No routes.";
+          return;
+        }
+
+        routesStatus.textContent = "";
+
+        routes.forEach(route => {
+          const tile = document.createElement("div");
+          tile.className = "tile";
+          const baseSalary = Number(route.salary) || 0;
+          const salaryWithCoef = baseSalary * coef;
+
+          tile.innerHTML = `
+            <img src="${getRouteImage(route.route)}" alt="Route ${escapeHtml(route.route)}" class="route-img">
+            <h3>${escapeHtml(route.route)}</h3>
+            <p>Base pay per trip: <span class="highlight">${formatMoney(baseSalary)}</span></p>
+            <p>With coef (${escapeHtml(post || "n/a")}): <span class="highlight">${formatMoney(salaryWithCoef)}</span></p>
+          `;
+          routesGrid.appendChild(tile);
+        });
+      } catch (err) {
+        routesStatus.textContent = "Load failed: " + err.message;
+      }
+    }
+
+    loadRoutes();
   </script>
 </body>
 <script src="sidebar.js"></script>

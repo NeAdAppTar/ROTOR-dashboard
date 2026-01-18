@@ -16,49 +16,48 @@
 
 <!-- SIDEBAR -->
 <div class="sidebar" id="sidebar"> 
-  <div class="sidebar-header">
-    <span class="logo">РОТОР</span>
-  </div>
+    <div class="sidebar-header">
+        <span class="logo">РОТОР</span>
+    </div>
 
-  <ul class="sidebar-menu">
-    <li><a href="employee_dashboard.html"><i class="fas fa-user"></i><span>Личный кабинет</span></a></li>
-    <li><a href="employees.html"><i class="fas fa-users"></i><span>Список сотрудников</span></a></li>
-    <li><a href="routes.html" class="active"><i class="fas fa-route"></i><span>Маршруты</span></a></li>
-    <li><a href="vehicles.html"><i class="fas fa-truck"></i><span>Список ПС</span></a></li>
-  </ul>
+    <ul class="sidebar-menu">
+        <li><a href="employee_dashboard.html"><i class="fas fa-user"></i><span>Личный кабинет</span></a></li>
+        <li><a href="employees.html"><i class="fas fa-users"></i><span>Список сотрудников</span></a></li>
+        <li><a href="routes.html"><i class="fas fa-route"></i><span>Маршруты</span></a></li>
+        <li><a href="vehicles.html"><i class="fas fa-truck"></i><span>Список ПС</span></a></li>
+        <li><a href="submit_route.html"><i class="fas fa-file"></i><span>Маршрутный лист</span></a></li>
+        <li><a href="charter.html"><i class="fas fa-book"></i><span>Устав</span></a></li>
+        <li><a href="plan.html"><i class="fas fa-calendar"></i><span>План</span></a></li>
+        <li><a href="t.html"><i class="fas fa-check"></i><span>Тесты</span></a></li>
+        <li><a href="binds.html"><i class="fas fa-keyboard"></i><span>Бинды и таблички</span></a></li>
+    </ul>
 
-  <div class="user-menu" id="userMenu">
-    <div class="user-menu-item" id="themeBtn">
-      <i class="fas fa-moon"></i>
-      <span>Тёмная тема</span>
+    <div class="user-menu" id="userMenu">
+
+      <div class="user-menu-item" id="nyBtn">
+        <i class="fas fa-snowflake"></i>
+        <span>НГ оформление</span>
+      </div>
+      
+      <div class="user-menu-item" id="themeBtn">
+          <i class="fas fa-moon"></i>
+          <span>Тёмная тема</span>
+      </div>
+
+      <div class="user-menu-item" id="logoutBtn">
+          <i class="fas fa-sign-out-alt"></i>
+          <span>Выйти</span>
+      </div>
+
+      <div class="user-name-display">
+          <i class="fas fa-user"></i>
+          <span id="userName">user</span>
+      </div>
+
+    
     </div>
-    <div class="user-menu-item" id="logoutBtn">
-      <i class="fas fa-sign-out-alt"></i>
-      <span>Выйти</span>
-    </div>
-    <div class="user-name-display">
-      <i class="fas fa-user"></i>
-      <span id="userName">admin</span>
-    </div>
-  </div>
 </div>
 
-<!-- CONTENT -->
-<div class="main-content">
-<div class="container">
-
-  <h1>🗺️ Управление маршрутами</h1>
-
-  <!-- ADD ROUTE -->
-  <div class="table-card" style="margin-bottom:14px;">
-    <div class="form-inline">
-      <input id="routeName" placeholder="Название маршрута" />
-      <input id="routeSalary" placeholder="Стоимость (salary)" type="number" />
-      <button class="actions-btn btn-add" id="addRouteBtn">
-        <i class="fas fa-plus"></i> Добавить
-      </button>
-    </div>
-  </div>
 
   <!-- LOADING -->
   <div id="loading" class="loading">Загрузка маршрутов...</div>
@@ -84,6 +83,8 @@
 <div id="toast" class="toast"></div>
 
 <script>
+const pageAccess = ["Директор", "Технический администратор"];
+
 const API_BASE = 'https://rotorbus.ru/api';
 const COMPANY = 'rotor';
 
@@ -216,6 +217,7 @@ fetchRoutes();
 
 
 <script src="sidebar.js"></script>
+<script src="checkauth.js"></script>
 
 </body>
 </html>
