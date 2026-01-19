@@ -123,10 +123,11 @@ const pageAccess = ["Директор", "Зам. директора", "Техн�
     body.innerHTML = '';
 
     try {
-      const res = await fetch(`${API_BASE}/get_users/${company}`);
+      const res = await fetch(`${API_BASE}/users/${company}`);
       const data = await res.json();
 
       if (data.status !== 'ok') throw new Error(data.message);
+      if (!Array.isArray(data.users)) throw new Error('Invalid users list');
 
       const trainees = data.users.filter(
         u => u.post === 'Водитель-стажер'
