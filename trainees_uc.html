@@ -126,40 +126,32 @@ const pageAccess = ["Директор", "Зам. директора", "Техн�
       const res = await fetch(`${API_BASE}/users/${company}`);
       const data = await res.json();
 
-      if (data.status !== 'ok') throw new Error(data.message);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      if (data.status !== 'ok') throw new Error(data.message || 'API error');
       if (!Array.isArray(data.users)) throw new Error('Invalid users list');
 
-      const trainees = data.users.filter(
-        u => u.post === 'Водитель-стажер'
-      );
+      const trainees = data.users.filter(u => u.post === 'Водитель-стажер');
 
       trainees.forEach(u => {
         const tr = document.createElement('tr');
 
         tr.innerHTML = `
-        <td>${u.name}</td>
-
-        <td class="status-ok">Вручную</td>
-        <td class="status-ok">Вручную</td>
-
-        <td>
+          <td>${u.name}</td>
+          <td class="status-ok">Вручную</td>
+          <td class="status-ok">Вручную</td>
+          <td>
             <select data-id="${u.id}">
-            <option value="yes">Вручную</option>
-            <option value="no">Вручную</option>
+              <option value="yes">Вручную</option>
+              <option value="no">Вручную</option>
             </select>
-        </td>
-
-        <td>${u.note ? u.note : '—'}</td>
-
-        <td>
-            <button class="actions-small btn-release"
-            onclick="releaseTrainee(${u.id}, '${u.name}')">
-            Выпустить стажёра
-            </button>
-        </td>
+          </td>
+          <td>${u.note ? u.note : '—'}</td>
+          <td>
+            <button class="actions-small btn-release">Выпустить стажёра</button>
+          </td>
         `;
 
-
+        tr.querySelector('button').addEventListener('click', () => releaseTrainee(u.id, u.name));
         body.appendChild(tr);
       });
 
@@ -175,19 +167,25 @@ const pageAccess = ["Директор", "Зам. директора", "Техн�
     if (!confirm(`Выпустить стажёра ${name}?`)) return;
 
     try {
-      const payload = {
-        id,
-        post: 'Водитель 3 класса'
-      };
+      const payload = { post: 'Водитель 3 класса' };
 
-      const res = await fetch(`${API_BASE}/update_user/${company}`, {
-        method: 'POST',
+      // ✅ Правильный эндпоинт по доке:
+      // PUT /api/user/{company}/{user_id}
+      const res = await fetch(`${API_BASE}/user/${company}/${id}`, {
+        method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
+        body: JSON.stringify(payload),
       });
 
-      const data = await res.json();
-      if (data.status !== 'ok') throw new Error(data.message);
+      let data = null;
+      try { data = await res.json(); } catch (_) {}
+
+      if (!res.ok) {
+        throw new Error((data && data.message) ? data.message : `HTTP ${res.status}`);
+      }
+      if (data && data.status && data.status !== 'ok') {
+        throw new Error(data.message || 'API error');
+      }
 
       showToast('Стажёр успешно выпущен');
       loadTrainees();
