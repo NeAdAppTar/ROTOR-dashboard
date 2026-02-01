@@ -68,6 +68,7 @@
           <input id="routeName" placeholder="Номер" />
           <input id="routeSalary" placeholder="Зарплата за круг" type="number" step="0.01" />
           <button class="actions-btn btn-add" id="addRouteBtn"><i class="fas fa-plus"></i> Добавить</button>
+          <button class="actions-btn" id="cancelEditBtn" style="display:none;"><i class="fas fa-xmark"></i> Отмена</button>
         </div>
 
         <div style="display:flex;gap:8px;align-items:center;">
@@ -113,11 +114,13 @@ const loading     = document.getElementById('loading');
 const routeName   = document.getElementById('routeName');
 const routeSalary = document.getElementById('routeSalary');
 const addRouteBtn = document.getElementById('addRouteBtn');
+const cancelEditBtn = document.getElementById('cancelEditBtn');
 const refreshBtn  = document.getElementById('refreshBtn');
 
 const toastEl = document.getElementById('toast');
 
 let cachedRoutes = [];
+let editingRouteId = null;
 
 // ===== TOAST =====
 function showToast(text, ok = true) {
@@ -149,6 +152,9 @@ async function fetchRoutes() {
         <td>${route.route}</td>
         <td>${route.salary}</td>
         <td>
+          <button class="actions-small btn-edit" onclick="startEditRoute(${route.id})" title="Редактировать">
+            <i class="fas fa-pen"></i>
+          </button>
           <button class="actions-small btn-delete" onclick="deleteRoute(${route.id})">
             <i class="fas fa-trash"></i>
           </button>
@@ -166,6 +172,40 @@ async function fetchRoutes() {
   }
 }
 
+function setEditMode(route) {
+  if (route) {
+    editingRouteId = route.id;
+    routeName.value = route.route || '';
+    routeSalary.value = route.salary ?? '';
+    addRouteBtn.innerHTML = '<i class="fas fa-save"></i> Сохранить';
+    cancelEditBtn.style.display = 'inline-flex';
+  } else {
+    editingRouteId = null;
+    routeName.value = '';
+    routeSalary.value = '';
+    addRouteBtn.innerHTML = '<i class="fas fa-plus"></i> Добавить';
+    cancelEditBtn.style.display = 'none';
+  }
+}
+
+async function startEditRoute(id) {
+  const cached = cachedRoutes.find(r => r.id === id);
+  if (cached) {
+    setEditMode(cached);
+    return;
+  }
+
+  try {
+    const res = await fetch(`${API_BASE}/route/${COMPANY}/${id}`);
+    if (!res.ok) throw new Error('Ошибка сервера');
+    const data = await res.json();
+    if (data.status !== 'ok') throw new Error(data.message);
+    setEditMode(data.route || null);
+  } catch (err) {
+    showToast(err.message, false);
+  }
+}
+
 // ADD ROUTE
 addRouteBtn.addEventListener('click', async () => {
   const route = routeName.value.trim();
@@ -176,7 +216,7 @@ addRouteBtn.addEventListener('click', async () => {
     return;
   }
 
-  if (cachedRoutes.some(r => r.route === route)) {
+  if (cachedRoutes.some(r => r.route === route && r.id !== editingRouteId)) {
     showToast('Маршрут уже существует', false);
     return;
   }
@@ -184,8 +224,13 @@ addRouteBtn.addEventListener('click', async () => {
   try {
     addRouteBtn.disabled = true;
 
-    const res = await fetch(`${API_BASE}/route/${COMPANY}`, {
-      method: 'POST',
+    const url = editingRouteId
+      ? `${API_BASE}/route/${COMPANY}/${editingRouteId}`
+      : `${API_BASE}/route/${COMPANY}`;
+    const method = editingRouteId ? 'PUT' : 'POST';
+
+    const res = await fetch(url, {
+      method,
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ route, salary })
     });
@@ -195,9 +240,8 @@ addRouteBtn.addEventListener('click', async () => {
 
     if (data.status !== 'ok') throw new Error(data.message);
 
-    showToast('Маршрут добавлен');
-    routeName.value = '';
-    routeSalary.value = '';
+    showToast(editingRouteId ? 'Маршрут обновлён' : 'Маршрут добавлен');
+    setEditMode(null);
     fetchRoutes();
 
   } catch (err) {
@@ -206,6 +250,8 @@ addRouteBtn.addEventListener('click', async () => {
     addRouteBtn.disabled = false;
   }
 });
+
+cancelEditBtn.addEventListener('click', () => setEditMode(null));
 
 refreshBtn.addEventListener('click', fetchRoutes);
 
@@ -224,6 +270,9 @@ async function deleteRoute(id) {
     if (data.status !== 'ok') throw new Error(data.message);
 
     showToast('Маршрут удалён');
+    if (editingRouteId === id) {
+      setEditMode(null);
+    }
     fetchRoutes();
 
   } catch (err) {
