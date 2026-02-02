@@ -247,39 +247,66 @@ async function loadVehicles() {
 }
 
 async function send() {
+  const raw = getCookie("userLogin") || "";
+  const userName = decodeURIComponent(raw).replace(/\+/g, " ").trim();
+
+  console.log("cookie userLogin raw:", raw);
+  console.log("userName parsed:", userName);
+
   if (!userName) {
-    alert("Пользователь не найден");
+    alert("Пользователь не найден (cookie userLogin пустой)");
     return;
   }
 
-  if (!rounds.value || !passengers.value) {
-    alert("Заполните все обязательные поля");
+  const roundsVal = Number(rounds.value);
+  const passengersVal = Number(passengers.value);
+
+  if (!Number.isFinite(roundsVal) || !Number.isFinite(passengersVal)) {
+    alert("Заполните все обязательные поля (числа)");
     return;
   }
+
+  const now = new Date();
+  const localDate = new Date(now.getTime() - now.getTimezoneOffset() * 60000)
+    .toISOString()
+    .split("T")[0];
 
   const body = {
     user_name: userName,
-    date: new Date().toISOString().split("T")[0],
+    date: localDate,
     route: routeSelect.value,
-    num_round_trips: Number(rounds.value),
-    num_passengers: Number(passengers.value),
-    proof: proof.value,
+    num_round_trips: roundsVal,
+    num_passengers: passengersVal,
+    proof: (proof.value || "").trim(),
     vehicle_id: Number(vehicleSelect.value)
   };
 
-  const res = await fetch(`https://rotorbus.ru/api/report/${COMPANY}`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body)
-  });
+  console.log("sending body:", body);
 
-  if (!res.ok) {
-    alert("Ошибка отправки отчёта");
+  let res;
+  try {
+    res = await fetch(`https://rotorbus.ru/api/report/${COMPANY}`, {
+      method: "POST",
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body)
+    });
+  } catch (e) {
+    console.error(e);
+    alert("Запрос не выполнился.");
     return;
   }
 
-  window.location.href = `/employee_dashboard`;
+  const text = await res.text();
+  console.log("server response:", res.status, text);
+
+  if (!res.ok) {
+    alert(`Ошибка отправки отчёта: ${res.status}\n${text}`);
+    return;
+  }
+
 }
+
 
 
 loadRoutes();
