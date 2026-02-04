@@ -10,6 +10,39 @@
     return match ? decodeURIComponent(match[2]) : null;
   }
 
+  function setCookieRaw(raw) {
+    document.cookie = raw;
+  }
+
+  function clearAuthCookies() {
+    const base = "path=/; domain=.rotorprov.ru; max-age=0; samesite=None; secure";
+    setCookieRaw(`userLogin=; ${base}`);
+    setCookieRaw(`userPass=; ${base}`);
+  }
+
+  function redirectToAuth() {
+    const redirectUrl = encodeURIComponent(window.location.href);
+    window.location.href = `https://auth.rotorprov.ru/?redirect=${redirectUrl}`;
+  }
+
+  async function verifyLogin(name, password) {
+    try {
+      const response = await fetch("https://rotorbus.ru/api/login/rotor", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, password })
+      });
+
+      if (!response.ok) return false;
+
+      const data = await response.json();
+      return data.status === "ok";
+    } catch (err) {
+      console.error("Ошибка проверки логина:", err);
+      return false;
+    }
+  }
+
   async function getUserByName(username) {
     try {
       const response = await fetch(
@@ -24,28 +57,35 @@
 
       return data.users.find(u => u.name === username) || null;
     } catch (err) {
-      console.error("Ошибка API:", err);
+      console.error("Ошибка API users:", err);
       return null;
     }
   }
 
   async function check() {
     const user = getCookie("userLogin");
+    const pass = getCookie("userPass");
 
-    // ❌ нет логина → на авторизацию
-    if (!user) {
-      const redirectUrl = encodeURIComponent(window.location.href);
-      window.location.href =
-        `https://auth.rotorprov.ru/?redirect=${redirectUrl}`;
+    // ❌ нет логина/пароля → на авторизацию
+    if (!user || !pass) {
+      clearAuthCookies();
+      redirectToAuth();
       return;
     }
 
-    // получаем пользователя
+    const ok = await verifyLogin(user, pass);
+    if (!ok) {
+      clearAuthCookies();
+      redirectToAuth();
+      return;
+    }
+
+
     const userData = await getUserByName(user);
 
     if (!userData) {
-      window.location.href =
-        "https://auth.rotorprov.ru/no-access.html";
+      clearAuthCookies();
+      window.location.href = "https://auth.rotorprov.ru/no-access.html";
       return;
     }
 
@@ -59,8 +99,7 @@
     const post = (userData.post || "").trim();
 
     if (!allowedPosts.includes(post)) {
-      window.location.href =
-        "https://auth.rotorprov.ru/no-access.html";
+      window.location.href = "https://auth.rotorprov.ru/no-access.html";
       return;
     }
 
