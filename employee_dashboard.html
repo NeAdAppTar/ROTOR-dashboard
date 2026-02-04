@@ -122,11 +122,11 @@
   </p>
 </div>
 
-    <div class="tile important">
+<!--  <div class="tile important">
       <p>Водитель, при завершении смены не забывай сдавать маршрутный лист</p>
-    </div>
+    </div> -->
 
-  <div class="tile important">
+<!-- <div class="tile important">
   <p>Выплата зарплаты за первый полупериод декабря</p>
 
   <a href="https://dashboard.rotorprov.ru/12h1" 
@@ -134,7 +134,7 @@
      class="button">
     Открыть
   </a>
-</div> 
+</div> -->
 
   
 
@@ -170,19 +170,16 @@ async function loadDashboard() {
   nickname.textContent = login;
 
   try {
-    // ⚠️ БЕРЁМ ВСЮ СТАТИСТИКУ
     const res = await fetch(`${API}/statistics/${COMPANY}`);
     if (!res.ok) throw new Error("HTTP " + res.status);
 
     const data = await res.json();
     if (data.status !== "ok") throw new Error("API error");
 
-    // 🔎 ИЩЕМ ПОЛЬЗОВАТЕЛЯ
     const stats = data.statistics.find(
       s => s.user_name === login
     );
 
-    // Если пользователь ещё без отчётов
     const s = stats || {
       post: "—",
       total_round_trips: 0,
