@@ -70,6 +70,11 @@
             style="display:none; padding: 8px 14px; font-size: 14px; cursor: pointer;">
         Учебный центр
     </button>
+
+    <button id="manageActivityBtn"
+            style="display:none; padding: 8px 14px; font-size: 14px; cursor: pointer;">
+        Активность сотрудников
+    </button>
 </div>
 
     <div id="loading" class="loading">Получение информации от сервера...</div>
@@ -114,6 +119,13 @@ const ALLOWED_POSTS_UC = [
   "Инструктор"
 ];
 
+const ALLOWED_POSTS_ACT = [
+  "Директор",
+  "Зам. директора",
+  "Технический администратор",
+  "Администратор"
+];
+
 // ===== Проверка доступа к кнопкам =====
 async function checkButtonsAccess() {
   const username = getCookie("userLogin");
@@ -138,6 +150,10 @@ async function checkButtonsAccess() {
       document.getElementById("manageUCBtn").style.display = "inline-block";
     }
 
+    if (ALLOWED_POSTS_ACT.includes(post)) {
+      document.getElementById("manageUCBtn").style.display = "inline-block";
+    }
+
   } catch (e) {
     console.error("checkButtonsAccess error:", e);
   }
@@ -149,6 +165,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document.getElementById("manageUCBtn").onclick =
     () => window.location.href = "trainees_uc.html";
+
+  document.getElementById("manageActivityBtn").onclick =
+    () => window.location.href = "activity-a.html";
 
   checkButtonsAccess();
 });

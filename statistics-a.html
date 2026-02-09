@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Статистика сотрудников</title>
+
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style_db.css">
+<link rel="icon" href="icon.png">
+
+<script src="usermenu.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<style>
+    table td,
+table th {
+    white-space: nowrap;
+}
+
+
+</style>
+
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+
+<div class="sidebar-header">
+<span class="logo">РОТОР</span>
+</div>
+
+<ul class="sidebar-menu">
+<li><a href="employee_dashboard.html"><i class="fas fa-user"></i><span>Личный кабинет</span></a></li>
+<li><a href="employees.html"><i class="fas fa-users"></i><span>Список сотрудников</span></a></li>
+<li><a href="routes.html"><i class="fas fa-route"></i><span>Маршруты</span></a></li>
+<li><a href="vehicles.html"><i class="fas fa-truck"></i><span>Список ПС</span></a></li>
+<li><a href="shift_report.html"><i class="fas fa-file"></i><span>Отчет</span></a></li>
+<li><a href="charter.html"><i class="fas fa-book"></i><span>Устав</span></a></li>
+<li><a href="plan.html"><i class="fas fa-calendar"></i><span>План</span></a></li>
+<li><a href="t.html"><i class="fas fa-check"></i><span>Тесты</span></a></li>
+<li><a href="binds.html"><i class="fas fa-keyboard"></i><span>Бинды и таблички</span></a></li>
+</ul>
+
+<div class="user-menu" id="userMenu">
+
+<div class="user-menu-item" id="nyBtn">
+<i class="fas fa-snowflake"></i>
+<span>НГ оформление</span>
+</div>
+
+<div class="user-menu-item" id="themeBtn">
+<i class="fas fa-moon"></i>
+<span>Тёмная тема</span>
+</div>
+
+<div class="user-menu-item" id="logoutBtn">
+<i class="fas fa-sign-out-alt"></i>
+<span>Выйти</span>
+</div>
+
+<div class="user-name-display">
+<i class="fas fa-user"></i>
+<span id="userName">user</span>
+</div>
+
+</div>
+</div>
+
+
+<!-- MAIN -->
+<div class="main-content">
+<div class="container">
+
+<h1>Редактирование статистики</h1>
+
+<div class="table-card">
+<table class="styled-table">
+
+<thead>
+<tr>
+<th>Сотрудник</th>
+
+<th>Кругорейсы (общие)</th>
+<th>Кругорейсы (период)</th>
+
+<th>Пассажиры (общие)</th>
+<th>Пассажиры (период)</th>
+
+<th>Зарплата (общая)</th>
+<th>Зарплата (период)</th>
+
+<th>Действие</th>
+</tr>
+</thead>
+
+<tbody id="statsTable"></tbody>
+
+</table>
+</div>
+
+</div>
+</div>
+
+
+<script>
+const pageAccess = ["Директор", "Технический администратор"];
+
+const API = "https://rotorbus.ru/api";
+const COMPANY = "rotor";
+
+const table = document.getElementById("statsTable");
+
+
+async function loadStats(){
+
+table.innerHTML = "<tr><td colspan='8'>Загрузка...</td></tr>";
+
+try{
+
+const res = await fetch(`${API}/statistics/${COMPANY}`);
+const data = await res.json();
+
+if(data.status !== "ok"){
+table.innerHTML = "<tr><td colspan='8'>Ошибка</td></tr>";
+return;
+}
+
+table.innerHTML = "";
+
+data.statistics.forEach(row => {
+
+const tr = document.createElement("tr");
+
+tr.innerHTML = `
+
+<td>${row.user_name}</td>
+
+<td><input value="${row.total_round_trips}" id="tr_${row.user_name}"></td>
+<td><input value="${row.period_round_trips}" id="pr_${row.user_name}"></td>
+
+<td><input value="${row.total_passengers}" id="tp_${row.user_name}"></td>
+<td><input value="${row.period_passengers}" id="pp_${row.user_name}"></td>
+
+<td><input value="${row.total_salary}" id="ts_${row.user_name}"></td>
+<td><input value="${row.period_salary}" id="ps_${row.user_name}"></td>
+
+<td>
+<button onclick="saveStats('${row.user_name}')">💾 Сохранить</button>
+</td>
+`;
+
+table.appendChild(tr);
+
+});
+
+}catch(e){
+console.error(e);
+table.innerHTML = "<tr><td colspan='8'>Ошибка загрузки</td></tr>";
+}
+
+}
+
+
+async function saveStats(name){
+
+const body = {
+
+total_round_trips: Number(document.getElementById(`tr_${name}`).value),
+period_round_trips: Number(document.getElementById(`pr_${name}`).value),
+
+total_passengers: Number(document.getElementById(`tp_${name}`).value),
+period_passengers: Number(document.getElementById(`pp_${name}`).value),
+
+total_salary: Number(document.getElementById(`ts_${name}`).value),
+period_salary: Number(document.getElementById(`ps_${name}`).value)
+
+};
+
+try{
+
+const res = await fetch(`${API}/statistics/${COMPANY}/user/${encodeURIComponent(name)}`,{
+method:"PUT",
+headers:{ "Content-Type":"application/json" },
+body: JSON.stringify(body)
+});
+
+const data = await res.json();
+
+if(data.status === "ok"){
+alert("Сохранено");
+}else{
+alert(data.message);
+}
+
+}catch(e){
+console.error(e);
+alert("Ошибка сохранения");
+}
+
+}
+
+
+loadStats();
+
+</script>
+
+<script src="sidebar.js"></script>
+<script src="checkauth.js"></script>
+</body>
+</html>
