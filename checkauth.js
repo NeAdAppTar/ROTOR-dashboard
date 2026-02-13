@@ -63,10 +63,16 @@
   }
 
   async function check() {
-    const user = getCookie("userLogin");
-    const pass = getCookie("userPass");
+    let user = getCookie("userLogin");
+    let pass = getCookie("userPass");
 
-    // ❌ нет логина/пароля → на авторизацию
+    if (!user || !pass) { // чтоь куки прогрузились
+    await new Promise(r => setTimeout(r, 150));
+    user = getCookie("userLogin");
+    pass = getCookie("userPass");
+  }
+
+    // нет логина/пароля → на авторизацию
     if (!user || !pass) {
       clearAuthCookies();
       redirectToAuth();
