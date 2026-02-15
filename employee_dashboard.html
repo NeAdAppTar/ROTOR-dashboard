@@ -10,6 +10,13 @@
   <link rel="icon" type="image/png" href="icon.png">
 
   <script src="usermenu.js"></script> 
+
+  <style>
+    .progress-over {
+  background: linear-gradient(90deg, #ff5c5c, #ff9900);
+}
+
+  </style>
 </head>
 
 <body>
@@ -122,6 +129,29 @@
   </p>
 </div>
 
+
+<div class="tile">
+  <h3>До повышения</h3>
+
+  <p>Текущая должность:
+    <span class="highlight" id="rankNow">—</span>
+  </p>
+
+  <p>Следующая ступень:
+    <span class="highlight" id="rankNext">—</span>
+  </p>
+
+  <p>Осталось кругорейсов:
+    <span class="highlight" id="rankLeft">0</span>
+  </p>
+
+  <div class="progress-container">
+    <div class="progress-bar" id="rankProgress"></div>
+    <span class="progress-label" id="rankProgressLabel">0 / 0</span>
+  </div>
+</div>
+
+
 <!--  <div class="tile important">
       <p>Водитель, при завершении смены не забывай сдавать маршрутный лист</p>
     </div> -->
@@ -217,6 +247,51 @@ async function loadDashboard() {
   } catch (e) {
     console.error("Ошибка загрузки:", e);
   }
+
+
+      /* ===== Promotion ===== */
+    const total = Number(s.total_round_trips) || 0;
+    const post = (s.post || "").toLowerCase();
+
+    let need = 0;
+    let next = "—";
+
+    if (post.includes("3")) {
+      need = 70;
+      next = "Водитель 2 класса";
+      rankNow.textContent = "Водитель 3 класса";
+    } 
+    else if (post.includes("2")) {
+      need = 150;
+      next = "Водитель 1 класса";
+      rankNow.textContent = "Водитель 2 класса";
+    } 
+    else if (post.includes("1")) {
+      rankNow.textContent = "Водитель 1 класса";
+      rankNext.textContent = "Максимум";
+      rankLeft.textContent = "0";
+      rankProgress.style.width = "100%";
+      rankProgressLabel.textContent = "Готово";
+      return;
+    } 
+    else {
+      rankNow.textContent = s.post;
+      rankNext.textContent = "—";
+      rankLeft.textContent = "—";
+      return;
+    }
+
+    rankNext.textContent = next;
+
+    const left = Math.max(0, need - total);
+    rankLeft.textContent = left;
+
+    let percent2 = (total / need) * 100;
+    if (percent2 > 100) percent2 = 100;
+
+    rankProgress.style.width = percent2 + "%";
+    rankProgressLabel.textContent = `${total} / ${need}`;
+
 }
 
 window.addEventListener("DOMContentLoaded", loadDashboard);
