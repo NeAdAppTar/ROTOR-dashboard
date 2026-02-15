@@ -219,37 +219,7 @@ async function loadDashboard() {
       period_salary: 0
     };
 
-    /* ===== UI ===== */
-    userRole.textContent = s.post || "—";
-
-    totalRoutes.textContent = formatNumber(s.total_round_trips);
-    totalPassengers.textContent = formatNumber(s.total_passengers);
-
-    periodRoutes.textContent = formatNumber(s.period_round_trips);
-    periodPassengers.textContent = formatNumber(s.period_passengers);
-    salary.textContent = formatNumber(s.period_salary) + " ₽";
-
-    /* ===== Progress ===== */
-    const max = 16;
-    const current = Number(s.period_round_trips) || 0;
-    let percent = (current / max) * 100;
-    if (percent > 100) percent = 100;
-
-    routesProgress.style.width = percent + "%";
-    routesProgressLabel.textContent = `${current} / ${max}`;
-
-    if (current > max) {
-      routesProgress.classList.add("progress-over");
-    } else {
-      routesProgress.classList.remove("progress-over");
-    }
-
-  } catch (e) {
-    console.error("Ошибка загрузки:", e);
-  }
-
-
-      /* ===== Promotion ===== */
+    /* ===== Promotion ===== */
     const total = Number(s.total_round_trips) || 0;
     const post = (s.post || "").toLowerCase();
 
@@ -291,6 +261,38 @@ async function loadDashboard() {
 
     rankProgress.style.width = percent2 + "%";
     rankProgressLabel.textContent = `${total} / ${need}`;
+
+    /* ===== UI ===== */
+    userRole.textContent = s.post || "—";
+
+    totalRoutes.textContent = formatNumber(s.total_round_trips);
+    totalPassengers.textContent = formatNumber(s.total_passengers);
+
+    periodRoutes.textContent = formatNumber(s.period_round_trips);
+    periodPassengers.textContent = formatNumber(s.period_passengers);
+    salary.textContent = formatNumber(s.period_salary) + " ₽";
+
+    /* ===== Progress ===== */
+    const max = 16;
+    const current = Number(s.period_round_trips) || 0;
+    let percent = (current / max) * 100;
+    if (percent > 100) percent = 100;
+
+    routesProgress.style.width = percent + "%";
+    routesProgressLabel.textContent = `${current} / ${max}`;
+
+    if (current > max) {
+      routesProgress.classList.add("progress-over");
+    } else {
+      routesProgress.classList.remove("progress-over");
+    }
+
+  } catch (e) {
+    console.error("Ошибка загрузки:", e);
+  }
+
+
+      
 
 }
 
