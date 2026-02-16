@@ -242,13 +242,13 @@ async function loadDashboard() {
       rankLeft.textContent = "0";
       rankProgress.style.width = "100%";
       rankProgressLabel.textContent = "Готово";
-      return;
     } 
     else {
-      rankNow.textContent = s.post;
+      rankNow.textContent = s.post || "—";
       rankNext.textContent = "—";
       rankLeft.textContent = "—";
-      return;
+      rankProgress.style.width = "0%";
+      rankProgressLabel.textContent = "—";
     }
 
     rankNext.textContent = next;
