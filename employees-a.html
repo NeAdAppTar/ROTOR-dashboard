@@ -352,7 +352,7 @@
 
 
   // ====== Сохранение изменений ======
-  saveUserEdit.addEventListener('click', async () => {
+saveUserEdit.addEventListener('click', async () => {
   if (!editingUserData) return;
 
   const company = companySelect.value;
@@ -364,6 +364,11 @@
     disciplinary_actions: editDA.value.trim(),
     note: editNote.value.trim()
   };
+
+  const newPassword = editPassword.value.trim();
+  if (newPassword) {
+    payload.password = newPassword;
+  }
 
   try {
     saveUserEdit.disabled = true;
@@ -390,6 +395,7 @@
     saveUserEdit.disabled = false;
   }
 });
+
 
 
 
