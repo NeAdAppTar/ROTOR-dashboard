@@ -94,10 +94,6 @@
     </table>
   </div>
 
-  <div id="searchBox" style="display:none; margin-bottom:10px;">
-  <input type="text" id="searchInput" placeholder="Введите значение..."
-         style="padding:6px; width:250px;">
-  <button onclick="clearSearch()" style="padding:6px;">Сброс</button>
 </div>
 
 </div>
@@ -260,6 +256,7 @@ function sortUsersByPost(users) {
 
 loadUsers();
 
+let activeInput = null;
 let currentFilterField = null;
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -268,26 +265,50 @@ document.addEventListener("DOMContentLoaded", () => {
   headers.forEach(th => {
     th.style.cursor = "pointer";
 
-    th.addEventListener("click", () => {
-      currentFilterField = th.dataset.field;
-      document.getElementById("searchBox").style.display = "block";
-      document.getElementById("searchInput").value = "";
-      document.getElementById("searchInput").focus();
+    th.addEventListener("click", (e) => {
+      e.stopPropagation();
+      showSearchInput(th);
     });
   });
 
-  document.getElementById("searchInput")
-    .addEventListener("input", applyFilter);
+  document.addEventListener("click", () => {
+    removeSearchInput();
+  });
 });
 
+function showSearchInput(th) {
+  removeSearchInput();
+
+  currentFilterField = th.dataset.field;
+
+  const input = document.createElement("input");
+  input.type = "text";
+  input.placeholder = "Поиск...";
+  input.style.width = "95%";
+  input.style.marginTop = "5px";
+  input.style.padding = "4px";
+
+  input.addEventListener("click", e => e.stopPropagation());
+  input.addEventListener("input", applyFilter);
+
+  th.appendChild(input);
+  input.focus();
+
+  activeInput = input;
+}
+
+function removeSearchInput() {
+  if (activeInput) {
+    activeInput.parentElement.removeChild(activeInput);
+    activeInput = null;
+    clearFilter();
+  }
+}
+
 function applyFilter() {
-  if (!currentFilterField) return;
+  if (!currentFilterField || !activeInput) return;
 
-  const value = document
-    .getElementById("searchInput")
-    .value
-    .toLowerCase();
-
+  const value = activeInput.value.toLowerCase();
   const rows = document.querySelectorAll("#usersBody tr");
 
   rows.forEach(row => {
@@ -295,16 +316,11 @@ function applyFilter() {
     const cell = row.children[cellIndex];
     const text = cell.textContent.toLowerCase();
 
-    if (text.includes(value)) {
-      row.style.display = "";
-    } else {
-      row.style.display = "none";
-    }
+    row.style.display = text.includes(value) ? "" : "none";
   });
 }
 
-function clearSearch() {
-  document.getElementById("searchInput").value = "";
+function clearFilter() {
   const rows = document.querySelectorAll("#usersBody tr");
   rows.forEach(row => row.style.display = "");
 }
@@ -317,6 +333,7 @@ function getColumnIndex(field) {
     default: return 0;
   }
 }
+
 </script>
 
 
