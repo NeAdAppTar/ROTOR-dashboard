@@ -81,17 +81,25 @@
     <table class="table" id="usersTable" style="display:none;">
       <thead>
         <tr>
-          <th>Ник</th>
-          <th>Должность</th>
+          <th data-field="name" class="filterable">Ник</th>
+          <th data-field="post" class="filterable">Должность</th>
           <th>ВК</th>
-          <th>Выговоры</th>
+          <th data-field="disciplinary_actions" class="filterable">Выговоры</th>
           <th>Счёт</th>
         </tr>
       </thead>
+
       <tbody id="usersBody">
       </tbody>
     </table>
   </div>
+
+  <div id="searchBox" style="display:none; margin-bottom:10px;">
+  <input type="text" id="searchInput" placeholder="Введите значение..."
+         style="padding:6px; width:250px;">
+  <button onclick="clearSearch()" style="padding:6px;">Сброс</button>
+</div>
+
 </div>
 <script>
 const pageAccess = null;
@@ -251,6 +259,64 @@ function sortUsersByPost(users) {
 }
 
 loadUsers();
+
+let currentFilterField = null;
+
+document.addEventListener("DOMContentLoaded", () => {
+  const headers = document.querySelectorAll(".filterable");
+
+  headers.forEach(th => {
+    th.style.cursor = "pointer";
+
+    th.addEventListener("click", () => {
+      currentFilterField = th.dataset.field;
+      document.getElementById("searchBox").style.display = "block";
+      document.getElementById("searchInput").value = "";
+      document.getElementById("searchInput").focus();
+    });
+  });
+
+  document.getElementById("searchInput")
+    .addEventListener("input", applyFilter);
+});
+
+function applyFilter() {
+  if (!currentFilterField) return;
+
+  const value = document
+    .getElementById("searchInput")
+    .value
+    .toLowerCase();
+
+  const rows = document.querySelectorAll("#usersBody tr");
+
+  rows.forEach(row => {
+    const cellIndex = getColumnIndex(currentFilterField);
+    const cell = row.children[cellIndex];
+    const text = cell.textContent.toLowerCase();
+
+    if (text.includes(value)) {
+      row.style.display = "";
+    } else {
+      row.style.display = "none";
+    }
+  });
+}
+
+function clearSearch() {
+  document.getElementById("searchInput").value = "";
+  const rows = document.querySelectorAll("#usersBody tr");
+  rows.forEach(row => row.style.display = "");
+}
+
+function getColumnIndex(field) {
+  switch (field) {
+    case "name": return 0;
+    case "post": return 1;
+    case "disciplinary_actions": return 3;
+    default: return 0;
+  }
+}
 </script>
 
 
