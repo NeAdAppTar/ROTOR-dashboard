@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <title>Создание сотрудника</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="style_db.css">
+  <link rel="stylesheet" href="style_a.css">
+  <link rel="icon" type="image/png" href="icon.png">
+
+  <script src="usermenu.js"></script>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+    <div class="sidebar-header">
+        <span class="logo">РОТОР</span>
+    </div>
+
+    <ul class="sidebar-menu">
+        <li><a href="employee_dashboard.html"><i class="fas fa-user"></i><span>Личный кабинет</span></a></li>
+        <li><a href="employees.html"><i class="fas fa-users"></i><span>Список сотрудников</span></a></li>
+        <li><a href="routes.html"><i class="fas fa-route"></i><span>Маршруты</span></a></li>
+        <li><a href="vehicles.html"><i class="fas fa-truck"></i><span>Список ПС</span></a></li>
+    </ul>
+
+    <div class="user-menu" id="userMenu">
+      <div class="user-menu-item" id="logoutBtn">
+          <i class="fas fa-sign-out-alt"></i>
+          <span>Выйти</span>
+      </div>
+
+      <div class="user-name-display">
+          <i class="fas fa-user"></i>
+          <span id="userName">admin</span>
+      </div>
+    </div>
+</div>
+
+<div class="main-content">
+  <div class="container">
+    <h1>Быстрое создание сотрудника</h1>
+
+    <div class="table-card" style="max-width:500px;">
+      <div class="form-inline" style="display:flex;gap:10px;">
+        <input id="newLogin" placeholder="Введите логин сотрудника" />
+        <button class="actions-btn btn-add" id="createBtn">
+          <i class="fas fa-user-plus"></i> Создать
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script>
+    const pageAccess = ["Директор", "Технический администратор", "Зам. директора"];
+const API_BASE = 'https://rotorbus.ru/api';
+const COMPANY = 'rotor';
+
+const createBtn = document.getElementById('createBtn');
+const loginInput = document.getElementById('newLogin');
+const toastEl = document.getElementById('toast');
+
+function showToast(text, ok = true) {
+  toastEl.textContent = text;
+  toastEl.style.background = ok ? '#111' : '#b91c1c';
+  toastEl.style.display = 'block';
+  setTimeout(() => toastEl.style.display = 'none', 3000);
+}
+
+createBtn.addEventListener('click', async () => {
+  const name = loginInput.value.trim();
+
+  if (!name) {
+    showToast('Введите логин', false);
+    return;
+  }
+
+  createBtn.disabled = true;
+  createBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Создание...';
+
+  try {
+
+    // Генерируем временный пароль
+    const tempPassword = 'temp_' + Math.random().toString(36).slice(-6);
+
+    const res = await fetch(`${API_BASE}/user/${COMPANY}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: name,
+        password: tempPassword,
+        post: 'Водитель-стажёр',
+        disciplinary_actions: '0/3',
+        account: '',
+        vk: '',
+        note: 'Требуется заполнение профиля'
+      })
+    });
+
+    if (!res.ok) throw new Error('Ошибка сервера');
+
+    const data = await res.json();
+    if (data.status !== 'ok') throw new Error(data.message);
+
+    showToast('Сотрудник создан');
+
+    loginInput.value = '';
+
+  } catch (err) {
+    showToast(err.message, false);
+  } finally {
+    createBtn.disabled = false;
+    createBtn.innerHTML = '<i class="fas fa-user-plus"></i> Создать';
+  }
+});
+</script>
+
+<script src="sidebar.js"></script>
+<script src="checkauth.js"></script>
+</body>
+</html>
