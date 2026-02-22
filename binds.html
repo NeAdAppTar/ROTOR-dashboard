@@ -1,18 +1,69 @@
 <!doctype html>
 <html lang="ru">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Бинды маршрутов</title>
-    <link rel="icon" type="image/png" href="icon.png">
-    <link rel="stylesheet" href="style_db.css">
-  <link rel="stylesheet" href="style.css" />
- 
- <script src="usermenu.js"></script>
-</head>
-<body>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Бинды маршрутов</title>
 
+<link rel="icon" type="image/png" href="icon.png">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style_db.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script src="usermenu.js"></script>
+<style>
+
+.card pre {
+  background:#0f172a;
+  color:#f8fafc;
+  padding:18px;
+  border-radius:14px;
+  cursor:pointer;
+  transition:0.2s;
+}
+
+.card pre:hover {
+  background:#1e293b;
+}
+
+.copy-btn {
+  margin-bottom:15px;
+  background:var(--primary);
+  border:none;
+  padding:10px 14px;
+  border-radius:10px;
+  cursor:pointer;
+  font-weight:600;
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  transition:0.3s;
+}
+
+.copy-btn:hover {
+  background:var(--primary-dark);
+  transform:scale(1.05);
+}
+
+.copy-success {
+  background:#22c55e !important;
+  color:white;
+}
+
+.copy-all {
+  background:#111;
+  color:white;
+  padding:12px 18px;
+  border-radius:12px;
+  border:none;
+  cursor:pointer;
+  font-weight:600;
+  margin-top:10px;
+}
+
+</style>
+</head>
+
+<body>
 <div class="sidebar" id="sidebar"> 
     <div class="sidebar-header">
         <span class="logo">РОТОР</span>
@@ -23,9 +74,8 @@
         <li><a href="employees.html"><i class="fas fa-users"></i><span>Список сотрудников</span></a></li>
         <li><a href="routes.html"><i class="fas fa-route"></i><span>Маршруты</span></a></li>
         <li><a href="vehicles.html"><i class="fas fa-truck"></i><span>Список ПС</span></a></li>
+        <li><a href="submit_route.html"><i class="fas fa-file"></i><span>Маршрутный лист</span></a></li>
         <li><a href="shift_report.html"><i class="fas fa-file"></i><span>Отчет</span></a></li>
-        <li><a href="charter.html"><i class="fas fa-book"></i><span>Устав</span></a></li>
-        <li><a href="plan.html"><i class="fas fa-calendar"></i><span>План</span></a></li>
         <li><a href="t.html"><i class="fas fa-check"></i><span>Тесты</span></a></li>
         <li><a href="binds.html"><i class="fas fa-keyboard"></i><span>Бинды и таблички</span></a></li>
     </ul>
@@ -52,110 +102,171 @@
         <span id="userName">user</span>
     </div>
 
-</div>
-
-
-</div>
+</div></div>
 <div class="main-content">
-  <div class="container">
-    <div class="card">
-      <p>Внизу можно скопировать все бинды сразу для вставки в свой файл.</p>
-    </div>
+<div class="container">
 
-    <div class="card" id="route-35">
-      <h2>Маршрут: 35</h2>
-      <pre>Цвет: Белый
+<div class="card" id="route-35">
+<h2><i class="fas fa-route"></i> Маршрут: 35</h2>
+
+<pre>Цвет: Белый
 Номер: 35
 Откуда: ********** ********** ВОКЗАЛ Отель Офисы ГУВД Автосалон Стройка ЗАВОД ЖБК
 Куда: [просто пробел]
 Стоимость: 80</pre>
-      <pre>do [Информатор] Автобус следует по маршруту 35. Желаем приятной поездки.</pre>
-      <button data-text="do [Информатор] Автобус следует по маршруту 35. Желаем приятной поездки.">Копировать бинД</button>
-      <pre>do [Табло в салоне] Вокзал, Отель, Офисы, ГУВД, Автосалон, Стройка, ЖБК.</pre>
-      <button data-text="do [Табло в салоне] Вокзал, Отель, Офисы, ГУВД, Автосалон, Стройка, ЖБК.">Копировать бинД</button>
-    </div>
 
-        <div class="card" id="route-m1">
-      <h2>Маршрут: м1</h2>
-      <pre>Цвет: Белый
-Номер: м1
-Откуда: ********** ********** Жуковский Приволжск Невский
-Куда: [просто пробел]
-Стоимость: 200</pre>
-      <pre>do [Информатор] Автобус следует по маршруту м1. Желаем приятной поездки.</pre>
-      <button data-text="do [Информатор] Автобус следует по маршруту м1. Желаем приятной поездки.">Копировать бинд</button>
-      <pre>do [Табло в салоне] пгт. Жуковский, Приволжск, Невский.</pre>
-      <button data-text="do [Табло в салоне] пгт. Жуковский Приволжск Невский.">Копировать бинд</button>
-    </div>
-    <div class="card" id="route-12">
-      <h2>Маршрут: 12</h2>
-      <pre>********** ********** ЖД Вокзал ТТУ Речной вокзал Тролл. депо Больница</pre>
-      <button data-text="********** ********** ЖД Вокзал ТТУ Речной вокзал Тролл. депо Больница">Скопировать</button>
-    </div>
-    <div class="card" id="route-99">
-      <h2>Маршрут: 99</h2>
-      <pre>********** ********** АВТОРЫНОК Вокзал АШ АТП-2 ТК Такси Банк Стройка РЫНОК</pre>
-      <button data-text="********** ********** АВТОРЫНОК Вокзал АШ АТП-2 ТК Такси Банк Стройка РЫНОК">Скопировать</button>
-    </div>
-    <div class="card" id="route-99">
-      <h2>Маршрут: 83</h2>
-      <pre>**** БОЛЬНИЦА Стройка ЖБК СТТП</pre>
-      <button data-text="**** БОЛЬНИЦА Стройка ЖБК СТТП">Скопировать</button>
-    </div>
+<button class="copy-btn" data-text="********** ********** ВОКЗАЛ Отель Офисы ГУВД Автосалон Стройка ЗАВОД ЖБК">
+<i class="fas fa-copy"></i> Скопировать
+</button>
 
+<pre>do [Информатор] Автобус следует по маршруту 35. Желаем приятной поездки.</pre>
+<button class="copy-btn" data-text="do [Информатор] Автобус следует по маршруту 35. Желаем приятной поездки.">
+<i class="fas fa-copy"></i> Копировать бинд
+</button>
 
-
-    <div class="card" id="other-binds">
-      <h2>Прочие бинды</h2>
-      <pre>bind [кнопка] do Удостоверение: ООО «РОТОР» сотрудник: Фамилия Имя. Должность.</pre>
-      <button data-text="bind (кнопка) do Удостоверение: ООО «РОТОР» сотрудник: Фамилия Имя. Должность.">Копировать</button>
-      <pre>bind (клавиша) do [Информатор] Во избежание травм во время движения или при резком торможении, держитесь за поручни.</pre>
-      <button data-text="bind (клавиша) do [Информатор] Во избежание травм во время движения или при резком торможении, держитесь за поручни.">Копировать</button>
-      <pre>bind (клавиша) do [Информатор] Вас обслуживает ООО "РОТОР"! Приглашаем водителей на работу! Высокая ЗП и хороший коллектив ждут Вас в ООО "РОТОР"!</pre>
-      <button data-text="bind (клавиша) do [Информатор] Вас обслуживает ООО РОТОР! Приглашаем водителей на работу! Высокая ЗП и хороший коллектив ждут Вас в ООО \"РОТОР\"!">Копировать</button>
-      <pre>bind (клавиша) b Трудоустройство в группе ВК ООО "РОТОР" https://vk.com/rotor_s7</pre>
-      <button data-text="bind (клавиша) b Трудоустройство в группе ВК ООО РОТОР https://vk.com/rotor_s7">Копировать</button>
-      <pre>bind (клавиша) do [Информатор] Автобус прибыл на конечную остановку. При выходе не забывайте свои личные вещи. Доброго вам пути.</pre>
-      <button data-text="bind (клавиша) do [Информатор] Автобус прибыл на конечную остановку. При выходе не забывайте свои личные вещи. Доброго вам пути.">Копировать</button>
-      <button id="copy-all">Копировать ВСЕ бинды</button>
-      <span id="status"></span>
-    </div>
-  </div>
+<pre>do [Табло в салоне] Вокзал, Отель, Офисы, ГУВД, Автосалон, Стройка, ЖБК.</pre>
+<button class="copy-btn" data-text="do [Табло в салоне] Вокзал, Отель, Офисы, ГУВД, Автосалон, Стройка, ЖБК.">
+<i class="fas fa-copy"></i> Копировать бинд
+</button>
 </div>
-  <script>
-    const pageAccess = null;
 
-    document.querySelectorAll('pre').forEach(pre => {
-      pre.innerHTML = pre.textContent.replace(/\\n/g, '<br>');
-    });
 
-    document.querySelectorAll('button[data-text]').forEach(btn => {
-      btn.addEventListener('click', async () => {
-        const text = btn.dataset.text;
-        try {
-          await navigator.clipboard.writeText(text);
-          btn.textContent = 'Скопировано!';
-          setTimeout(()=>btn.textContent='Копировать бинД',1000);
-        } catch {
-          const t = document.createElement('textarea');
-          t.value = text;
-          document.body.appendChild(t);
-          t.select();
-          document.execCommand('copy');
-          t.remove();
-        }
-      });
-    });
+<div class="card" id="route-12">
+<h2><i class="fas fa-route"></i> Маршрут: 12</h2>
 
-    document.getElementById('copy-all').addEventListener('click', async () => {
-      const all = Array.from(document.querySelectorAll('pre')).map(e=>e.textContent.trim()).join('\n\n');
-      await navigator.clipboard.writeText(all);
-      document.getElementById('status').textContent = 'Все бинды скопированы!';
-      setTimeout(()=>document.getElementById('status').textContent='',1500);
-    });
+<pre>Цвет: Белый
+Номер: 12
+Откуда: ********** ********** ЖД Вокзал ТТУ Речной вокзал Тролл. депо Больница
+Куда: [просто пробел]
+Стоимость: 80</pre>
 
-  </script>
+<button class="copy-btn" data-text="********** ********** ЖД Вокзал ТТУ Речной вокзал Тролл. депо Больница">
+<i class="fas fa-copy"></i> Скопировать
+</button>
+</div>
+
+
+<div class="card" id="route-99">
+<h2><i class="fas fa-route"></i> Маршрут: 99</h2>
+
+<pre>Цвет: Белый
+Номер: 99
+Откуда: ********** ********** АВТОРЫНОК Вокзал АШ АТП-2 ТК Такси Банк Стройка РЫНОК
+Куда: [просто пробел]
+Стоимость: 80</pre>
+
+<button class="copy-btn" data-text="********** ********** АВТОРЫНОК Вокзал АШ АТП-2 ТК Такси Банк Стройка РЫНОК">
+<i class="fas fa-copy"></i> Скопировать
+</button>
+</div>
+
+
+<div class="card" id="route-83">
+<h2><i class="fas fa-route"></i> Маршрут: 83</h2>
+
+<pre>Цвет: Белый
+Номер: 83
+Откуда: **** **** **** БОЛЬНИЦА Стройка ЖБК СТТП
+Куда: [просто пробел]
+Стоимость: 155</pre>
+
+<button class="copy-btn" data-text="**** **** **** БОЛЬНИЦА Стройка ЖБК СТТП">
+<i class="fas fa-copy"></i> Скопировать
+</button>
+</div>
+
+
+<div class="card" id="other-binds">
+<h2><i class="fas fa-clipboard"></i> Прочие бинды</h2>
+
+<pre>bind [кнопка] do Удостоверение: ООО «РОТОР» сотрудник: Фамилия Имя. Должность.</pre>
+<button class="copy-btn" data-text="bind (кнопка) do Удостоверение: ООО «РОТОР» сотрудник: Фамилия Имя. Должность.">
+<i class="fas fa-copy"></i> Копировать
+</button>
+
+<pre>bind (клавиша) do [Информатор] Во избежание травм во время движения или при резком торможении, держитесь за поручни.</pre>
+<button class="copy-btn" data-text="bind (клавиша) do [Информатор] Во избежание травм во время движения или при резком торможении, держитесь за поручни.">
+<i class="fas fa-copy"></i> Копировать
+</button>
+
+<pre>bind (клавиша) do [Информатор] Вас обслуживает ООО "РОТОР"! Приглашаем водителей на работу! Высокая ЗП и хороший коллектив ждут Вас в ООО "РОТОР"!</pre>
+<button class="copy-btn" data-text="bind (клавиша) do [Информатор] Вас обслуживает ООО РОТОР! Приглашаем водителей на работу! Высокая ЗП и хороший коллектив ждут Вас в ООО &quot;РОТОР&quot;!">
+<i class="fas fa-copy"></i> Копировать
+</button>
+
+<pre>bind (клавиша) b Трудоустройство в группе ВК ООО "РОТОР" https://vk.com/rotor_s7</pre>
+<button class="copy-btn" data-text="bind (клавиша) b Трудоустройство в группе ВК ООО РОТОР https://vk.com/rotor_s7">
+<i class="fas fa-copy"></i> Копировать
+</button>
+
+<pre>bind (клавиша) do [Информатор] Автобус прибыл на конечную остановку. При выходе не забывайте свои личные вещи. Доброго вам пути.</pre>
+<button class="copy-btn" data-text="bind (клавиша) do [Информатор] Автобус прибыл на конечную остановку. При выходе не забывайте свои личные вещи. Доброго вам пути.">
+<i class="fas fa-copy"></i> Копировать
+</button>
+
+<button id="copy-all" class="copy-all">
+<i class="fas fa-layer-group"></i> Копировать ВСЕ бинды
+</button>
+
+<span id="status"></span>
+
+</div>
+</div>
+</div>
+
+<script>
+
+/* ===== КОПИРОВАНИЕ ===== */
+
+document.querySelectorAll('.copy-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    copyText(btn.dataset.text, btn);
+  });
+});
+
+document.querySelectorAll('pre').forEach(pre => {
+  pre.addEventListener('click', () => {
+    copyText(pre.textContent.trim());
+  });
+});
+
+function copyText(text, button = null) {
+  navigator.clipboard.writeText(text).then(() => {
+    if (button) {
+      const original = button.innerHTML;
+      button.classList.add('copy-success');
+      button.innerHTML = '<i class="fas fa-check"></i> Скопировано';
+      setTimeout(() => {
+        button.classList.remove('copy-success');
+        button.innerHTML = original;
+      }, 1200);
+    }
+  });
+}
+
+/* ===== КОПИРОВАТЬ ВСЁ ===== */
+
+document.getElementById('copyAll').addEventListener('click', () => {
+  const all = Array.from(document.querySelectorAll('.card pre'))
+    .map(e => e.textContent.trim())
+    .join('\n\n');
+
+  copyText(all);
+});
+
+/* ===== ПОИСК ===== */
+
+document.getElementById('searchInput').addEventListener('input', function() {
+  const value = this.value.toLowerCase();
+  document.querySelectorAll('.route-card').forEach(card => {
+    const route = card.dataset.route;
+    card.style.display = route.includes(value) ? 'block' : 'none';
+  });
+});
+
+</script>
+
 </body>
 <script src="sidebar.js"></script>
-<script src="checkauth.js"></script>
+
 </html>
