@@ -139,25 +139,29 @@ async function loadTrainings() {
     );
 
     trainees.forEach(user => {
-      const training = trainings.find(t => t.user_name === user.name);
-      if (!training) return;
+  const training = trainings.find(t =>
+    t.user_name?.trim() === user.name?.trim()
+  );
 
-      const tr = document.createElement('tr');
+  const tr = document.createElement('tr');
 
-      tr.innerHTML = `
-        <td>${training.user_name}</td>
-        <td>${training.score_regulation || '-'}</td>
-        <td>${training.score_adequacy || '-'}</td>
-        <td class="${training.completed === 'yes' ? 'status-ok' : 'status-no'}">
-          ${training.completed === 'yes' ? 'Завершено' : 'Не завершено'}
-        </td>
-        <td>${user.note || '—'}</td>
-        <td>
-          <button class="actions-small btn-release">
-            Выпустить
-          </button>
-        </td>
-      `;
+  tr.innerHTML = `
+    <td>${user.name}</td>
+    <td>${training?.score_regulation || '-'}</td>
+    <td>${training?.score_adequacy || '-'}</td>
+    <td class="${training?.completed === 'yes' ? 'status-ok' : 'status-no'}">
+      ${training?.completed === 'yes' ? 'Завершено' : 'Не завершено'}
+    </td>
+    <td>${user.note || '—'}</td>
+    <td>
+      <button class="actions-small btn-release">
+        Выпустить
+      </button>
+    </td>
+  `;
+
+  body.appendChild(tr);
+});
 
       tr.querySelector('button').addEventListener('click', () => {
         releaseTrainee(training.id, training.user_name);
