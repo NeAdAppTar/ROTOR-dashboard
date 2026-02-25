@@ -163,13 +163,6 @@ async function loadTrainings() {
   body.appendChild(tr);
 });
 
-      tr.querySelector('button').addEventListener('click', () => {
-        releaseTrainee(training.id, training.user_name);
-      });
-
-      body.appendChild(tr);
-    });
-
     finishLoading();
 
   } catch (err) {
