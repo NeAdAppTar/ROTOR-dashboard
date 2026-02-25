@@ -100,101 +100,74 @@
 <div id="toast" class="toast"></div>
 
 <script>
-const pageAccess = ["Директор", "Зам. директора", "Технический администратор", "Начальник учебного центра", "Инструктор"];
+async function loadTrainings() {
+  loading.style.display = 'block';
+  table.style.display = 'none';
+  body.innerHTML = '';
 
-  const API_BASE = 'https://rotorbus.ru/api';
-  const company = 'rotor';
+  try {
+    // 1️⃣ Получаем стажировки
+    const resTraining = await fetch(`${API_BASE}/training/${company}`);
+    const dataTraining = await resTraining.json();
 
-  const loading = document.getElementById('loading');
-  const table = document.getElementById('traineesTable');
-  const body = document.getElementById('traineesBody');
-  const toast = document.getElementById('toast');
+    if (!resTraining.ok) throw new Error(`HTTP ${resTraining.status}`);
 
-  function showToast(text, ok = true) {
-    toast.textContent = text;
-    toast.style.background = ok ? '#111' : '#b91c1c';
-    toast.style.display = 'block';
-    setTimeout(() => toast.style.display = 'none', 3000);
-  }
+    let trainings = [];
 
-  async function loadTrainees() {
-    loading.style.display = 'block';
-    table.style.display = 'none';
-    body.innerHTML = '';
+    if (dataTraining.status === 'ok' && Array.isArray(dataTraining.trainings)) {
+      trainings = dataTraining.trainings;
+    } else if (dataTraining.message && dataTraining.message.toLowerCase().includes('no trainings')) {
+      trainings = [];
+    } else if (dataTraining.status !== 'ok') {
+      throw new Error(dataTraining.message || 'API error');
+    }
 
-    try {
-      const res = await fetch(`${API_BASE}/users/${company}`);
-      const data = await res.json();
+    // 2️⃣ Получаем пользователей
+    const resUsers = await fetch(`${API_BASE}/users/${company}`);
+    const dataUsers = await resUsers.json();
 
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      if (data.status !== 'ok') throw new Error(data.message || 'API error');
-      if (!Array.isArray(data.users)) throw new Error('Invalid users list');
+    if (!resUsers.ok) throw new Error(`HTTP ${resUsers.status}`);
+    if (dataUsers.status !== 'ok') throw new Error(dataUsers.message || 'Users API error');
 
-      const trainees = data.users.filter(u => u.post === 'Водитель-стажер');
+    const trainees = dataUsers.users.filter(u => u.post === 'Водитель-стажер');
 
-      trainees.forEach(u => {
-        const tr = document.createElement('tr');
+    // 3️⃣ Сопоставляем
+    trainees.forEach(user => {
+      const training = trainings.find(t => t.user_name === user.name);
+      if (!training) return; // если нет записи — не показываем
 
-        tr.innerHTML = `
-          <td>${u.name}</td>
-          <td class="status-ok">Вручную</td>
-          <td class="status-ok">Вручную</td>
-          <td>
-            <select data-id="${u.id}">
-              <option value="yes">Вручную</option>
-              <option value="no">Вручную</option>
-            </select>
-          </td>
-          <td>${u.note ? u.note : '—'}</td>
-          <td>
-            <button class="actions-small btn-release">Выпустить стажёра</button>
-          </td>
-        `;
+      const tr = document.createElement('tr');
 
-        tr.querySelector('button').addEventListener('click', () => releaseTrainee(u.id, u.name));
-        body.appendChild(tr);
+      tr.innerHTML = `
+        <td>${training.user_name}</td>
+        <td>${training.score_regulation || '-'}</td>
+        <td>${training.score_adequacy || '-'}</td>
+        <td class="${training.completed === 'yes' ? 'status-ok' : 'status-no'}">
+          ${training.completed === 'yes' ? 'Завершено' : 'Не завершено'}
+        </td>
+        <td>${user.note || '—'}</td>
+        <td>
+          <button class="actions-small btn-release">
+            Выпустить
+          </button>
+        </td>
+      `;
+
+      tr.querySelector('button').addEventListener('click', () => {
+        releaseTrainee(training.id, training.user_name);
       });
 
-      loading.style.display = 'none';
-      table.style.display = 'table';
-    } catch (err) {
-      loading.textContent = 'Ошибка загрузки';
-      showToast(err.message, false);
-    }
+      body.appendChild(tr);
+    });
+
+    loading.style.display = 'none';
+    table.style.display = 'table';
+
+  } catch (err) {
+    loading.textContent = 'Ошибка загрузки';
+    showToast(err.message, false);
   }
-
-  async function releaseTrainee(id, name) {
-    if (!confirm(`Выпустить стажёра ${name}?`)) return;
-
-    try {
-      const payload = { post: 'Водитель 3 класса' };
-
-      // ✅ Правильный эндпоинт по доке:
-      // PUT /api/user/{company}/{user_id}
-      const res = await fetch(`${API_BASE}/user/${company}/${id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      });
-
-      let data = null;
-      try { data = await res.json(); } catch (_) {}
-
-      if (!res.ok) {
-        throw new Error((data && data.message) ? data.message : `HTTP ${res.status}`);
-      }
-      if (data && data.status && data.status !== 'ok') {
-        throw new Error(data.message || 'API error');
-      }
-
-      showToast('Стажёр успешно выпущен');
-      loadTrainees();
-    } catch (err) {
-      showToast('Ошибка: ' + err.message, false);
-    }
-  }
-
-  loadTrainees();
+}
 </script>
 
 <script src="sidebar.js"></script>

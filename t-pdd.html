@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <title>Тест по ПДД</title>
+  <title>Тест на адекватность</title>
   <link rel="stylesheet" href="style_db.css">
   <link rel="stylesheet" href="style.css">
   <link rel="icon" type="image/png" href="icon.png">
@@ -61,76 +61,41 @@
     <p id="playerName"></p>
 
     <form id="testForm">
-     <div class="question">
-  <p>1. Какое движение установлено на дорогах РФ?</p>
-  <label><input type="radio" name="q1" value="1"> Правостороннее движение</label><br>
-  <label><input type="radio" name="q1" value="0"> Левостороннее движение</label><br>
-  <label><input type="radio" name="q1" value="0"> По усмотрению водителя</label>
-</div>
 
-<div class="question">
-  <p>2. Что означает мигающий жёлтый сигнал светофора?</p>
-  <label><input type="radio" name="q2" value="0"> Запрещает движение</label><br>
-  <label><input type="radio" name="q2" value="1"> Предупреждает об опасности и требует осторожности</label><br>
-  <label><input type="radio" name="q2" value="0"> Разрешает движение без ограничений</label>
-</div>
+      <div class="question">
+        <p>1. Клиент грубо обращается к вам. Ваши действия?</p>
+        <label><input type="radio" name="q1" value="1"> Спокойно продолжаю диалог</label>
+        <label><input type="radio" name="q1" value="0"> Отвечаю в том же тоне</label>
+        <label><input type="radio" name="q1" value="0"> Игнорирую полностью</label>
+      </div>
 
-<div class="question">
-  <p>3. Кто имеет преимущество на перекрёстке без знаков?</p>
-  <label><input type="radio" name="q3" value="1"> Транспорт, приближающийся справа</label><br>
-  <label><input type="radio" name="q3" value="0"> Тот, кто едет быстрее</label><br>
-  <label><input type="radio" name="q3" value="0"> Тот, кто первым подал сигнал</label>
-</div>
+      <div class="question">
+        <p>2. Коллега допустил ошибку.</p>
+        <label><input type="radio" name="q2" value="1"> Сообщаю руководству корректно</label>
+        <label><input type="radio" name="q2" value="0"> Высмеиваю публично</label>
+        <label><input type="radio" name="q2" value="0"> Пишу жалобы в общий чат</label>
+      </div>
 
-<div class="question">
-  <p>4. Что обязан сделать водитель при ДТП, если есть пострадавшие?</p>
-  <label><input type="radio" name="q4" value="1"> Оказать первую помощь, вызвать скорую и полицию</label><br>
-  <label><input type="radio" name="q4" value="0"> Уехать с места происшествия</label><br>
-  <label><input type="radio" name="q4" value="0"> Сообщить друзьям</label>
-</div>
+      <div class="question">
+        <p>3. Вас провоцируют в чате.</p>
+        <label><input type="radio" name="q3" value="1"> Не поддаюсь провокации</label>
+        <label><input type="radio" name="q3" value="0"> Начинаю конфликт</label>
+        <label><input type="radio" name="q3" value="0"> Ухожу, хлопнув дверью</label>
+      </div>
 
-<div class="question">
-  <p>5. Что запрещено водителю?</p>
-  <label><input type="radio" name="q5" value="1"> Управлять транспортом в состоянии опьянения</label><br>
-  <label><input type="radio" name="q5" value="0"> Использовать ближний свет днём</label><br>
-  <label><input type="radio" name="q5" value="0"> Проехать по автомагистрали</label>
-</div>
+      <div class="question">
+        <p>4. Вам отказали в повышении.</p>
+        <label><input type="radio" name="q4" value="1"> Спокойно принимаю решение</label>
+        <label><input type="radio" name="q4" value="0"> Устраиваю скандал</label>
+        <label><input type="radio" name="q4" value="0"> Начинаю саботаж</label>
+      </div>
 
-<div class="question">
-  <p>6. Что должен сделать водитель при приближении машины с маячком и сиреной?</p>
-  <label><input type="radio" name="q6" value="1"> Уступить дорогу</label><br>
-  <label><input type="radio" name="q6" value="0"> Продолжить движение</label><br>
-  <label><input type="radio" name="q6" value="0"> Обогнать её</label>
-</div>
-
-<div class="question">
-  <p>7. Где запрещён обгон?</p>
-  <label><input type="radio" name="q7" value="1"> На пешеходных переходах и перед железнодорожным переездом</label><br>
-  <label><input type="radio" name="q7" value="0"> На пустой дороге</label><br>
-  <label><input type="radio" name="q7" value="0"> На автомагистрали</label>
-</div>
-
-<div class="question">
-  <p>8. Какой свет должен быть включён при движении днём?</p>
-  <label><input type="radio" name="q8" value="0"> Дальний свет</label><br>
-  <label><input type="radio" name="q8" value="1"> Ближний свет фар или дневные ходовые огни</label><br>
-  <label><input type="radio" name="q8" value="0"> Только габаритные огни</label>
-</div>
-
-<div class="question">
-  <p>9. Как поступить, если загорелся красный сигнал светофора?</p>
-  <label><input type="radio" name="q9" value="0"> Проехать, если нет машин</label><br>
-  <label><input type="radio" name="q9" value="1"> Остановиться перед стоп-линией</label><br>
-  <label><input type="radio" name="q9" value="0"> Замедлить ход и продолжить</label>
-</div>
-
-<div class="question">
-  <p>10. Что должен сделать водитель при вынужденной остановке на дороге?</p>
-  <label><input type="radio" name="q10" value="0"> Ничего</label><br>
-  <label><input type="radio" name="q10" value="1"> Включить аварийку и выставить знак аварийной остановки</label><br>
-  <label><input type="radio" name="q10" value="0"> Выйти и подать рукой сигнал</label>
-</div>
-
+      <div class="question">
+        <p>5. Возник спор.</p>
+        <label><input type="radio" name="q5" value="1"> Пытаюсь найти компромисс</label>
+        <label><input type="radio" name="q5" value="0"> Давлю авторитетом</label>
+        <label><input type="radio" name="q5" value="0"> Игнорирую ситуацию</label>
+      </div>
 
       <button type="submit">Отправить</button>
     </form>
@@ -138,11 +103,11 @@
     <p id="result"></p>
   </main>
 </div>
-  <script src="tsys.js"></script>
-  <script>
-    const pageAccess = null;
-    initTest("ПДД");
-  </script>
+<script src="tsys.js"></script>
+<script>
+  const pageAccess = null;
+  initAdequacyTest();
+</script>
 
   <style>
     /* ------------------ Кнопки тестов ------------------ */
