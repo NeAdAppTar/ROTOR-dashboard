@@ -246,6 +246,13 @@ async function loadTrainings() {
 
   try {
 
+    const payload = {
+  user_name: String(user.name),
+  score_regulation: String(training?.score_regulation ?? '0'),
+  score_adequacy: String(training?.score_adequacy ?? '0'),
+  completed: completedValue // уже "yes" или "no"
+  };
+
     const res = await fetch(`${API_BASE}/api/training/${company}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
