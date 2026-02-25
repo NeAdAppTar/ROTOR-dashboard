@@ -21,6 +21,45 @@
       cursor: pointer;
     }
     .btn-release { background: #16a34a; color: #fff; }
+
+    .practice-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  cursor: pointer;
+  background: #dc2626;
+  color: white;
+  font-weight: 600;
+  transition: all 0.25s ease;
+  user-select: none;
+  position: relative;
+}
+
+.practice-toggle .toggle-circle {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: white;
+  transition: transform 0.25s ease;
+}
+
+.practice-toggle.active {
+  background: #16a34a;
+}
+
+.practice-toggle.active .toggle-circle {
+  transform: translateX(6px);
+}
+
+.practice-toggle:hover {
+  transform: scale(1.05);
+}
+
+.practice-toggle:active {
+  transform: scale(0.95);
+}
   </style>
 </head>
 
@@ -86,6 +125,7 @@
 <div id="toast" class="toast"></div>
 
 <script>
+  const pageAccess = ["Директор", "Зам. директора", "Технический администратор", "Начальник учебного центра", "Инструктор"];
 const API_BASE = 'https://rotorbus.ru';
 const company = 'rotor';
 
@@ -112,7 +152,7 @@ async function loadTrainings() {
     table.style.display = 'none';
     body.innerHTML = '';
 
-    // Получаем стажировки
+    // --- Стажировки ---
     const resTraining = await fetch(`${API_BASE}/api/training/${company}`);
     const dataTraining = await resTraining.json();
 
@@ -126,7 +166,7 @@ async function loadTrainings() {
       throw new Error(dataTraining.message);
     }
 
-    // Получаем пользователей
+    // --- Пользователи ---
     const resUsers = await fetch(`${API_BASE}/api/users/${company}`);
     const dataUsers = await resUsers.json();
 
@@ -139,74 +179,93 @@ async function loadTrainings() {
     );
 
     trainees.forEach(user => {
-  const training = trainings.find(t =>
-    t.user_name?.trim().toLowerCase() ===
-    user.name?.trim().toLowerCase()
-  );
 
-  const scoreReg = Number(training?.score_regulation || 0);
-  const scoreAdeq = Number(training?.score_adequacy || 0);
-  const completed = training?.completed === 'yes';
+      const training = trainings.find(t =>
+        t.user_name?.trim().toLowerCase() ===
+        user.name?.trim().toLowerCase()
+      );
 
-  const tr = document.createElement('tr');
+      const scoreReg = Number(training?.score_regulation || 0);
+      const scoreAdeq = Number(training?.score_adequacy || 0);
+      const completed = training?.completed === 'yes';
 
-  tr.innerHTML = `
-    <td>${user.name}</td>
+      const tr = document.createElement('tr');
 
-    <td class="${scoreReg >= 10 ? 'status-ok' : 'status-no'}">
-      ${scoreReg || 0}/20
-    </td>
+      tr.innerHTML = `
+        <td>${user.name}</td>
 
-    <td class="${scoreAdeq >= 5 ? 'status-ok' : 'status-no'}">
-      ${scoreAdeq || 0}/5
-    </td>
+        <td class="${scoreReg >= 10 ? 'status-ok' : 'status-no'}">
+          ${scoreReg}/20
+        </td>
 
-    <td>
-      <select class="practice-select">
-        <option value="no" ${!completed ? 'selected' : ''}>Не пройдена</option>
-        <option value="yes" ${completed ? 'selected' : ''}>Пройдена</option>
-      </select>
-    </td>
+        <td class="${scoreAdeq >= 5 ? 'status-ok' : 'status-no'}">
+          ${scoreAdeq}/5
+        </td>
 
-    <td>${user.note || '—'}</td>
+        <td>
+          <div class="practice-toggle ${completed ? 'active' : ''}">
+            <div class="toggle-circle"></div>
+            <span class="toggle-label">
+              ${completed ? 'Пройдена' : 'Не пройдена'}
+            </span>
+          </div>
+        </td>
 
-    <td>
-      <button class="actions-small btn-release">
-        Выпустить
-      </button>
-    </td>
-  `;
+        <td>${user.note || '—'}</td>
 
-  const releaseBtn = tr.querySelector('.btn-release');
-  const practiceSelect = tr.querySelector('.practice-select');
+        <td>
+          <button class="actions-small btn-release">
+            Выпустить
+          </button>
+        </td>
+      `;
 
-  function validate() {
-    const practicePassed = practiceSelect.value === 'yes';
+      const releaseBtn = tr.querySelector('.btn-release');
+      const practiceToggle = tr.querySelector('.practice-toggle');
+      const toggleLabel = tr.querySelector('.toggle-label');
 
-    const canRelease =
-      practicePassed &&
-      scoreReg >= 10 &&
-      scoreAdeq >= 5;
+      function isPracticePassed() {
+        return practiceToggle.classList.contains('active');
+      }
 
-    releaseBtn.disabled = !canRelease;
-    releaseBtn.style.opacity = canRelease ? '1' : '0.5';
-  }
+      function validate() {
+        const canRelease =
+          isPracticePassed() &&
+          scoreReg >= 10 &&
+          scoreAdeq >= 5;
 
-  practiceSelect.addEventListener('change', validate);
+        releaseBtn.disabled = !canRelease;
+        releaseBtn.style.opacity = canRelease ? '1' : '0.5';
+      }
 
-  validate(); // первичная проверка
+      // Переключатель практики
+      practiceToggle.addEventListener('click', () => {
+        practiceToggle.classList.toggle('active');
 
-  releaseBtn.addEventListener('click', () => {
-    if (releaseBtn.disabled) {
-      showToast('Стажёр не соответствует требованиям', false);
-      return;
-    }
+        const passed = isPracticePassed();
+        toggleLabel.textContent = passed ? 'Пройдена' : 'Не пройдена';
 
-    releaseTrainee(training?.id, user.name);
-  });
+        validate();
+      });
 
-  body.appendChild(tr);
-});
+      validate();
+
+      releaseBtn.addEventListener('click', () => {
+        if (releaseBtn.disabled) {
+          showToast('Стажёр не соответствует требованиям', false);
+          return;
+        }
+
+        if (!training?.id) {
+          showToast('Нет записи о стажировке', false);
+          return;
+        }
+
+        releaseTrainee(training.id, user.name);
+      });
+
+      body.appendChild(tr);
+    });
 
     finishLoading();
 
