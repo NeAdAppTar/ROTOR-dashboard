@@ -140,25 +140,70 @@ async function loadTrainings() {
 
     trainees.forEach(user => {
   const training = trainings.find(t =>
-    t.user_name?.trim() === user.name?.trim()
+    t.user_name?.trim().toLowerCase() ===
+    user.name?.trim().toLowerCase()
   );
+
+  const scoreReg = Number(training?.score_regulation || 0);
+  const scoreAdeq = Number(training?.score_adequacy || 0);
+  const completed = training?.completed === 'yes';
 
   const tr = document.createElement('tr');
 
   tr.innerHTML = `
     <td>${user.name}</td>
-    <td>${training?.score_regulation || '-'}</td>
-    <td>${training?.score_adequacy || '-'}</td>
-    <td class="${training?.completed === 'yes' ? 'status-ok' : 'status-no'}">
-      ${training?.completed === 'yes' ? 'Завершено' : 'Не завершено'}
+
+    <td class="${scoreReg >= 10 ? 'status-ok' : 'status-no'}">
+      ${scoreReg || 0}/20
     </td>
+
+    <td class="${scoreAdeq >= 5 ? 'status-ok' : 'status-no'}">
+      ${scoreAdeq || 0}/5
+    </td>
+
+    <td>
+      <select class="practice-select">
+        <option value="no" ${!completed ? 'selected' : ''}>Не пройдена</option>
+        <option value="yes" ${completed ? 'selected' : ''}>Пройдена</option>
+      </select>
+    </td>
+
     <td>${user.note || '—'}</td>
+
     <td>
       <button class="actions-small btn-release">
         Выпустить
       </button>
     </td>
   `;
+
+  const releaseBtn = tr.querySelector('.btn-release');
+  const practiceSelect = tr.querySelector('.practice-select');
+
+  function validate() {
+    const practicePassed = practiceSelect.value === 'yes';
+
+    const canRelease =
+      practicePassed &&
+      scoreReg >= 10 &&
+      scoreAdeq >= 5;
+
+    releaseBtn.disabled = !canRelease;
+    releaseBtn.style.opacity = canRelease ? '1' : '0.5';
+  }
+
+  practiceSelect.addEventListener('change', validate);
+
+  validate(); // первичная проверка
+
+  releaseBtn.addEventListener('click', () => {
+    if (releaseBtn.disabled) {
+      showToast('Стажёр не соответствует требованиям', false);
+      return;
+    }
+
+    releaseTrainee(training?.id, user.name);
+  });
 
   body.appendChild(tr);
 });
