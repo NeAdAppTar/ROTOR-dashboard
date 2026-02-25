@@ -100,6 +100,22 @@
 <div id="toast" class="toast"></div>
 
 <script>
+  const pageAccess = ["Директор", "Зам. директора", "Технический администратор", "Начальник учебного центра", "Инструктор"];
+const API_BASE = 'https://rotorbus.ru/api';  
+const company = 'rotor';
+
+const loading = document.getElementById('loading');
+const table = document.getElementById('traineesTable');
+const body = document.getElementById('traineesBody');
+const toast = document.getElementById('toast');
+
+function showToast(text, ok = true) {
+  toast.textContent = text;
+  toast.style.background = ok ? '#111' : '#b91c1c';
+  toast.style.display = 'block';
+  setTimeout(() => toast.style.display = 'none', 3000);
+}
+
 async function loadTrainings() {
   loading.style.display = 'block';
   table.style.display = 'none';
