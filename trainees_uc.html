@@ -153,7 +153,7 @@ async function loadTrainings() {
     body.innerHTML = '';
 
     // --- Стажировки ---
-    const resTraining = await fetch(`${API_BASE}/api/training/${company}`);
+    const resTraining = await fetch(`${API_BASE}/training/${company}`);
     const dataTraining = await resTraining.json();
 
     let trainings = [];
@@ -167,7 +167,7 @@ async function loadTrainings() {
     }
 
     // --- Пользователи ---
-    const resUsers = await fetch(`${API_BASE}/api/users/${company}`);
+    const resUsers = await fetch(`${API_BASE}/users/${company}`);
     const dataUsers = await resUsers.json();
 
     if (dataUsers.status !== 'ok') {
