@@ -254,15 +254,10 @@ async function loadTrainings() {
   };
 
     const res = await fetch(`${API_BASE}/api/training/${company}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        user_name: user.name,
-        score_regulation: scoreReg,
-        score_adequacy: scoreAdeq,
-        completed: completedValue
-      })
-    });
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify(payload)
+});
 
     const data = await res.json();
     if (data.status !== 'ok') throw new Error(data.message);
