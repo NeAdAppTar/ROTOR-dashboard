@@ -9,70 +9,56 @@
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="icon" type="image/png" href="icon.png">
-  <script src="usermenu.js"></script> 
+  <script src="usermenu.js"></script>
+
   <style>
-    .status-ok {
-      color: #16a34a;
-      font-weight: 600;
-    }
-    .status-no {
-      color: #dc2626;
-      font-weight: 600;
-    }
+    .status-ok { color: #16a34a; font-weight: 600; }
+    .status-no { color: #dc2626; font-weight: 600; }
     .actions-small {
       padding: 6px 10px;
       border-radius: 6px;
       border: none;
       cursor: pointer;
     }
-    .btn-release {
-      background: #16a34a;
-      color: #fff;
-    }
+    .btn-release { background: #16a34a; color: #fff; }
   </style>
 </head>
+
 <body>
 
-    <div class="sidebar" id="sidebar"> 
-    <div class="sidebar-header">
-        <span class="logo">РОТОР</span>
-    </div>
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <span class="logo">РОТОР</span>
+  </div>
 
-    <ul class="sidebar-menu">
-        <li><a href="employee_dashboard.html"><i class="fas fa-user"></i><span>Личный кабинет</span></a></li>
-        <li><a href="employees.html"><i class="fas fa-users"></i><span>Список сотрудников</span></a></li>
-        <li><a href="routes.html"><i class="fas fa-route"></i><span>Маршруты</span></a></li>
-        <li><a href="vehicles.html"><i class="fas fa-truck"></i><span>Список ПС</span></a></li>
-        <li><a href="shift_report.html"><i class="fas fa-file"></i><span>Отчет</span></a></li>
-        <li><a href="charter.html"><i class="fas fa-book"></i><span>Устав</span></a></li>
-        <li><a href="plan.html"><i class="fas fa-calendar"></i><span>План</span></a></li>
-        <li><a href="t.html"><i class="fas fa-check"></i><span>Тесты</span></a></li>
-        <li><a href="binds.html"><i class="fas fa-keyboard"></i><span>Бинды и таблички</span></a></li>
-    </ul>
+  <ul class="sidebar-menu">
+    <li><a href="employee_dashboard.html"><i class="fas fa-user"></i><span>Личный кабинет</span></a></li>
+    <li><a href="employees.html"><i class="fas fa-users"></i><span>Список сотрудников</span></a></li>
+    <li><a href="routes.html"><i class="fas fa-route"></i><span>Маршруты</span></a></li>
+    <li><a href="vehicles.html"><i class="fas fa-truck"></i><span>Список ПС</span></a></li>
+    <li><a href="shift_report.html"><i class="fas fa-file"></i><span>Отчет</span></a></li>
+    <li><a href="charter.html"><i class="fas fa-book"></i><span>Устав</span></a></li>
+    <li><a href="plan.html"><i class="fas fa-calendar"></i><span>План</span></a></li>
+    <li><a href="t.html"><i class="fas fa-check"></i><span>Тесты</span></a></li>
+    <li><a href="binds.html"><i class="fas fa-keyboard"></i><span>Бинды и таблички</span></a></li>
+  </ul>
 
-    <div class="user-menu" id="userMenu">
-
-      <div class="user-menu-item" id="nyBtn">
-      <i class="fas fa-snowflake"></i>
-      <span>НГ оформление</span>
-      </div>
-      
+  <div class="user-menu" id="userMenu">
     <div class="user-menu-item" id="themeBtn">
-        <i class="fas fa-moon"></i>
-        <span>Тёмная тема</span>
+      <i class="fas fa-moon"></i>
+      <span>Тёмная тема</span>
     </div>
 
     <div class="user-menu-item" id="logoutBtn">
-        <i class="fas fa-sign-out-alt"></i>
-        <span>Выйти</span>
+      <i class="fas fa-sign-out-alt"></i>
+      <span>Выйти</span>
     </div>
 
     <div class="user-name-display">
-        <i class="fas fa-user"></i>
-        <span id="userName">user</span>
-    </div> 
-</div>
-</div>
+      <i class="fas fa-user"></i>
+      <span id="userName">user</span>
+    </div>
+  </div>
 </div>
 
 <div class="main-content">
@@ -85,9 +71,9 @@
       <thead>
         <tr>
           <th>Логин</th>
-          <th>Устав (не спользуется)</th>
-          <th>ПДД (не используется)</th>
-          <th>Практика (не используется)</th>
+          <th>Устав</th>
+          <th>ПДД</th>
+          <th>Практика</th>
           <th>Примечание</th>
           <th>Действие</th>
         </tr>
@@ -100,8 +86,7 @@
 <div id="toast" class="toast"></div>
 
 <script>
-  const pageAccess = ["Директор", "Зам. директора", "Технический администратор", "Начальник учебного центра", "Инструктор"];
-const API_BASE = 'https://rotorbus.ru/api';  
+const API_BASE = 'https://rotorbus.ru';
 const company = 'rotor';
 
 const loading = document.getElementById('loading');
@@ -116,41 +101,46 @@ function showToast(text, ok = true) {
   setTimeout(() => toast.style.display = 'none', 3000);
 }
 
+function finishLoading() {
+  loading.style.display = 'none';
+  table.style.display = 'table';
+}
+
 async function loadTrainings() {
-  loading.style.display = 'block';
-  table.style.display = 'none';
-  body.innerHTML = '';
-
   try {
-    // 1️⃣ Получаем стажировки
-    const resTraining = await fetch(`${API_BASE}/training/${company}`);
-    const dataTraining = await resTraining.json();
+    loading.style.display = 'block';
+    table.style.display = 'none';
+    body.innerHTML = '';
 
-    if (!resTraining.ok) throw new Error(`HTTP ${resTraining.status}`);
+    // Получаем стажировки
+    const resTraining = await fetch(`${API_BASE}/api/training/${company}`);
+    const dataTraining = await resTraining.json();
 
     let trainings = [];
 
-    if (dataTraining.status === 'ok' && Array.isArray(dataTraining.trainings)) {
-      trainings = dataTraining.trainings;
-    } else if (dataTraining.message && dataTraining.message.toLowerCase().includes('no trainings')) {
+    if (dataTraining.status === 'ok') {
+      trainings = dataTraining.trainings || [];
+    } else if (dataTraining.message?.toLowerCase().includes('no trainings')) {
       trainings = [];
-    } else if (dataTraining.status !== 'ok') {
-      throw new Error(dataTraining.message || 'API error');
+    } else {
+      throw new Error(dataTraining.message);
     }
 
-    // 2️⃣ Получаем пользователей
-    const resUsers = await fetch(`${API_BASE}/users/${company}`);
+    // Получаем пользователей
+    const resUsers = await fetch(`${API_BASE}/api/users/${company}`);
     const dataUsers = await resUsers.json();
 
-    if (!resUsers.ok) throw new Error(`HTTP ${resUsers.status}`);
-    if (dataUsers.status !== 'ok') throw new Error(dataUsers.message || 'Users API error');
+    if (dataUsers.status !== 'ok') {
+      throw new Error(dataUsers.message);
+    }
 
-    const trainees = dataUsers.users.filter(u => u.post === 'Водитель-стажер');
+    const trainees = dataUsers.users.filter(
+      u => u.post === 'Водитель-стажер'
+    );
 
-    // 3️⃣ Сопоставляем
     trainees.forEach(user => {
       const training = trainings.find(t => t.user_name === user.name);
-      if (!training) return; // если нет записи — не показываем
+      if (!training) return;
 
       const tr = document.createElement('tr');
 
@@ -176,18 +166,41 @@ async function loadTrainings() {
       body.appendChild(tr);
     });
 
-    loading.style.display = 'none';
-    table.style.display = 'table';
+    finishLoading();
 
   } catch (err) {
+    console.error(err);
     loading.textContent = 'Ошибка загрузки';
     showToast(err.message, false);
   }
 }
+
+async function releaseTrainee(id, name) {
+  if (!confirm(`Выпустить ${name}?`)) return;
+
+  try {
+    const res = await fetch(`${API_BASE}/api/training/${company}/${id}`, {
+      method: 'DELETE'
+    });
+
+    const data = await res.json();
+
+    if (data.status !== 'ok') {
+      throw new Error(data.message);
+    }
+
+    showToast('Стажёр выпущен');
+    loadTrainings();
+
+  } catch (err) {
+    showToast(err.message, false);
+  }
+}
+
+document.addEventListener('DOMContentLoaded', loadTrainings);
 </script>
 
 <script src="sidebar.js"></script>
 <script src="checkauth.js"></script>
-
 </body>
 </html>
