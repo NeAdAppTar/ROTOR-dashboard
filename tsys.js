@@ -18,6 +18,79 @@ function getUsername() {
   return 'НЛО';
 }
 
+async function initTest(testName) {
+  if (testName === "Устав") {
+    initRegulationTest();
+  } else if (testName === "Адекватность") {
+    initAdequacyTest();
+  }
+}
+
+async function initRegulationTest() {
+  const username = getUsername();
+  document.getElementById('playerName').textContent = username;
+
+  const form = document.getElementById('testForm');
+  const resultText = document.getElementById('result');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const formData = new FormData(form);
+    let score = 0;
+
+    for (const value of formData.values()) {
+      score += Number(value);
+    }
+
+    resultText.textContent = "Результат отправляется...";
+
+    try {
+      // Загружаем текущие стажировки
+      const resGet = await fetch(`${API_BASE}/training/${COMPANY}`);
+      const dataGet = await resGet.json();
+
+      if (dataGet.status !== "ok" || !Array.isArray(dataGet.trainings)) {
+        throw new Error(dataGet.message || "Ошибка получения данных");
+      }
+
+      const existing = dataGet.trainings.find(
+        t => t.user_name?.trim().toLowerCase() === username?.trim().toLowerCase()
+      );
+
+      const payload = {
+        user_name: String(username),
+        score_regulation: String(score),
+        score_adequacy: String(existing?.score_adequacy || "0"),
+        completed: existing?.completed || "no"
+      };
+
+      // Отправка
+      const resPost = await fetch(`${API_BASE}/training/${COMPANY}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+
+      const dataPost = await resPost.json();
+
+      if (!resPost.ok || dataPost.status !== "ok") {
+        throw new Error(dataPost.message || "Ошибка API");
+      }
+
+      resultText.textContent = "Тест успешно сдан.";
+
+      setTimeout(() => {
+        window.location.href = "t.html";
+      }, 1200);
+
+    } catch (err) {
+      console.error(err);
+      resultText.textContent = "Ошибка: " + err.message;
+    }
+  });
+}
+
 async function initAdequacyTest() {
   const username = getUsername();
   document.getElementById('playerName').textContent = username;
