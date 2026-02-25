@@ -38,31 +38,27 @@ async function initAdequacyTest() {
     resultText.textContent = "Результат отправляется...";
 
     try {
-      // 1️⃣ Проверяем есть ли уже запись
+      // 1️⃣ Получаем текущие стажировки
       const resGet = await fetch(`${API_BASE}/training/${COMPANY}`);
       const dataGet = await resGet.json();
 
-      let existing = null;
-
-      if (dataGet.status === "ok" && Array.isArray(dataGet.trainings)) {
-        existing = dataGet.trainings.find(t => t.user_name === username);
+      if (dataGet.status !== "ok" || !Array.isArray(dataGet.trainings)) {
+        throw new Error(dataGet.message || "Ошибка получения данных");
       }
 
-      if (existing) {
-        // 2️⃣ Удаляем старую запись
-        await fetch(`${API_BASE}/training/${COMPANY}/${existing.id}`, {
-          method: "DELETE"
-        });
-      }
+      const existing = dataGet.trainings.find(
+        t => t.user_name?.trim().toLowerCase() === username?.trim().toLowerCase()
+      );
 
-      // 3️⃣ Создаём новую запись с обновлённым score_adequacy
+      // 2️⃣ Формируем payload полностью как строки
       const payload = {
-        user_name: username,
-        score_regulation: existing ? existing.score_regulation : "0",
-        score_adequacy: score.toString(),
+        user_name: String(username),
+        score_regulation: String(existing?.score_regulation ?? "0"),
+        score_adequacy: String(score),
         completed: "yes"
       };
 
+      // 3️⃣ Отправляем POST (он обновляет запись, если уже есть)
       const resPost = await fetch(`${API_BASE}/training/${COMPANY}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -82,6 +78,7 @@ async function initAdequacyTest() {
       }, 1200);
 
     } catch (err) {
+      console.error(err);
       resultText.textContent = "Ошибка: " + err.message;
     }
   });
