@@ -239,14 +239,45 @@ async function loadTrainings() {
       }
 
       // Переключатель практики
-      practiceToggle.addEventListener('click', () => {
-        practiceToggle.classList.toggle('active');
+      practiceToggle.addEventListener('click', async () => {
 
-        const passed = isPracticePassed();
-        toggleLabel.textContent = passed ? 'Пройдена' : 'Не пройдена';
+  const newState = !practiceToggle.classList.contains('active');
+  const completedValue = newState ? 'yes' : 'no';
 
-        validate();
+  try {
+    // если запись уже есть — удаляем её
+    if (training?.id) {
+      await fetch(`${API_BASE}/api/training/${company}/${training.id}`, {
+        method: 'DELETE'
       });
+    }
+
+    // создаём новую запись с обновлённым статусом
+    const res = await fetch(`${API_BASE}/api/training/${company}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        user_name: user.name,
+        score_regulation: scoreReg,
+        score_adequacy: scoreAdeq,
+        completed: completedValue
+      })
+    });
+
+    const data = await res.json();
+    if (data.status !== 'ok') throw new Error(data.message);
+
+    // обновляем UI
+    practiceToggle.classList.toggle('active');
+    toggleLabel.textContent = newState ? 'Пройдена' : 'Не пройдена';
+
+    showToast('Практика обновлена');
+    loadTrainings(); // перезагружаем данные
+
+  } catch (err) {
+    showToast('Ошибка сохранения', false);
+  }
+});
 
       validate();
 
