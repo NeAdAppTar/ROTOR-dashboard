@@ -53,7 +53,7 @@ async function initAdequacyTest() {
       // 2️⃣ Формируем payload полностью как строки
       const payload = {
         user_name: String(username),
-        score_regulation: String(existing?.score_regulation ?? "0"),
+        score_regulation: String(existing?.score_regulation || "0"),
         score_adequacy: String(score),
         completed: "yes"
       };

@@ -126,7 +126,7 @@
 
 <script>
   const pageAccess = ["Директор", "Зам. директора", "Технический администратор", "Начальник учебного центра", "Инструктор"];
-const API_BASE = 'https://rotorbus.ru';
+const API_BASE = 'https://rotorbus.ru/api';
 const company = 'rotor';
 
 const loading = document.getElementById('loading');
@@ -240,29 +240,26 @@ async function loadTrainings() {
 
       // Переключатель практики
   practiceToggle.addEventListener('click', async () => {
-
   const newState = !practiceToggle.classList.contains('active');
   const completedValue = newState ? 'yes' : 'no';
 
-  try {
-
-    const payload = {
-  user_name: String(user.name),
-  score_regulation: String(training?.score_regulation ?? '0'),
-  score_adequacy: String(training?.score_adequacy ?? '0'),
-  completed: completedValue // уже "yes" или "no"
+  const payload = {
+    user_name: String(user.name),
+    score_regulation: String(training?.score_regulation || "0"),
+    score_adequacy: String(training?.score_adequacy || "0"),
+    completed: completedValue
   };
 
-    const res = await fetch(`${API_BASE}/api/training/${company}`, {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify(payload)
-});
+  try {
+    const res = await fetch(`${API_BASE}/training/${company}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
 
     const data = await res.json();
     if (data.status !== 'ok') throw new Error(data.message);
 
-    // Обновляем UI только после успешного ответа
     practiceToggle.classList.toggle('active');
     toggleLabel.textContent = newState ? 'Пройдена' : 'Не пройдена';
 
