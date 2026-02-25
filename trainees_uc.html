@@ -240,15 +240,17 @@ async function loadTrainings() {
 
       // Переключатель практики
   practiceToggle.addEventListener('click', async () => {
+
   const newState = !practiceToggle.classList.contains('active');
-  const completedValue = newState ? 'yes' : 'no';
 
   const payload = {
     user_name: String(user.name),
-    score_regulation: String(training?.score_regulation || "0"),
-    score_adequacy: String(training?.score_adequacy || "0"),
-    completed: completedValue
+    score_regulation: Number(training?.score_regulation ?? 0),
+    score_adequacy: Number(training?.score_adequacy ?? 0),
+    completed: newState ? 1 : 0
   };
+
+  console.log("POST payload:", payload);
 
   try {
     const res = await fetch(`${API_BASE}/training/${company}`, {
@@ -271,7 +273,6 @@ async function loadTrainings() {
     showToast('Ошибка сохранения', false);
   }
 });
-
       validate();
 
       releaseBtn.addEventListener('click', () => {
