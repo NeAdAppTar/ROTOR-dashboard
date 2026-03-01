@@ -63,13 +63,27 @@
 
     <div class="test-links" id="testLinks">
       <a href="t-ustav.html" class="button">Тест по Уставу</a>
-      <a href="t-pdd.html" class="button">Тест по ПДД</a>
+      <a href="t-pdd.html" class="button">Тест на адекватность</a>
     </div>
   </main>
 </div>
   <script src="tsys.js"></script>
-  <script>
-    const pageAccess = null;
+<script>
+  const pageAccess = null;
+  // ДОПУСК
+  const allowedGeneralTests = [
+    "Водитель-стажер",
+    "Инструктор",
+    "Начальник учебного центра",
+    "Технический администратор",
+    "Директор"
+  ];
+
+  const allowedUpgradeTest = [
+    "Водитель 3 класса",
+    "Технический администратор",
+    "Директор"
+  ];
 
   function getCookie(name) {
     const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
@@ -77,18 +91,27 @@
   }
 
   const username = getCookie('userLogin') || localStorage.getItem('username') || 'Неизвестный';
-  const role = getCookie('userRole') || localStorage.getItem('role') || 'employee';
 
-    document.getElementById('playerName').textContent = `${username}`;
+  const post = getCookie('userPost') || localStorage.getItem('post') || "";
 
-  if (role === 'leader') {
-      const resultsButton = document.createElement('a');
-      resultsButton.href = 'results.html';
-      resultsButton.textContent = 'Результаты';
-      resultsButton.className = 'button';
-      document.querySelector('.test-links').appendChild(resultsButton);
-    }
-  </script>
+  document.getElementById('playerName').textContent = `${username}`;
+
+  const testLinks = document.getElementById("testLinks");
+
+  // ДОСТУП К ОБЫЧНЫМ ТЕСТАМ
+  if (!allowedGeneralTests.includes(post)) {
+    testLinks.innerHTML = "<p style='color:red; font-weight:600;'>У вас нет доступа к тестам</p>";
+  }
+
+  // ТЕСТ НА 2 КЛАСС
+  if (allowedUpgradeTest.includes(post)) {
+    const upgradeBtn = document.createElement("a");
+    upgradeBtn.href = "t-v2.html";
+    upgradeBtn.textContent = "Тест на повышение до 2 класса";
+    upgradeBtn.className = "button";
+    testLinks.appendChild(upgradeBtn);
+  }
+</script>
 
   <style>
 .button {
