@@ -26,6 +26,8 @@ async function initTest(testName) {
   }
 }
 
+//     УСТАВ
+
 async function initRegulationTest() {
   const username = getUsername();
   document.getElementById('playerName').textContent = username;
@@ -38,15 +40,11 @@ async function initRegulationTest() {
 
     const formData = new FormData(form);
     let score = 0;
-
-    for (const value of formData.values()) {
-      score += Number(value);
-    }
+    for (const value of formData.values()) score += Number(value);
 
     resultText.textContent = "Результат отправляется...";
 
     try {
-      // Загружаем текущие стажировки
       const resGet = await fetch(`${API_BASE}/training/${COMPANY}`);
       const dataGet = await resGet.json();
 
@@ -55,34 +53,37 @@ async function initRegulationTest() {
       }
 
       const existing = dataGet.trainings.find(
-        t => t.user_name?.trim().toLowerCase() === username?.trim().toLowerCase()
+        t => t.user_name?.trim().toLowerCase() === username.toLowerCase()
       );
 
       const payload = {
-        user_name: String(username),
-        score_regulation: String(score),
-        score_adequacy: String(existing?.score_adequacy || "0"),
-        completed: existing?.completed || "no"
+        user_name: username,
+        score_regulation: score,
+        score_adequacy: Number(existing?.score_adequacy ?? 0),
+        completed: existing?.completed === "yes" ? 1 : 0
       };
 
-      // Отправка
-      const resPost = await fetch(`${API_BASE}/training/${COMPANY}`, {
-        method: "POST",
+      let apiUrl = `${API_BASE}/training/${COMPANY}`;
+      let method = "POST";
+
+      if (existing?.id) {
+        apiUrl = `${API_BASE}/training/${COMPANY}/${existing.id}`;
+        method = "PUT";
+      }
+
+      const resSend = await fetch(apiUrl, {
+        method,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload)
       });
 
-      const dataPost = await resPost.json();
-
-      if (!resPost.ok || dataPost.status !== "ok") {
-        throw new Error(dataPost.message || "Ошибка API");
+      const dataSend = await resSend.json();
+      if (!resSend.ok || dataSend.status !== "ok") {
+        throw new Error(dataSend.message || "Ошибка API");
       }
 
       resultText.textContent = "Тест успешно сдан.";
-
-      setTimeout(() => {
-        window.location.href = "t.html";
-      }, 1200);
+      setTimeout(() => window.location.href = "t.html", 1200);
 
     } catch (err) {
       console.error(err);
@@ -90,6 +91,8 @@ async function initRegulationTest() {
     }
   });
 }
+
+//     АДЕКВАТНОСТЬ
 
 async function initAdequacyTest() {
   const username = getUsername();
@@ -103,15 +106,12 @@ async function initAdequacyTest() {
 
     const formData = new FormData(form);
     let score = 0;
-
-    for (const value of formData.values()) {
-      score += Number(value);
-    }
+    for (const value of formData.values()) score += Number(value);
 
     resultText.textContent = "Результат отправляется...";
 
     try {
-      // 1️⃣ Получаем текущие стажировки
+      // Получаем текущие стажировки
       const resGet = await fetch(`${API_BASE}/training/${COMPANY}`);
       const dataGet = await resGet.json();
 
@@ -120,35 +120,38 @@ async function initAdequacyTest() {
       }
 
       const existing = dataGet.trainings.find(
-        t => t.user_name?.trim().toLowerCase() === username?.trim().toLowerCase()
+        t => t.user_name?.trim().toLowerCase() === username.toLowerCase()
       );
 
-      // 2️⃣ Формируем payload полностью как строки
       const payload = {
-        user_name: String(username),
-        score_regulation: String(existing?.score_regulation || "0"),
-        score_adequacy: String(score),
-        completed: "yes"
+        user_name: username,
+        score_regulation: Number(existing?.score_regulation ?? 0),
+        score_adequacy: score,
+        completed: 1
       };
 
-      // 3️⃣ Отправляем POST (он обновляет запись, если уже есть)
-      const resPost = await fetch(`${API_BASE}/training/${COMPANY}`, {
-        method: "POST",
+      let apiUrl = `${API_BASE}/training/${COMPANY}`;
+      let method = "POST";
+
+      // Если запись есть → обновляем PUT
+      if (existing?.id) {
+        apiUrl = `${API_BASE}/training/${COMPANY}/${existing.id}`;
+        method = "PUT";
+      }
+
+      const resSend = await fetch(apiUrl, {
+        method,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload)
       });
 
-      const dataPost = await resPost.json();
-
-      if (!resPost.ok || dataPost.status !== "ok") {
-        throw new Error(dataPost.message || "Ошибка API");
+      const dataSend = await resSend.json();
+      if (!resSend.ok || dataSend.status !== "ok") {
+        throw new Error(dataSend.message || "Ошибка API");
       }
 
       resultText.textContent = "Тест успешно сдан.";
-
-      setTimeout(() => {
-        window.location.href = "t.html";
-      }, 1200);
+      setTimeout(() => window.location.href = "t.html", 1200);
 
     } catch (err) {
       console.error(err);

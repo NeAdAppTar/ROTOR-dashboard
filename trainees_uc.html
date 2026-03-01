@@ -240,21 +240,25 @@ async function loadTrainings() {
 
       // Переключатель практики
   practiceToggle.addEventListener('click', async () => {
+  if (!training?.id) {
+    showToast('Нет ID стажировки', false);
+    return;
+  }
 
   const newState = !practiceToggle.classList.contains('active');
 
   const payload = {
     user_name: String(user.name),
-    score_regulation: String(training?.score_regulation ?? "0"),
-    score_adequacy: String(training?.score_adequacy ?? "0"),
-    completed: newState ? "1" : "0"
+    score_regulation: Number(training?.score_regulation ?? 0),
+    score_adequacy: Number(training?.score_adequacy ?? 0),
+    completed: newState ? 1 : 0
   };
 
-  console.log("POST payload:", payload);
+  console.log("PUT payload:", payload);
 
   try {
-    const res = await fetch(`${API_BASE}/training/${company}`, {
-      method: 'POST',
+    const res = await fetch(`${API_BASE}/training/${company}/${training.id}`, {
+      method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
     });
@@ -264,6 +268,8 @@ async function loadTrainings() {
 
     practiceToggle.classList.toggle('active');
     toggleLabel.textContent = newState ? 'Пройдена' : 'Не пройдена';
+
+    training.completed = newState ? "yes" : "no";
 
     validate();
     showToast('Практика обновлена');
