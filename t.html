@@ -70,7 +70,7 @@
   <script src="tsys.js"></script>
 <script>
   const pageAccess = null;
-  // СПИСКИ ДОПУСКА
+    // СПИСКИ ДОПУСКА
   const allowedGeneralTests = [
     "Водитель-стажер",
     "Инструктор",
@@ -90,39 +90,47 @@
     return match ? decodeURIComponent(match[2]) : null;
   }
 
+  // userLogin из cookie
   const username = getCookie("userLogin") || "Неизвестный";
   document.getElementById("playerName").textContent = username;
 
   const testLinks = document.getElementById("testLinks");
 
-  const company = "rotor"; 
+  // НАЗВАНИЕ БАЗЫ (company) — должно совпадать с файлами БД на сервере
+  const company = "rotor"; // если нужно другое — скажи
 
-  // Загружаем всех пользователей компании
-  fetch(`/api/users/${company}`)
-    .then(r => r.json())
+  // Делаем запрос к API на rotorbus.ru
+  fetch(`https://rotorbus.ru/api/users/${company}`, {
+    credentials: "include" // если требуется передавать cookies
+  })
+    .then(r => {
+      if (!r.ok) throw new Error("HTTP " + r.status);
+      return r.json();
+    })
     .then(data => {
-      if (data.status !== "ok") {
-        testLinks.innerHTML = "<p style='color:red;font-weight:600;'>Ошибка загрузки данных</p>";
-        return;
-      }
+      if (data.status !== "ok") throw new Error("API returned error");
 
       const users = data.users;
+
+      // Ищем пользователя по имени
       const user = users.find(u => u.name === username);
 
       if (!user) {
-        testLinks.innerHTML = "<p style='color:red;font-weight:600;'>Пользователь не найден в базе</p>";
+        testLinks.innerHTML =
+          "<p style='color:red;font-weight:600;'>Пользователь не найден в базе</p>";
         return;
       }
 
       const post = user.post;
-      console.log("Найдена должность:", post);
+      console.log("Должность:", post);
 
-      // --- ДОСТУП К ОБЫЧНЫМ ТЕСТАМ 
+      // --- ДОСТУП К ОБЫЧНЫМ ТЕСТАМ ---
       if (!allowedGeneralTests.includes(post)) {
-        testLinks.innerHTML = "<p style='color:red;font-weight:600;'>У вас нет доступа к тестам</p>";
+        testLinks.innerHTML =
+          "<p style='color:red;font-weight:600;'>У вас нет доступа к тестам</p>";
       }
 
-      // --- ТЕСТ НА 2 КЛАСС
+      // --- ТЕСТ НА 2 КЛАСС ---
       if (allowedUpgradeTest.includes(post)) {
         const upgradeBtn = document.createElement("a");
         upgradeBtn.href = "t-v2.html";
@@ -132,9 +140,9 @@
       }
     })
     .catch(err => {
-      console.error(err);
+      console.error("API ERROR:", err);
       testLinks.innerHTML =
-        "<p style='color:red;font-weight:600;'>Ошибка соединения с сервером</p>";
+        "<p style='color:red;font-weight:600;'>Ошибка подключения к серверу</p>";
     });
 </script>
 
