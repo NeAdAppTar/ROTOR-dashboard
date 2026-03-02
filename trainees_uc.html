@@ -198,7 +198,7 @@ async function loadTrainings() {
           ${scoreReg}/20
         </td>
 
-        <td class="${scoreAdeq >= 5 ? 'status-ok' : 'status-no'}">
+        <td class="${scoreAdeq >= 3 ? 'status-ok' : 'status-no'}">
           ${scoreAdeq}/5
         </td>
 
@@ -232,7 +232,7 @@ async function loadTrainings() {
         const canRelease =
           isPracticePassed() &&
           scoreReg >= 10 &&
-          scoreAdeq >= 5;
+          scoreAdeq >= 3;
 
         releaseBtn.disabled = !canRelease;
         releaseBtn.style.opacity = canRelease ? '1' : '0.5';
