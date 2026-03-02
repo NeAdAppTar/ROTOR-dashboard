@@ -59,8 +59,8 @@ async function initRegulationTest() {
       const payload = {
   user_name: username,
   score_regulation: score,
-  score_adequacy: Number(existing?.score_adequacy ?? 0),
-  completed: existing?.completed ?? "no"
+  score_adequacy: Number(existing?.score_adequacy ?? "0"),
+  completed: existing?.completed ?? "no"  
 };
 
       let apiUrl = `${API_BASE}/training/${COMPANY}`;
@@ -125,7 +125,7 @@ async function initAdequacyTest() {
 
       const payload = {
   user_name: username,
-  score_regulation: Number(existing?.score_regulation ?? 0),
+  score_regulation: Number(existing?.score_regulation ?? "0"),
   score_adequacy: score,
   completed: "yes"
 };
