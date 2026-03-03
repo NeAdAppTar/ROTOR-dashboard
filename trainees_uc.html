@@ -311,7 +311,7 @@ async function releaseTrainee(id, name) {
   if (!confirm(`Выпустить ${name}?`)) return;
 
   try {
-    const res = await fetch(`${API_BASE}/api/training/${company}/${id}`, {
+    const res = await fetch(`${API_BASE}/training/${company}/${id}`, {
       method: 'DELETE'
     });
 
