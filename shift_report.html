@@ -219,7 +219,7 @@ function getCookie(name) {
 const userName = decodeURIComponent(getCookie("userLogin") || "");
 
 async function loadRoutes() {
-  const res = await fetch(`https://rotorbus.ru/api/routes/${COMPANY}`);
+  const res = await fetch(`https://api.rotorbus.ru/routes/${COMPANY}`);
   const data = await res.json();
 
   routeSelect.innerHTML = "";
@@ -233,7 +233,7 @@ async function loadRoutes() {
 }
 
 async function loadVehicles() {
-  const res = await fetch(`https://rotorbus.ru/api/vehicles/${COMPANY}`);
+  const res = await fetch(`https://api.rotorbus.ru/vehicles/${COMPANY}`);
   const data = await res.json();
 
   vehicleSelect.innerHTML = "";
@@ -285,7 +285,7 @@ async function send() {
 
   let res;
   try {
-    res = await fetch(`https://rotorbus.ru/api/report/${COMPANY}`, {
+    res = await fetch(`https://api.rotorbus.ru/report/${COMPANY}`, {
       method: "POST",
       credentials: "include",
       headers: { "Content-Type": "application/json" },

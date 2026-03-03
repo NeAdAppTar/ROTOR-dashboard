@@ -100,7 +100,7 @@ const COMPANY = "rotor";
 ========================= */
 
 async function loadReports() {
-  const res = await fetch(`https://rotorbus.ru/api/reports/${COMPANY}`);
+  const res = await fetch(`https://api.rotorbus.ru/reports/${COMPANY}`);
   const data = await res.json();
 
   reportsBody.innerHTML = "";
@@ -172,14 +172,14 @@ tr.innerHTML = `
 ========================= */
 
 async function verify(id) {
-  await fetch(`https://rotorbus.ru/api/report/verify/${COMPANY}/${id}`, {
+  await fetch(`https://api.rotorbus.ru/report/verify/${COMPANY}/${id}`, {
     method: "POST"
   });
   loadReports();
 }
 
 async function reject(id) {
-  await fetch(`https://rotorbus.ru/api/report/reject/${COMPANY}/${id}`, {
+  await fetch(`https://api.rotorbus.ru/report/reject/${COMPANY}/${id}`, {
     method: "POST"
   });
   loadReports();
@@ -188,7 +188,7 @@ async function reject(id) {
 async function del(id) {
   if (!confirm("Удалить отчёт?")) return;
 
-  await fetch(`https://rotorbus.ru/api/report/${COMPANY}/${id}`, {
+  await fetch(`https://api.rotorbus.ru/report/${COMPANY}/${id}`, {
     method: "DELETE"
   });
   loadReports();

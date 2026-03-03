@@ -1,4 +1,4 @@
-const API_BASE = "https://rotorbus.ru/api";
+const API_BASE = "https://api.rotorbus.ru";
 const COMPANY = "rotor";
 
 function getCookie(name) {

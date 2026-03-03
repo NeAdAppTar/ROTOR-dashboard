@@ -96,11 +96,9 @@
 
   const testLinks = document.getElementById("testLinks");
 
-  // НАЗВАНИЕ БАЗЫ (company) — должно совпадать с файлами БД на сервере
-  const company = "rotor"; // если нужно другое — скажи
+  const company = "rotor"; 
 
-  // Делаем запрос к API на rotorbus.ru
-  fetch(`https://rotorbus.ru/api/users/${company}`, {
+  fetch(`https://api.rotorbus.ru/users/${company}`, {
     credentials: "include" // если требуется передавать cookies
   })
     .then(r => {

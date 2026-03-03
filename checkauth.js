@@ -27,7 +27,7 @@
 
   async function verifyLogin(name, password) {
     try {
-      const response = await fetch("https://rotorbus.ru/api/login/rotor", {
+      const response = await fetch("https://api.rotorbus.ru/login/rotor", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, password })
@@ -46,7 +46,7 @@
   async function getUserByName(username) {
     try {
       const response = await fetch(
-        "https://rotorbus.ru/api/users/rotor",
+        "https://api.rotorbus.ru/users/rotor",
         { method: "GET" }
       );
 
