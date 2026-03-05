@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function deleteCookie(name) {
         document.cookie =
-            `${name}=; path=/; domain=.rotorprov.ru; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
+            `${name}=; path=/; domain=.rotorprov.ru; max-age=0; samesite=None; secure`;
     }
 
     // ===== SNOW =====
@@ -81,9 +81,11 @@ document.addEventListener("DOMContentLoaded", () => {
     // ===== LOGOUT =====
     logoutBtn?.addEventListener("click", () => {
         deleteCookie("userLogin");
-        deleteCookie("userHash");
+        deleteCookie("userPass");
         deleteCookie("snow");
-
+        
+        localStorage.clear();
+        
         window.location.href = "https://auth.rotorprov.ru/";
     });
 });

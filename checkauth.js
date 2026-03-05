@@ -1,3 +1,7 @@
+if (window.history.replaceState) {
+  window.history.replaceState(null, null, window.location.href);
+}
+
 (function () {
   // роли, разрешённые для страницы
   const allowedPosts =
