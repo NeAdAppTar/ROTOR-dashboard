@@ -83,9 +83,10 @@ document.addEventListener("DOMContentLoaded", () => {
         deleteCookie("userLogin");
         deleteCookie("userPass");
         deleteCookie("snow");
-        
-        localStorage.clear();
-        
+
+        localStorage.removeItem("userLogin");
+        localStorage.removeItem("userPost");
+
         window.location.href = "https://auth.rotorprov.ru/";
     });
 });
