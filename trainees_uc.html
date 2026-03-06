@@ -292,7 +292,7 @@ async function loadTrainings() {
           return;
         }
 
-        releaseTrainee(training.id, user.name);
+        releaseTrainee(training.id, user);
       });
 
       body.appendChild(tr);
@@ -307,24 +307,45 @@ async function loadTrainings() {
   }
 }
 
-async function releaseTrainee(id, name) {
-  if (!confirm(`Выпустить ${name}?`)) return;
+async function releaseTrainee(trainingId, user) {
+
+  if (!confirm(`Выпустить ${user.name}?`)) return;
 
   try {
-    const res = await fetch(`${API_BASE}/training/${company}/${id}`, {
+
+    // 1. Повышаем пользователя
+    const resUser = await fetch(`${API_BASE}/user/${company}/${user.id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        post: "Водитель 3 класса"
+      })
+    });
+
+    const userData = await resUser.json();
+
+    if (userData.status !== 'ok') {
+      throw new Error(userData.message);
+    }
+
+    // 2. Удаляем стажировку
+    const resTraining = await fetch(`${API_BASE}/training/${company}/${trainingId}`, {
       method: 'DELETE'
     });
 
-    const data = await res.json();
+    const trainingData = await resTraining.json();
 
-    if (data.status !== 'ok') {
-      throw new Error(data.message);
+    if (trainingData.status !== 'ok') {
+      throw new Error(trainingData.message);
     }
 
-    showToast('Стажёр выпущен');
+    showToast('Стажёр успешно выпущен');
     loadTrainings();
 
   } catch (err) {
+    console.error(err);
     showToast(err.message, false);
   }
 }
