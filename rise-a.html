@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
 <meta charset="utf-8">
-<title>Активность сотрудников</title>
+<title>Повышения сотрудников</title>
 
 <link rel="stylesheet" href="style.css">
 <link rel="stylesheet" href="style_db.css">
@@ -59,7 +59,7 @@
 <div class="main-content">
 <div class="container">
 
-<h1>Активность сотрудников</h1>
+<h1>Контроль повышений</h1>
 
 <div class="table-card">
 <table class="styled-table">
@@ -68,10 +68,9 @@
 <tr>
 <th>Сотрудник</th>
 <th>Должность</th>
-<th>Выполнение нормы</th>
-<th>Зарплата</th>
-<th>Взыскания</th>
-<th>Действия</th>
+<th>Кругорейсов всего</th>
+<th>Статус</th>
+<th>Действие</th>
 </tr>
 </thead>
 
@@ -84,11 +83,10 @@
 </div>
 
 <script>
-const pageAccess = ["Директор", "Зам. директора", "Администратор", "Технический администратор"];
+const pageAccess = ["Директор", "Технический администратор"];
 
 const API_BASE = "https://api.rotorbus.ru";
-const COMPANY = "rotor";    
-const NORM = 16;
+const COMPANY = "rotor";
 
 const table = document.getElementById("employeesTable");
 
@@ -99,45 +97,60 @@ return String(str || "")
 .replaceAll(">","&gt;");
 }
 
-function progressBar(value){
-
-const percent = Math.min((value / NORM) * 100, 100);
-const over = value >= NORM ? "progress-over" : "";
-
-return `
-<div class="progress-container">
-<div class="progress-bar ${over}" style="width:${percent}%"></div>
-<span class="progress-label">${value} / ${NORM}</span>
-</div>`;
-}
-
-function parsePunish(str){
-if(!str) return 0;
-return Number(str.split("/")[0]) || 0;
-}
-
 async function fetchJson(url){
 const res = await fetch(url);
 return res.json();
 }
 
-async function giveWarning(user){
+function getPromotion(user,trips){
 
-const currentStr = user.disciplinary_actions || "0/3";
-const current = parsePunish(currentStr);
+if(user.post === "Водитель 3 класса"){
 
-if(current >= 3){
-alert("Нельзя выдать больше 3 взысканий");
-return;
+if(trips >= 50){
+return {
+eligible:true,
+next:"Водитель 2 класса",
+text:"Можно повысить"
+};
 }
 
-const newValue = `${current + 1}/3`;
+return {
+eligible:false,
+text:"Нужно 50 кругорейсов"
+};
+
+}
+
+if(user.post === "Водитель 2 класса"){
+
+if(trips >= 120){
+return {
+eligible:true,
+next:"Водитель 1 класса",
+text:"Можно повысить"
+};
+}
+
+return {
+eligible:false,
+text:"Нужно 120 кругорейсов"
+};
+
+}
+
+return {eligible:false,text:"Повышение не предусмотрено"};
+
+}
+
+async function promoteUser(user,newPost){
+
+if(!confirm(`Повысить ${user.name} до "${newPost}" ?`)) return;
 
 const res = await fetch(`${API_BASE}/user/${COMPANY}/${user.id}`,{
 method:"PUT",
 headers:{ "Content-Type":"application/json" },
 body: JSON.stringify({
-disciplinary_actions: newValue
+post:newPost
 })
 });
 
@@ -148,28 +161,12 @@ loadEmployees();
 }else{
 alert(data.message);
 }
-}
 
-async function fireUser(user){
-
-if(!confirm(`Уволить ${user.name}?`)) return;
-
-const res = await fetch(`${API_BASE}/user/${COMPANY}/${user.id}`,{
-method:"DELETE"
-});
-
-const data = await res.json();
-
-if(data.status === "ok"){
-loadEmployees();
-}else{
-alert(data.message);
-}
 }
 
 async function loadEmployees(){
 
-table.innerHTML = "<tr><td colspan='6'>Загрузка...</td></tr>";
+table.innerHTML = "<tr><td colspan='5'>Загрузка...</td></tr>";
 
 try{
 
@@ -184,42 +181,41 @@ table.innerHTML = "";
 users.forEach(user => {
 
 const stat = stats.find(s => s.user_name === user.name) || {};
+const trips = Number(stat.total_round_trips || 0);
 
-const trips = Number(stat.period_round_trips || 0);
-const salary = Number(stat.period_salary || 0);
+const promo = getPromotion(user,trips);
 
-const punishStr = user.disciplinary_actions || "0/3";
-const punish = parsePunish(punishStr);
+let action = `<span class="status-badge badge-not">Недоступно</span>`;
+
+if(promo.eligible){
+
+action = `
+<button class="btn-ok"
+onclick='promoteUser(${JSON.stringify(user)},"${promo.next}")'>
+⬆ Повысить
+</button>
+`;
+
+}
 
 const tr = document.createElement("tr");
 
 tr.innerHTML = `
 <td>${escapeHtml(user.name)}</td>
+
 <td>${escapeHtml(user.post)}</td>
-<td>${progressBar(trips)}</td>
-<td>${salary.toLocaleString()} ₽</td>
+
+<td>${trips}</td>
 
 <td>
 <span class="status-badge ${
-punish === 0 ? 'badge-ok' :
-punish === 3 ? 'badge-rej' :
-'badge-not'
+promo.eligible ? 'badge-ok' : 'badge-not'
 }">
-${escapeHtml(punishStr)}
+${promo.text}
 </span>
 </td>
 
-<td class="actions">
-
-<button class="btn-ok" onclick='giveWarning(${JSON.stringify(user)})'>
-⚠ Выговор
-</button>
-
-<button class="btn-rej" onclick='fireUser(${JSON.stringify(user)})'>
-🗑 Уволить
-</button>
-
-</td>
+<td>${action}</td>
 `;
 
 table.appendChild(tr);
@@ -227,13 +223,16 @@ table.appendChild(tr);
 });
 
 if(!users.length){
-table.innerHTML = "<tr><td colspan='6'>Нет сотрудников</td></tr>";
+table.innerHTML="<tr><td colspan='5'>Нет сотрудников</td></tr>";
 }
 
 }catch(err){
-table.innerHTML = "<tr><td colspan='6'>Ошибка загрузки</td></tr>";
+
+table.innerHTML="<tr><td colspan='5'>Ошибка загрузки</td></tr>";
 console.error(err);
+
 }
+
 }
 
 loadEmployees();
