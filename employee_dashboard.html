@@ -103,7 +103,7 @@
 </div>
 
 <div class="tile">
-  <h3>Текущий полупериод</h3>
+  <h3>Текущий полумесячный период</h3>
 
   <p>Кругорейсов:
     <span class="highlight" id="periodRoutes">
@@ -227,12 +227,12 @@ async function loadDashboard() {
     let next = "—";
 
     if (post.includes("3")) {
-      need = 70;
+      need = 50;
       next = "Водитель 2 класса";
       rankNow.textContent = "Водитель 3 класса";
     } 
     else if (post.includes("2")) {
-      need = 150;
+      need = 120;
       next = "Водитель 1 класса";
       rankNow.textContent = "Водитель 2 класса";
     } 
@@ -273,7 +273,7 @@ async function loadDashboard() {
     salary.textContent = formatNumber(s.period_salary) + " ₽";
 
     /* ===== Progress ===== */
-    const max = 16;
+    const max = 12;
     const current = Number(s.period_round_trips) || 0;
     let percent = (current / max) * 100;
     if (percent > 100) percent = 100;
