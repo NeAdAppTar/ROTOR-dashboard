@@ -4,8 +4,7 @@
   <meta charset="UTF-8">
   <title>Список ПС</title>
 
-  <link rel="stylesheet" href="style_db.css">
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="base.css">
   <link rel="icon" type="image/png" href="icon.png">
 
   <!-- Иконки -->
@@ -38,7 +37,7 @@
     <div id="loading" class="loading">Получение информации от сервера...</div>
 
     <div id="tableContainer" style="display:none;">
-      <table class="styled-table" id="vehiclesTable">
+      <table class="table" id="vehiclesTable">
         <thead>
           <tr>
             <th>Бортовой номер</th>
@@ -141,8 +140,8 @@ async function loadVehicles() {
         <td>${v.board_number || "-"}</td>
         <td>${v.state_number || "-"}</td>
         <td>${v.model || "-"}</td>
-        <td>${v.built || "-"}</td>
-        <td>${v.since || "-"}</td>
+        <td>${formatDateRU(v.built)}</td>
+        <td>${formatDateRU(v.since)}</td>
         <td>${v.note || ""}</td>
       `;
 
@@ -159,11 +158,24 @@ async function loadVehicles() {
   }
 }
 
+function formatDateRU(dateStr) {
+  if (!dateStr) return "-";
+
+  const d = new Date(dateStr);
+  if (isNaN(d)) return dateStr;
+
+  const day = String(d.getDate()).padStart(2, "0");
+  const month = String(d.getMonth() + 1).padStart(2, "0");
+  const year = d.getFullYear();
+
+  return `${day}.${month}.${year}`;
+}
+
 loadVehicles();
 </script>
 
 
 <script src="sidebar.js"></script>
-<script src="checkauth.js"></script>
+
 </body>
 </html>
