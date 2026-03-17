@@ -1,0 +1,103 @@
+
+
+/* ===== Dashboard ===== */
+.dashboard {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 30px;
+  padding: 30px;
+  box-sizing: border-box;
+}
+
+.tile {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 40px;              /* ← как было */
+  text-align: center;
+  min-height: 320px;          /* ← как было */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  transition: var(--transition);
+
+  border: 1px solid #facc15;  /* ← аккуратный желтый */
+}
+
+.tile:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 28px rgba(0,0,0,0.18);
+}
+
+.tile h3 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
+
+.tile p {
+  font-size: 1.4rem;
+}
+
+
+/* ===== Текст ===== */
+.highlight {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--primary-dark);
+}
+
+/* ===== Кнопка ===== */
+.logout-btn {
+  margin-top: 15px;
+  padding: 12px 20px;
+  background: var(--primary);
+  color: var(--black);
+  border: none;
+  border-radius: var(--radius);
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.logout-btn:hover {
+  background: var(--primary-dark);
+}
+
+/* ===== Progress ===== */
+.progress-container {
+  position: relative;
+  background: #f3f4f6;
+  border-radius: 10px;
+  height: 24px;
+  width: 100%;
+  margin-top: 10px;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #facc15, #eab308);
+  transition: width 0.5s ease;
+}
+
+.progress-label {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-weight: 600;
+  color: #111;
+  font-size: 0.95rem;
+}
+
+/* ===== Переполнение ===== */
+.progress-over {
+  background: linear-gradient(90deg, #22c55e, #16a34a);
+}
+
+/* ===== Loading icon ===== */
+.loading-icon {
+  display: inline-flex;
+  align-items: center;
+}
