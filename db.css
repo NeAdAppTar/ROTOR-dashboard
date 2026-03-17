@@ -9,34 +9,6 @@
   box-sizing: border-box;
 }
 
-.tile {
-  background: var(--card-bg);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  padding: 40px;              /* ← как было */
-  text-align: center;
-  min-height: 320px;          /* ← как было */
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  transition: var(--transition);
-
-  border: 1px solid #facc15;  /* ← аккуратный желтый */
-}
-
-.tile:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 12px 28px rgba(0,0,0,0.18);
-}
-
-.tile h3 {
-  font-size: 2rem;
-  margin-bottom: 20px;
-}
-
-.tile p {
-  font-size: 1.4rem;
-}
 
 
 /* ===== Текст ===== */
