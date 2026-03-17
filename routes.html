@@ -5,8 +5,7 @@
   <meta charset="utf-8">
   <!-- <meta name="viewport" content="width=device-width,initial-scale=1"> -->
   <title>Маршруты</title>
-  <link rel="stylesheet" href="style_db.css">
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="base.css">
   <link rel="icon" type="image/png" href="icon.png">
 
   <style>
@@ -33,6 +32,21 @@
 
     .route-button:active {
       transform: translateY(1px);
+    }
+
+    .routes-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(600px, 1fr)); /* плитки широкие */
+      gap: 40px;
+      margin-top: 40px;
+    }
+
+    .route-img {
+      max-width: 100%;
+      height: auto;
+      border-radius: var(--radius);
+      margin-bottom: 25px;
+      box-shadow: var(--shadow);
     }
 
     
@@ -167,5 +181,4 @@
   </script>
 </body>
 <script src="sidebar.js"></script>
-<script src="checkauth.js"></script>
 </html>

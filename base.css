@@ -191,12 +191,61 @@ body.dark .table tbody tr:hover {
 }
 
 body.dark .table td {
-  border-bottom: 1px solid #334155; /* тёмно-серый */
+  border-bottom: 1px solid #334155; 
 }
 
 /* ===== CONTAINER ===== */
 .container {
-  max-width: 1200px;   /* ← ключевое */
-  margin: 0 auto;      /* центр */
+  max-width: 1200px;
+  margin: 0 auto;
   padding: 20px;
+}
+
+
+/* ============================= */
+/*            КАРТОЧКИ           */
+/* ============================= */
+
+.container {
+  max-width: 1500px;
+  margin: auto;
+  padding: 30px 20px;
+}
+
+.card, .form-card {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 25px;
+  margin: 25px 0;
+  box-shadow: var(--shadow);
+  transition: var(--transition);
+}
+
+.card:hover, .form-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+}
+
+/* charter */
+.charter {
+  background: var(--card-bg);
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: var(--shadow);
+  line-height: 1.6;
+  animation: fadeIn 0.7s ease;
+}
+
+.charter h2 {
+  margin-top: 30px;
+  margin-bottom: 15px;
+  font-size: 1.6rem;
+  color: var(--primary-dark);
+  border-left: 6px solid var(--primary);
+  padding-left: 10px;
+}
+
+.charter p, .charter li {
+  margin: 8px 0;
+  font-size: 1.1rem;
 }
