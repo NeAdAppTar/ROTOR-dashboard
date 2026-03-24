@@ -1,6 +1,6 @@
 
 
-/* ===== Dashboard ===== */
+/*  Dashboard  */
 .dashboard {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
@@ -11,14 +11,14 @@
 
 
 
-/* ===== Текст ===== */
+/*  Текст  */
 .highlight {
   font-size: 1.6rem;
   font-weight: 700;
   color: var(--primary-dark);
 }
 
-/* ===== Кнопка ===== */
+/*  Кнопка  */
 .logout-btn {
   margin-top: 15px;
   padding: 12px 20px;
@@ -35,7 +35,7 @@
   background: var(--primary-dark);
 }
 
-/* ===== Progress ===== */
+/*  Progress  */
 .progress-container {
   position: relative;
   background: #f3f4f6;
@@ -63,12 +63,12 @@
   font-size: 0.95rem;
 }
 
-/* ===== Переполнение ===== */
+/*  Переполнение  */
 .progress-over {
   background: linear-gradient(90deg, #22c55e, #16a34a);
 }
 
-/* ===== Loading icon ===== */
+/*  Loading icon  */
 .loading-icon {
   display: inline-flex;
   align-items: center;

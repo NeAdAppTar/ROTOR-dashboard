@@ -1,4 +1,4 @@
-/* ===== ТЕСТЫ ===== */
+/*  ТЕСТЫ  */
 
 .test-container {
   max-width: 800px;
@@ -30,7 +30,7 @@
   margin-top: 20px;
 }
 
-/* Кнопки (используем общий стиль!) */
+/* Кнопки (общий стиль!!!!!!!!) */
 .button {
   padding: 14px;
   border-radius: var(--radius);
@@ -46,7 +46,7 @@
   box-shadow: var(--shadow);
 }
 
-/* ===== ВОПРОСЫ ===== */
+/*  ВОПРОСЫ  */
 
 .question {
   padding: 20px;

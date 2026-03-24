@@ -13,7 +13,7 @@
 
 
 
-/* ===== Общие ===== */
+/* Общие */
 body {
   font-family: 'Segoe UI', Roboto, sans-serif;
   background: var(--bg);
@@ -63,7 +63,7 @@ p {
 }
 
 
-/* ===== Layout ===== */
+/* Layout */
 .main-content {
   margin-left: 240px;
 }
@@ -106,7 +106,7 @@ body.dark button {
   text-decoration: none;
 }
 
-/* === Кнопка переключения темы === */
+/* Кнопка переключения темы */
 #themeToggle {
   position: fixed;
   bottom: 25px;
@@ -127,7 +127,7 @@ body.dark button {
   transform: scale(1.1);
 }
 
-/* === Темная тема === */
+/* Темная тема */
 body.dark {
   --bg: #0f172a;
   --card-bg: #1e293b;
@@ -162,7 +162,7 @@ body.dark button {
   color: var(--black);
 }
 
-/* ===== TABLE ===== */
+/* TABLE */
 .table {
   width: 100%;
   border-collapse: collapse;
@@ -170,7 +170,7 @@ body.dark button {
   border-radius: var(--radius);
   overflow: hidden;
   box-shadow: var(--shadow);
-  font-size: 14px; /* компактнее */
+  font-size: 14px; 
 }
 
 /* HEADER */
@@ -180,7 +180,7 @@ body.dark button {
 }
 
 .table th {
-  padding: 8px 10px; /* ↓ сжали */
+  padding: 8px 10px;
   text-align: left;
   font-weight: 600;
   white-space: nowrap;
@@ -189,7 +189,7 @@ body.dark button {
 
 /* BODY */
 .table td {
-  padding: 6px 10px; /* ↓ сильно сжали строки */
+  padding: 6px 10px; 
   border-bottom: 1px solid #eee;
 }
 
@@ -203,7 +203,7 @@ body.dark button {
   transition: background 0.2s;
 }
 
-/* ===== DARK TABLE ===== */
+/* DARK TABLE */
 body.dark .table thead {
   background: #111827;
   color: var(--primary);
@@ -226,7 +226,7 @@ body.dark .table td {
   border-bottom: 1px solid #334155; 
 }
 
-/* ===== CONTAINER ===== */
+/* CONTAINER */
 .container {
   max-width: 1200px;
   margin: 0 auto;
@@ -234,9 +234,7 @@ body.dark .table td {
 }
 
 
-/* ============================= */
-/*            КАРТОЧКИ           */
-/* ============================= */
+/* КАРТОЧКИ */
 
 .container {
   max-width: 1500px;
